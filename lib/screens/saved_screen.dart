@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../models/calculation.dart';
 import '../services/storage_service.dart';
 
@@ -114,10 +115,7 @@ class _SavedScreenState extends State<SavedScreen> {
             const SizedBox(height: 8),
             Text(
               DateFormat('MMM dd, yyyy - hh:mm a').format(calc.timestamp),
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white70,
-              ),
+              style: const TextStyle(fontSize: 14, color: Colors.white70),
             ),
             const Divider(color: Colors.white54, height: 24),
             const Text(
@@ -129,25 +127,27 @@ class _SavedScreenState extends State<SavedScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            ...calc.inputs.entries.map((entry) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        entry.key.replaceAll('_', ' ').toUpperCase(),
-                        style: const TextStyle(color: Colors.white70),
+            ...calc.inputs.entries.map(
+              (entry) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      entry.key.replaceAll('_', ' ').toUpperCase(),
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                    Text(
+                      entry.value.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
                       ),
-                      Text(
-                        entry.value.toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const Divider(color: Colors.white54, height: 24),
             const Text(
               'Results',
@@ -158,28 +158,30 @@ class _SavedScreenState extends State<SavedScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            ...calc.results.entries.map((entry) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        entry.key.replaceAll('_', ' ').toUpperCase(),
-                        style: const TextStyle(color: Colors.white70),
+            ...calc.results.entries.map(
+              (entry) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      entry.key.replaceAll('_', ' ').toUpperCase(),
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                    Text(
+                      entry.value is double
+                          ? (entry.value as double).toStringAsFixed(2)
+                          : entry.value.toString(),
+                      style: const TextStyle(
+                        color: Color(0xFFFF8C00),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
-                      Text(
-                        entry.value is double
-                            ? (entry.value as double).toStringAsFixed(2)
-                            : entry.value.toString(),
-                        style: const TextStyle(
-                          color: Color(0xFFFF8C00),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
@@ -205,74 +207,70 @@ class _SavedScreenState extends State<SavedScreen> {
       appBar: AppBar(
         title: const Text(
           'Saved',
-          style: TextStyle(color: Color(0xFF1E3A5F), fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Color(0xFF1E3A5F),
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _saved.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.bookmark_border,
-                        size: 80,
-                        color: Colors.grey[300],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'No saved calculations',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.bookmark_border,
+                    size: 80,
+                    color: Colors.grey[300],
                   ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _saved.length,
-                  itemBuilder: (context, index) {
-                    final calc = _saved[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        leading: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: _getColorForType(calc.type).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            _getIconForType(calc.type),
-                            color: _getColorForType(calc.type),
-                          ),
-                        ),
-                        title: Text(
-                          calc.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        subtitle: Text(
-                          DateFormat('MMM dd, yyyy - hh:mm a')
-                              .format(calc.timestamp),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete_outline, color: Colors.red),
-                          onPressed: () => _removeSaved(calc.id),
-                        ),
-                        onTap: () => _showCalculationDetails(calc),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No saved calculations',
+                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: _saved.length,
+              itemBuilder: (context, index) {
+                final calc = _saved[index];
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _getColorForType(calc.type).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                    );
-                  },
-                ),
+                      child: Icon(
+                        _getIconForType(calc.type),
+                        color: _getColorForType(calc.type),
+                      ),
+                    ),
+                    title: Text(
+                      calc.title,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    subtitle: Text(
+                      DateFormat(
+                        'MMM dd, yyyy - hh:mm a',
+                      ).format(calc.timestamp),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete_outline, color: Colors.red),
+                      onPressed: () => _removeSaved(calc.id),
+                    ),
+                    onTap: () => _showCalculationDetails(calc),
+                  ),
+                );
+              },
+            ),
     );
   }
 }

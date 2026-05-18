@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../widgets/input_field.dart';
 
 class CostEstimator extends StatefulWidget {
@@ -11,16 +12,16 @@ class CostEstimator extends StatefulWidget {
 class _CostEstimatorState extends State<CostEstimator> {
   final _areaController = TextEditingController();
   String _constructionType = 'Basic';
-  
+
   double _totalCost = 0;
   double _costPerSqFt = 0;
   bool _hasCalculated = false;
 
   final Map<String, double> _costRates = {
-    'Basic': 1200,     // ₹1200 per sq ft
-    'Standard': 1800,  // ₹1800 per sq ft
-    'Premium': 2500,   // ₹2500 per sq ft
-    'Luxury': 3500,    // ₹3500 per sq ft
+    'Basic': 1200, // ₹1200 per sq ft
+    'Standard': 1800, // ₹1800 per sq ft
+    'Premium': 2500, // ₹2500 per sq ft
+    'Luxury': 3500, // ₹3500 per sq ft
   };
 
   void _calculate() {
@@ -34,9 +35,9 @@ class _CostEstimatorState extends State<CostEstimator> {
         _hasCalculated = true;
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter area')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter area')));
     }
   }
 
@@ -56,13 +57,13 @@ class _CostEstimatorState extends State<CostEstimator> {
       appBar: AppBar(
         title: const Text(
           'Construction Cost Estimator',
-          style: TextStyle(color: Color(0xFF1E3A5F), fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Color(0xFF1E3A5F),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _reset,
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _reset),
         ],
       ),
       body: SingleChildScrollView(
@@ -214,20 +215,14 @@ class _CostEstimatorState extends State<CostEstimator> {
                         ),
                       ),
                       const Divider(color: Colors.white54, height: 24),
-                      _buildResultRow(
-                        'Construction Type',
-                        _constructionType,
-                      ),
+                      _buildResultRow('Construction Type', _constructionType),
                       const SizedBox(height: 12),
                       _buildResultRow(
                         'Rate per sq ft',
                         '₹${_costPerSqFt.toStringAsFixed(0)}',
                       ),
                       const SizedBox(height: 12),
-                      _buildResultRow(
-                        'Area',
-                        '${_areaController.text} sq ft',
-                      ),
+                      _buildResultRow('Area', '${_areaController.text} sq ft'),
                       const Divider(color: Colors.white54, height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -271,10 +266,7 @@ class _CostEstimatorState extends State<CostEstimator> {
                         ),
                         child: Text(
                           'Note: This is an approximate estimate. Actual costs may vary based on location, materials, and other factors.',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white70,
-                          ),
+                          style: TextStyle(fontSize: 12, color: Colors.white70),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -295,10 +287,7 @@ class _CostEstimatorState extends State<CostEstimator> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.white70,
-          ),
+          style: const TextStyle(fontSize: 16, color: Colors.white70),
         ),
         Text(
           value,

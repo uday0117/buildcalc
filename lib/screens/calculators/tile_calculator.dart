@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../widgets/input_field.dart';
+
 import '../../models/calculation.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/input_field.dart';
 
 class TileCalculator extends StatefulWidget {
   const TileCalculator({super.key});
@@ -15,7 +16,7 @@ class _TileCalculatorState extends State<TileCalculator> {
   final _widthController = TextEditingController();
   final _tileLengthController = TextEditingController();
   final _tileWidthController = TextEditingController();
-  
+
   double _tilesRequired = 0;
   double _areaToTile = 0;
   double _boxes = 0;
@@ -30,20 +31,20 @@ class _TileCalculatorState extends State<TileCalculator> {
     if (length > 0 && width > 0 && tileLength > 0 && tileWidth > 0) {
       // Calculate area to tile
       _areaToTile = length * width;
-      
+
       // Convert tile size from mm to meters
       final tileLengthM = tileLength / 1000;
       final tileWidthM = tileWidth / 1000;
-      
+
       // Calculate area of one tile
       final tileArea = tileLengthM * tileWidthM;
-      
+
       // Calculate number of tiles
       _tilesRequired = _areaToTile / tileArea;
-      
+
       // Add 10% wastage
       _tilesRequired = _tilesRequired * 1.1;
-      
+
       // Calculate boxes (assuming 10 tiles per box)
       _boxes = _tilesRequired / 10;
 
@@ -53,9 +54,9 @@ class _TileCalculatorState extends State<TileCalculator> {
 
       _saveToHistory();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter all values')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter all values')));
     }
   }
 
@@ -100,13 +101,13 @@ class _TileCalculatorState extends State<TileCalculator> {
       appBar: AppBar(
         title: const Text(
           'Tile Calculator',
-          style: TextStyle(color: Color(0xFF1E3A5F), fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Color(0xFF1E3A5F),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _reset,
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _reset),
         ],
       ),
       body: SingleChildScrollView(
@@ -238,10 +239,7 @@ class _TileCalculatorState extends State<TileCalculator> {
                       const SizedBox(height: 12),
                       Text(
                         '(Includes 10% wastage)',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white70,
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.white70),
                       ),
                     ],
                   ),
@@ -260,10 +258,7 @@ class _TileCalculatorState extends State<TileCalculator> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.white70,
-          ),
+          style: const TextStyle(fontSize: 16, color: Colors.white70),
         ),
         Text(
           value,

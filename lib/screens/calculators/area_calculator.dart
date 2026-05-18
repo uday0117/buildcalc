@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../widgets/input_field.dart';
+
 import '../../models/calculation.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/input_field.dart';
 
 class AreaCalculator extends StatefulWidget {
   const AreaCalculator({super.key});
@@ -15,17 +16,12 @@ class _AreaCalculatorState extends State<AreaCalculator> {
   final _dimension1Controller = TextEditingController();
   final _dimension2Controller = TextEditingController();
   final _dimension3Controller = TextEditingController();
-  
+
   double _area = 0;
   double _perimeter = 0;
   bool _hasCalculated = false;
 
-  final List<String> _shapes = [
-    'Rectangle',
-    'Square',
-    'Circle',
-    'Triangle',
-  ];
+  final List<String> _shapes = ['Rectangle', 'Square', 'Circle', 'Triangle'];
 
   void _calculate() {
     final dim1 = double.tryParse(_dimension1Controller.text) ?? 0;
@@ -42,9 +38,9 @@ class _AreaCalculatorState extends State<AreaCalculator> {
     switch (_selectedShape) {
       case 'Rectangle':
         if (dim2 <= 0) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please enter width')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Please enter width')));
           return;
         }
         _area = dim1 * dim2;
@@ -63,9 +59,9 @@ class _AreaCalculatorState extends State<AreaCalculator> {
 
       case 'Triangle':
         if (dim2 <= 0) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please enter height')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Please enter height')));
           return;
         }
         _area = 0.5 * dim1 * dim2;
@@ -96,10 +92,7 @@ class _AreaCalculatorState extends State<AreaCalculator> {
         'dimension2': _dimension2Controller.text,
         'dimension3': _dimension3Controller.text,
       },
-      results: {
-        'area': _area,
-        'perimeter': _perimeter,
-      },
+      results: {'area': _area, 'perimeter': _perimeter},
       timestamp: DateTime.now(),
     );
 
@@ -147,13 +140,13 @@ class _AreaCalculatorState extends State<AreaCalculator> {
       appBar: AppBar(
         title: const Text(
           'Area Calculator',
-          style: TextStyle(color: Color(0xFF1E3A5F), fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Color(0xFF1E3A5F),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _reset,
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _reset),
         ],
       ),
       body: SingleChildScrollView(
@@ -299,15 +292,9 @@ class _AreaCalculatorState extends State<AreaCalculator> {
                         ),
                       ),
                       const Divider(color: Colors.white54, height: 24),
-                      _buildResultRow(
-                        'Shape',
-                        _selectedShape,
-                      ),
+                      _buildResultRow('Shape', _selectedShape),
                       const SizedBox(height: 12),
-                      _buildResultRow(
-                        'Area',
-                        '${_area.toStringAsFixed(2)} m²',
-                      ),
+                      _buildResultRow('Area', '${_area.toStringAsFixed(2)} m²'),
                       if (_perimeter > 0) ...[
                         const SizedBox(height: 12),
                         _buildResultRow(
@@ -332,10 +319,7 @@ class _AreaCalculatorState extends State<AreaCalculator> {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.white70,
-          ),
+          style: const TextStyle(fontSize: 16, color: Colors.white70),
         ),
         Text(
           value,

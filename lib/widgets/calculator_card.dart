@@ -33,11 +33,7 @@ class CalculatorCard extends StatelessWidget {
                   color: iconColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  icon,
-                  size: 40,
-                  color: iconColor,
-                ),
+                child: Icon(icon, size: 40, color: iconColor),
               ),
               const SizedBox(height: 12),
               Text(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../models/calculation.dart';
 import '../services/storage_service.dart';
 
@@ -102,7 +103,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
       appBar: AppBar(
         title: const Text(
           'History',
-          style: TextStyle(color: Color(0xFF1E3A5F), fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Color(0xFF1E3A5F),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
           if (_history.isNotEmpty)
@@ -115,77 +119,66 @@ class _HistoryScreenState extends State<HistoryScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _history.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.history,
-                        size: 80,
-                        color: Colors.grey[300],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'No calculations yet',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.history, size: 80, color: Colors.grey[300]),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No calculations yet',
+                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                   ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _history.length,
-                  itemBuilder: (context, index) {
-                    final calc = _history[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        leading: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: _getColorForType(calc.type).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            _getIconForType(calc.type),
-                            color: _getColorForType(calc.type),
-                          ),
-                        ),
-                        title: Text(
-                          calc.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        subtitle: Text(
-                          DateFormat('MMM dd, yyyy - hh:mm a')
-                              .format(calc.timestamp),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.bookmark_border),
-                          onPressed: () async {
-                            await StorageService.saveCalculation(calc);
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Saved to bookmarks'),
-                                  duration: Duration(seconds: 1),
-                                ),
-                              );
-                            }
-                          },
-                        ),
+                ],
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: _history.length,
+              itemBuilder: (context, index) {
+                final calc = _history[index];
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _getColorForType(calc.type).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                    );
-                  },
-                ),
+                      child: Icon(
+                        _getIconForType(calc.type),
+                        color: _getColorForType(calc.type),
+                      ),
+                    ),
+                    title: Text(
+                      calc.title,
+                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    subtitle: Text(
+                      DateFormat(
+                        'MMM dd, yyyy - hh:mm a',
+                      ).format(calc.timestamp),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.bookmark_border),
+                      onPressed: () async {
+                        await StorageService.saveCalculation(calc);
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Saved to bookmarks'),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
     );
   }
 }
