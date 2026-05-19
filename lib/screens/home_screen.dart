@@ -11,6 +11,7 @@ import 'calculators/steel_calculator.dart';
 import 'calculators/tile_calculator.dart';
 import 'history_screen.dart';
 import 'saved_screen.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     HomeContent(),
     HistoryScreen(),
     SavedScreen(),
+    SettingsScreen(),
   ];
 
   @override
@@ -41,18 +43,14 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         selectedItemColor: const Color(0xFFFF8C00),
         unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
         items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: 'Saved'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'History',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Saved',
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
       ),
@@ -72,20 +70,6 @@ class HomeContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.menu, size: 28),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.settings_outlined, size: 28),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
               const SizedBox(height: 20),
 
               // Logo and Tagline
@@ -124,10 +108,7 @@ class HomeContent extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       'Build Smart, Calculate Right',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                     ),
                   ],
                 ),
