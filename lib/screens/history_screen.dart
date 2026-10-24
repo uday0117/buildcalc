@@ -143,7 +143,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     leading: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: _getColorForType(calc.type).withOpacity(0.1),
+                        color: _getColorForType(
+                          calc.type,
+                        ).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
@@ -164,15 +166,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     trailing: IconButton(
                       icon: const Icon(Icons.bookmark_border),
                       onPressed: () async {
+                        final messenger = ScaffoldMessenger.maybeOf(context);
                         await StorageService.saveCalculation(calc);
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Saved to bookmarks'),
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
-                        }
+                        if (!mounted) return;
+                        messenger?.showSnackBar(
+                          const SnackBar(
+                            content: Text('Saved to bookmarks'),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
                       },
                     ),
                   ),

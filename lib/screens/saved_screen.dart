@@ -244,7 +244,9 @@ class _SavedScreenState extends State<SavedScreen> {
                     leading: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: _getColorForType(calc.type).withOpacity(0.1),
+                        color: _getColorForType(
+                          calc.type,
+                        ).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(

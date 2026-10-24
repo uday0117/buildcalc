@@ -1,9 +1,23 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../app_localizations.dart';
+import '../app_settings.dart';
+import '../services/update_service.dart';
 import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({
+    super.key,
+    this.settings = const AppSettings(),
+    required this.onSettingsChanged,
+  });
+
+  final AppSettings settings;
+  final ValueChanged<AppSettings> onSettingsChanged;
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -14,10 +28,13 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+  Timer? _navigationTimer;
+  String _version = '1.0.0';
 
   @override
   void initState() {
     super.initState();
+    _loadVersion();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
@@ -35,27 +52,89 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    // Navigate to home after 3 seconds
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
-      }
+    _navigationTimer = Timer(const Duration(seconds: 2), () async {
+      await _navigateToHome();
     });
+  }
+
+  Future<void> _navigateToHome() async {
+    if (!mounted) return;
+
+    final hasUpdate = await UpdateService.hasUpdate();
+    if (!mounted) return;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(
+          settings: widget.settings,
+          onSettingsChanged: widget.onSettingsChanged,
+        ),
+      ),
+    );
+
+    if (hasUpdate) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: const Text('Update available'),
+            content: const Text(
+              'A newer version of BuildCalc is ready to install with improved features and fixes.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Later'),
+              ),
+              FilledButton(
+                onPressed: () async {
+                  final url = Uri.parse(UpdateService.playStoreUrl);
+                  if (await canLaunchUrl(url)) {
+                    await launchUrl(url, mode: LaunchMode.externalApplication);
+                  }
+                  if (context.mounted) Navigator.of(context).pop();
+                },
+                child: const Text('Update now'),
+              ),
+            ],
+          ),
+        );
+      });
+    }
+  }
+
+  Future<void> _loadVersion() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      if (!mounted) return;
+      setState(() => _version = info.version);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _version = '1.0.0');
+    }
   }
 
   @override
   void dispose() {
+    _navigationTimer?.cancel();
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accentColor = Theme.of(context).colorScheme.secondary;
+    final textColor = isDark ? Colors.white : const Color(0xFF1E3A5F);
+    final secondaryTextColor = isDark
+        ? Colors.white.withValues(alpha: 0.8)
+        : Colors.black.withValues(alpha: 0.7);
+
     return Scaffold(
-      backgroundColor: const Color(0xFF1E3A5F), // Dark Blue
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -64,101 +143,43 @@ class _SplashScreenState extends State<SplashScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Logo/Icon Container
-                Container(
-                  width: 140,
-                  height: 140,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      color: const Color(0xFFFF8C00),
-                      width: 3,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFFF8C00).withOpacity(0.3),
-                        blurRadius: 20,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.calculate_rounded,
-                        size: 60,
-                        color: Color(0xFFFF8C00),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'BC',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 40),
-
-                // App Name
-                const Text(
+                const SizedBox(height: 12),
+                Text(
                   'BuildCalc',
                   style: TextStyle(
                     fontSize: 42,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: textColor,
                     letterSpacing: 2,
                   ),
                 ),
                 const SizedBox(height: 8),
-
-                // Tagline
                 Text(
-                  'Professional Construction Calculator',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white.withOpacity(0.8),
-                    letterSpacing: 0.5,
-                  ),
+                  AppLocalizations.translate(context, 'professional'),
+                  style: TextStyle(fontSize: 16, color: secondaryTextColor),
                 ),
-                const SizedBox(height: 60),
-
-                // Animated Loader
+                const SizedBox(height: 54),
                 SizedBox(
-                  width: 50,
-                  height: 50,
+                  width: 48,
+                  height: 48,
                   child: CircularProgressIndicator(
                     strokeWidth: 3,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      const Color(0xFFFF8C00),
-                    ),
+                    valueColor: AlwaysStoppedAnimation<Color>(accentColor),
                   ),
                 ),
-                const SizedBox(height: 20),
-
-                // Loading Text
-                TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.5, end: 1.0),
-                  duration: const Duration(milliseconds: 800),
-                  builder: (context, value, child) {
-                    return Opacity(
-                      opacity: value,
-                      child: Text(
-                        'Loading...',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white.withOpacity(0.7),
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                    );
-                  },
+                const SizedBox(height: 18),
+                Text(
+                  AppLocalizations.translate(context, 'loading'),
+                  style: TextStyle(fontSize: 15, color: secondaryTextColor),
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  'v$_version',
+                  style: TextStyle(
+                    fontSize: 12,
+                    letterSpacing: 1.1,
+                    color: secondaryTextColor,
+                  ),
                 ),
               ],
             ),

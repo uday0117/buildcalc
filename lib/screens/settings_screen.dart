@@ -3,8 +3,21 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../app_localizations.dart';
+import '../app_settings.dart';
+import '../services/review_service.dart';
+
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({
+    super.key,
+    required this.settings,
+    required this.onThemeChanged,
+    required this.onLocaleChanged,
+  });
+
+  final AppSettings settings;
+  final ValueChanged<ThemeMode> onThemeChanged;
+  final ValueChanged<Locale> onLocaleChanged;
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -21,14 +34,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadPackageInfo() async {
     try {
-      final packageInfo = await PackageInfo.fromPlatform();
-      setState(() {
-        _version = '${packageInfo.version}+${packageInfo.buildNumber}';
-      });
-    } catch (e) {
-      setState(() {
-        _version = '1.0.0';
-      });
+      final info = await PackageInfo.fromPlatform();
+      if (!mounted) return;
+      setState(() => _version = '${info.version}+${info.buildNumber}');
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _version = '1.0.0');
     }
   }
 
@@ -36,12 +47,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Could not open link')));
-      }
+    } else if (mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Could not open link')));
     }
   }
 
@@ -49,26 +58,90 @@ class _SettingsScreenState extends State<SettingsScreen> {
     await Share.share(
       'Check out BuildCalc - Your construction calculator app!\n\n'
       'Calculate cement, bricks, sand, paint, steel, tiles and more.\n\n'
-      'Download now: https://play.google.com/store/apps/details?id=com.example.buildcalc',
+      'Download now: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
       subject: 'BuildCalc - Construction Calculator',
     );
   }
 
-  void _showRateDialog() {
+  void _showThemeDialog() {
+    final options = [ThemeMode.system, ThemeMode.light, ThemeMode.dark];
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Rate BuildCalc'),
-        content: const Text(
-          'The app is not yet published on Play Store. '
-          'Once published, you can rate us directly from the store!',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+        title: Text(AppLocalizations.translate(context, 'theme')),
+        content: SizedBox(
+          width: 260,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: options.map((mode) {
+              final label = mode == ThemeMode.system
+                  ? AppLocalizations.translate(context, 'system')
+                  : mode == ThemeMode.light
+                  ? AppLocalizations.translate(context, 'light')
+                  : AppLocalizations.translate(context, 'dark');
+
+              final isSelected = widget.settings.themeMode == mode;
+
+              return ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(
+                  isSelected
+                      ? Icons.check_circle_rounded
+                      : Icons.circle_outlined,
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.grey,
+                ),
+                title: Text(label),
+                onTap: () {
+                  widget.onThemeChanged(mode);
+                  Navigator.pop(context);
+                },
+              );
+            }).toList(),
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageDialog() {
+    final options = AppSettings.supportedLocales;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.translate(context, 'language')),
+        content: SizedBox(
+          width: 260,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: options.map((locale) {
+              final label = locale.languageCode == 'ar'
+                  ? AppLocalizations.translate(context, 'arabic')
+                  : AppLocalizations.translate(context, 'english');
+
+              final isSelected = widget.settings.locale == locale;
+
+              return ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(
+                  isSelected
+                      ? Icons.check_circle_rounded
+                      : Icons.circle_outlined,
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.grey,
+                ),
+                title: Text(label),
+                onTap: () {
+                  widget.onLocaleChanged(locale);
+                  Navigator.pop(context);
+                },
+              );
+            }).toList(),
+          ),
+        ),
       ),
     );
   }
@@ -80,13 +153,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       body: Column(
         children: [
-          // Profile Header with Gradient
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
               gradient: isDark
                   ? const LinearGradient(
-                      colors: [Color(0xFF2C2C2C), Color(0xFF1A1A1A)],
+                      colors: [Color(0xFF111827), Color(0xFF0F172A)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     )
@@ -98,21 +170,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(32),
+                padding: const EdgeInsets.all(28),
                 child: Column(
                   children: [
                     CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.white.withOpacity(0.3),
+                      radius: 42,
+                      backgroundColor: Colors.white.withValues(alpha: 0.15),
                       child: const Icon(
-                        Icons.business,
-                        size: 50,
-                        color: Color(0xFFFF8C00),
+                        Icons.business_center_rounded,
+                        size: 48,
+                        color: Color(0xFFFFA726),
                       ),
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'BuildCalc',
+                      AppLocalizations.translate(context, 'appName'),
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(
                             color: Colors.white,
@@ -121,9 +193,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Build Smart, Calculate Right',
+                      AppLocalizations.translate(context, 'tagline'),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                   ],
@@ -131,83 +203,161 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ),
           ),
-
-          // Settings List
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              children: [
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.info_outline,
-                  title: 'About',
-                  subtitle: 'Version $_version',
-                  onTap: () {
-                    showAboutDialog(
-                      context: context,
-                      applicationName: 'BuildCalc',
-                      applicationVersion: _version,
-                      applicationIcon: const Icon(
-                        Icons.business,
-                        size: 50,
-                        color: Color(0xFFFF8C00),
-                      ),
-                      children: const [
-                        Text(
-                          'Your construction calculator app for cement, bricks, sand, and more.',
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 18, 16, 24),
+              child: Column(
+                children: [
+                  _buildSettingsSection(
+                    context,
+                    children: [
+                      _buildSettingsTile(
+                        context,
+                        icon: Icons.palette_rounded,
+                        title: AppLocalizations.translate(context, 'theme'),
+                        subtitle: _themeLabel(
+                          context,
+                          widget.settings.themeMode,
                         ),
-                      ],
-                    );
-                  },
-                ),
-                const Divider(height: 1, indent: 72),
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.privacy_tip_outlined,
-                  title: 'Privacy Policy',
-                  onTap: () => _openUrl(
-                    'https://uday0117.github.io/buildcalc/privacy_policy.html',
+                        onTap: _showThemeDialog,
+                      ),
+                      const Divider(height: 1, indent: 72),
+                      _buildSettingsTile(
+                        context,
+                        icon: Icons.language_rounded,
+                        title: AppLocalizations.translate(context, 'language'),
+                        subtitle: widget.settings.locale.languageCode == 'ar'
+                            ? AppLocalizations.translate(context, 'arabic')
+                            : AppLocalizations.translate(context, 'english'),
+                        onTap: _showLanguageDialog,
+                      ),
+                    ],
                   ),
-                ),
-                const Divider(height: 1, indent: 72),
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.description_outlined,
-                  title: 'Terms & Conditions',
-                  onTap: () => _openUrl(
-                    'https://uday0117.github.io/buildcalc/terms_and_conditions.html',
+                  const SizedBox(height: 16),
+                  _buildSettingsSection(
+                    context,
+                    children: [
+                      _buildSettingsTile(
+                        context,
+                        icon: Icons.info_outline_rounded,
+                        title: AppLocalizations.translate(context, 'about'),
+                        onTap: () {
+                          showAboutDialog(
+                            context: context,
+                            applicationName: AppLocalizations.translate(
+                              context,
+                              'appName',
+                            ),
+                            applicationVersion: _version,
+                            applicationIcon: const Icon(
+                              Icons.business_center_rounded,
+                              size: 50,
+                              color: Color(0xFFFFA726),
+                            ),
+                            children: const [
+                              Text(
+                                'Your construction calculator app for cement, bricks, sand, and more.',
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      const Divider(height: 1, indent: 72),
+                      _buildSettingsTile(
+                        context,
+                        icon: Icons.privacy_tip_outlined,
+                        title: AppLocalizations.translate(context, 'privacy'),
+                        onTap: () => _openUrl(
+                          'https://uday0117.github.io/buildcalc/privacy_policy.html',
+                        ),
+                      ),
+                      const Divider(height: 1, indent: 72),
+                      _buildSettingsTile(
+                        context,
+                        icon: Icons.description_outlined,
+                        title: AppLocalizations.translate(context, 'terms'),
+                        onTap: () => _openUrl(
+                          'https://uday0117.github.io/buildcalc/terms_and_conditions.html',
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const Divider(height: 1, indent: 72),
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.share_outlined,
-                  title: 'Share App',
-                  onTap: _shareApp,
-                ),
-                const Divider(height: 1, indent: 72),
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.star_outline,
-                  title: 'Rate Us',
-                  subtitle: 'On Play Store',
-                  onTap: _showRateDialog,
-                ),
-                const SizedBox(height: 32),
-                Center(
-                  child: Text(
-                    'Made with ❤️ by UK Solutions',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                  const SizedBox(height: 16),
+                  _buildSettingsSection(
+                    context,
+                    children: [
+                      _buildSettingsTile(
+                        context,
+                        icon: Icons.share_rounded,
+                        title: AppLocalizations.translate(context, 'share'),
+                        onTap: _shareApp,
+                      ),
+                      const Divider(height: 1, indent: 72),
+                      _buildSettingsTile(
+                        context,
+                        icon: Icons.star_rounded,
+                        title: AppLocalizations.translate(context, 'rateUs'),
+                        subtitle: AppLocalizations.translate(
+                          context,
+                          'appRating',
+                        ),
+                        onTap: () => ReviewService.requestReview(),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 16),
-              ],
+                  const SizedBox(height: 28),
+                  Center(
+                    child: Text(
+                      AppLocalizations.translate(context, 'madeBy'),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  String _themeLabel(BuildContext context, ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.dark:
+        return AppLocalizations.translate(context, 'dark');
+      case ThemeMode.light:
+        return AppLocalizations.translate(context, 'light');
+      case ThemeMode.system:
+        return AppLocalizations.translate(context, 'system');
+    }
+  }
+
+  Widget _buildSettingsSection(
+    BuildContext context, {
+    required List<Widget> children,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF111827) : Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black12,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(children: children),
     );
   }
 
@@ -220,12 +370,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     VoidCallback? onTap,
   }) {
     return ListTile(
-      leading: Icon(icon, color: const Color(0xFFFF8C00)),
-      title: Text(title),
-      subtitle: subtitle != null ? Text(subtitle) : null,
-      trailing: trailing ?? const Icon(Icons.chevron_right, size: 20),
+      leading: Icon(icon, color: const Color(0xFFFFA726)),
+      title: Text(title, style: Theme.of(context).textTheme.titleMedium),
+      subtitle: subtitle != null
+          ? Text(
+              subtitle,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+            )
+          : null,
+      trailing: trailing ?? const Icon(Icons.chevron_right_rounded, size: 20),
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
     );
   }
 }

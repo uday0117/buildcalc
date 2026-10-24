@@ -1,29 +1,54 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:buildcalc/app_settings.dart';
 import 'package:buildcalc/main.dart';
+import 'package:buildcalc/screens/settings_screen.dart';
+import 'package:buildcalc/screens/splash_screen.dart';
+import 'package:buildcalc/services/review_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('BuildCalc app loads successfully', (tester) async {
     await tester.pumpWidget(const BuildCalcApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('BuildCalc'), findsWidgets);
+  });
+
+  testWidgets('splash screen does not render the app icon badge', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(home: SplashScreen(onSettingsChanged: (_) {})),
+    );
+    await tester.pump();
+
+    expect(find.byIcon(Icons.calculate_rounded), findsNothing);
+    expect(find.text('BuildCalc'), findsOneWidget);
+  });
+
+  testWidgets('settings screen hides the check-for-update action', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SettingsScreen(
+          settings: const AppSettings(),
+          onThemeChanged: (_) {},
+          onLocaleChanged: (_) {},
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Check for update'), findsNothing);
+    expect(find.text('Theme'), findsOneWidget);
+  });
+
+  test('review service uses the Play Store review URL', () {
+    final uri = ReviewService.playStoreReviewUri;
+
+    expect(uri.host, 'play.google.com');
+    expect(uri.queryParameters['id'], 'com.uksolutions.buildcalc');
+    expect(uri.queryParameters.containsKey('showAllReviews'), isTrue);
   });
 }

@@ -127,7 +127,7 @@ class _CostEstimatorState extends State<CostEstimator> {
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: _constructionType == type
-                              ? const Color(0xFFFF8C00).withOpacity(0.1)
+                              ? const Color(0xFFFF8C00).withValues(alpha: 0.1)
                               : Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
@@ -261,7 +261,7 @@ class _CostEstimatorState extends State<CostEstimator> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.white.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
