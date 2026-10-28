@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/calculation.dart';
 import '../../services/storage_service.dart';
 import '../../widgets/input_field.dart';
+import '../../widgets/result_card.dart';
 
 class TileCalculator extends StatefulWidget {
   const TileCalculator({super.key});
@@ -54,14 +55,14 @@ class _TileCalculatorState extends State<TileCalculator> {
 
       _saveToHistory();
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please enter all values')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter all values')),
+      );
     }
   }
 
-  void _saveToHistory() {
-    final calculation = Calculation(
+  Calculation _createCalculationModel() {
+    return Calculation(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       type: 'tile',
       title: 'Tile Calculator',
@@ -78,8 +79,21 @@ class _TileCalculatorState extends State<TileCalculator> {
       },
       timestamp: DateTime.now(),
     );
+  }
 
-    StorageService.saveToHistory(calculation);
+  void _saveToHistory() {
+    StorageService.saveToHistory(_createCalculationModel());
+  }
+
+  Future<void> _bookmark() async {
+    await StorageService.saveCalculation(_createCalculationModel());
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Saved to Bookmarks'),
+        duration: Duration(seconds: 1),
+      ),
+    );
   }
 
   void _reset() {
@@ -97,17 +111,21 @@ class _TileCalculatorState extends State<TileCalculator> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final sectionHeaderColor = isDark ? const Color(0xFFFFA726) : const Color(0xFF1E3A5F);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Tile Calculator',
-          style: TextStyle(
-            color: Color(0xFF1E3A5F),
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _reset),
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            tooltip: 'Reset',
+            onPressed: _reset,
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -121,28 +139,30 @@ class _TileCalculatorState extends State<TileCalculator> {
                 child: Column(
                   children: [
                     const Icon(
-                      Icons.dashboard,
-                      size: 60,
+                      Icons.dashboard_rounded,
+                      size: 54,
                       color: Color(0xFF8D6E63),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Calculate tiles required\nfor flooring',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: TextStyle(
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
-            const Text(
+            Text(
               'Floor Dimensions',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1E3A5F),
+                color: sectionHeaderColor,
               ),
             ),
             const SizedBox(height: 12),
@@ -152,42 +172,46 @@ class _TileCalculatorState extends State<TileCalculator> {
               hint: 'Enter length',
               controller: _lengthController,
               suffix: 'm',
+              prefixIcon: Icons.straighten_rounded,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
             InputField(
               label: 'Floor Width',
               hint: 'Enter width',
               controller: _widthController,
               suffix: 'm',
+              prefixIcon: Icons.square_foot_rounded,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
-            const Text(
+            Text(
               'Tile Dimensions',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1E3A5F),
+                color: sectionHeaderColor,
               ),
             ),
             const SizedBox(height: 12),
 
             InputField(
               label: 'Tile Length',
-              hint: 'Enter tile length (e.g., 600)',
+              hint: 'Enter tile length (e.g. 600)',
               controller: _tileLengthController,
               suffix: 'mm',
+              prefixIcon: Icons.crop_portrait_rounded,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
             InputField(
               label: 'Tile Width',
-              hint: 'Enter tile width (e.g., 600)',
+              hint: 'Enter tile width (e.g. 600)',
               controller: _tileWidthController,
               suffix: 'mm',
+              prefixIcon: Icons.crop_landscape_rounded,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 22),
 
             ElevatedButton(
               onPressed: _calculate,
@@ -196,79 +220,42 @@ class _TileCalculatorState extends State<TileCalculator> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
               child: const Text(
                 'Calculate',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ),
 
             if (_hasCalculated) ...[
               const SizedBox(height: 24),
-              Card(
-                color: const Color(0xFF1E3A5F),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Results',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Divider(color: Colors.white54, height: 24),
-                      _buildResultRow(
-                        'Floor Area',
-                        '${_areaToTile.toStringAsFixed(2)} m²',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResultRow(
-                        'Tiles Required',
-                        '${_tilesRequired.toStringAsFixed(0)} tiles',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResultRow(
-                        'Boxes Required',
-                        '${_boxes.toStringAsFixed(1)} boxes',
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        '(Includes 10% wastage)',
-                        style: TextStyle(fontSize: 12, color: Colors.white70),
-                      ),
-                    ],
+              ResultCard(
+                title: 'Results',
+                icon: Icons.dashboard_rounded,
+                onSave: _bookmark,
+                note: 'Includes 10% wastage for cutting. Box count assumes 10 tiles/box.',
+                rows: [
+                  ResultRowItem(
+                    label: 'Tiles Required',
+                    value: '${_tilesRequired.toStringAsFixed(0)} tiles',
+                    isPrimary: true,
                   ),
-                ),
+                  ResultRowItem(
+                    label: 'Boxes Required',
+                    value: '${_boxes.toStringAsFixed(1)} boxes',
+                  ),
+                  ResultRowItem(
+                    label: 'Total Floor Area',
+                    value: '${_areaToTile.toStringAsFixed(2)} m²',
+                  ),
+                ],
               ),
             ],
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildResultRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, color: Colors.white70),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFFF8C00),
-          ),
-        ),
-      ],
     );
   }
 

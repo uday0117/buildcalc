@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/calculation.dart';
 import '../../services/storage_service.dart';
 import '../../widgets/input_field.dart';
+import '../../widgets/result_card.dart';
 
 class AreaCalculator extends StatefulWidget {
   const AreaCalculator({super.key});
@@ -81,8 +82,8 @@ class _AreaCalculatorState extends State<AreaCalculator> {
     _saveToHistory();
   }
 
-  void _saveToHistory() {
-    final calculation = Calculation(
+  Calculation _createCalculationModel() {
+    return Calculation(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       type: 'area',
       title: 'Area Calculator',
@@ -95,8 +96,21 @@ class _AreaCalculatorState extends State<AreaCalculator> {
       results: {'area': _area, 'perimeter': _perimeter},
       timestamp: DateTime.now(),
     );
+  }
 
-    StorageService.saveToHistory(calculation);
+  void _saveToHistory() {
+    StorageService.saveToHistory(_createCalculationModel());
+  }
+
+  Future<void> _bookmark() async {
+    await StorageService.saveCalculation(_createCalculationModel());
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Saved to Bookmarks'),
+        duration: Duration(seconds: 1),
+      ),
+    );
   }
 
   void _reset() {
@@ -134,19 +148,37 @@ class _AreaCalculatorState extends State<AreaCalculator> {
     }
   }
 
+  IconData _getShapeIcon(String shape) {
+    switch (shape) {
+      case 'Rectangle':
+        return Icons.crop_landscape_rounded;
+      case 'Square':
+        return Icons.crop_square_rounded;
+      case 'Circle':
+        return Icons.circle_outlined;
+      case 'Triangle':
+        return Icons.change_history_rounded;
+      default:
+        return Icons.square_foot_rounded;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Area Calculator',
-          style: TextStyle(
-            color: Color(0xFF1E3A5F),
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _reset),
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            tooltip: 'Reset',
+            onPressed: _reset,
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -160,65 +192,76 @@ class _AreaCalculatorState extends State<AreaCalculator> {
                 child: Column(
                   children: [
                     const Icon(
-                      Icons.square_foot,
-                      size: 60,
+                      Icons.square_foot_rounded,
+                      size: 54,
                       color: Color(0xFF66BB6A),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Calculate area and perimeter\nof different shapes',
+                      'Calculate area and perimeter\nof different geometric shapes',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: TextStyle(
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
-            // Shape selector
+            // Shape Selector Chips
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Select Shape',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF2C3E50),
+                    color: isDark ? Colors.white70 : const Color(0xFF2C3E50),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _selectedShape,
-                      isExpanded: true,
-                      icon: const Icon(Icons.arrow_drop_down),
-                      items: _shapes.map((String shape) {
-                        return DropdownMenuItem<String>(
-                          value: shape,
-                          child: Text(shape),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedShape = newValue!;
-                          _reset();
-                        });
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _shapes.map((shape) {
+                    final isSelected = _selectedShape == shape;
+                    return ChoiceChip(
+                      selected: isSelected,
+                      avatar: Icon(
+                        _getShapeIcon(shape),
+                        size: 18,
+                        color: isSelected
+                            ? Colors.white
+                            : (isDark ? Colors.white70 : const Color(0xFF1E3A5F)),
+                      ),
+                      label: Text(shape),
+                      labelStyle: TextStyle(
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.w500,
+                        color: isSelected
+                            ? Colors.white
+                            : (isDark ? Colors.white70 : const Color(0xFF1E3A5F)),
+                      ),
+                      selectedColor: const Color(0xFFFF8C00),
+                      backgroundColor:
+                          isDark ? const Color(0xFF1E293B) : Colors.white,
+                      onSelected: (selected) {
+                        if (selected) {
+                          setState(() {
+                            _selectedShape = shape;
+                            _reset();
+                          });
+                        }
                       },
-                    ),
-                  ),
+                    );
+                  }).toList(),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             // Dimension 1
             InputField(
@@ -226,38 +269,36 @@ class _AreaCalculatorState extends State<AreaCalculator> {
               hint: 'Enter ${_getDimension1Label().toLowerCase()}',
               controller: _dimension1Controller,
               suffix: 'm',
+              prefixIcon: Icons.straighten_rounded,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
             // Dimension 2 (if needed)
-            if (_selectedShape == 'Rectangle' || _selectedShape == 'Triangle')
-              Column(
-                children: [
-                  InputField(
-                    label: _getDimension2Label(),
-                    hint: 'Enter ${_getDimension2Label().toLowerCase()}',
-                    controller: _dimension2Controller,
-                    suffix: 'm',
-                  ),
-                  const SizedBox(height: 16),
-                ],
+            if (_selectedShape == 'Rectangle' || _selectedShape == 'Triangle') ...[
+              InputField(
+                label: _getDimension2Label(),
+                hint: 'Enter ${_getDimension2Label().toLowerCase()}',
+                controller: _dimension2Controller,
+                suffix: 'm',
+                prefixIcon: Icons.height_rounded,
               ),
+              const SizedBox(height: 14),
+            ],
 
             // Dimension 3 (for triangle perimeter)
-            if (_selectedShape == 'Triangle')
-              Column(
-                children: [
-                  InputField(
-                    label: 'Third Side (optional)',
-                    hint: 'For perimeter calculation',
-                    controller: _dimension3Controller,
-                    suffix: 'm',
-                  ),
-                  const SizedBox(height: 16),
-                ],
+            if (_selectedShape == 'Triangle') ...[
+              InputField(
+                label: 'Third Side (optional)',
+                hint: 'For perimeter calculation',
+                controller: _dimension3Controller,
+                suffix: 'm',
+                prefixIcon: Icons.architecture_rounded,
+                helperText: 'Optional: only needed if calculating perimeter',
               ),
+              const SizedBox(height: 14),
+            ],
 
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
 
             ElevatedButton(
               onPressed: _calculate,
@@ -266,70 +307,39 @@ class _AreaCalculatorState extends State<AreaCalculator> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
               child: const Text(
                 'Calculate',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ),
 
             if (_hasCalculated) ...[
               const SizedBox(height: 24),
-              Card(
-                color: const Color(0xFF1E3A5F),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Results',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Divider(color: Colors.white54, height: 24),
-                      _buildResultRow('Shape', _selectedShape),
-                      const SizedBox(height: 12),
-                      _buildResultRow('Area', '${_area.toStringAsFixed(2)} m²'),
-                      if (_perimeter > 0) ...[
-                        const SizedBox(height: 12),
-                        _buildResultRow(
-                          'Perimeter',
-                          '${_perimeter.toStringAsFixed(2)} m',
-                        ),
-                      ],
-                    ],
+              ResultCard(
+                title: 'Results',
+                icon: Icons.square_foot_rounded,
+                onSave: _bookmark,
+                note: 'Shape: $_selectedShape',
+                rows: [
+                  ResultRowItem(
+                    label: 'Total Area',
+                    value: '${_area.toStringAsFixed(2)} m²',
+                    isPrimary: true,
                   ),
-                ),
+                  if (_perimeter > 0)
+                    ResultRowItem(
+                      label: 'Perimeter',
+                      value: '${_perimeter.toStringAsFixed(2)} m',
+                    ),
+                ],
               ),
             ],
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildResultRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, color: Colors.white70),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFFF8C00),
-          ),
-        ),
-      ],
     );
   }
 

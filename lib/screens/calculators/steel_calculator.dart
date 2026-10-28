@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/calculation.dart';
 import '../../services/storage_service.dart';
 import '../../widgets/input_field.dart';
+import '../../widgets/result_card.dart';
 
 class SteelCalculator extends StatefulWidget {
   const SteelCalculator({super.key});
@@ -15,7 +16,7 @@ class _SteelCalculatorState extends State<SteelCalculator> {
   final _lengthController = TextEditingController();
   final _diameterController = TextEditingController();
   final _quantityController = TextEditingController();
-  
+
   double _totalWeight = 0;
   double _weightPerBar = 0;
   bool _hasCalculated = false;
@@ -29,7 +30,7 @@ class _SteelCalculatorState extends State<SteelCalculator> {
       // Formula: Weight = D² × L / 162
       // Where D = diameter in mm, L = length in meters
       _weightPerBar = (diameter * diameter * length) / 162;
-      
+
       _totalWeight = _weightPerBar * quantity;
 
       setState(() {
@@ -44,8 +45,8 @@ class _SteelCalculatorState extends State<SteelCalculator> {
     }
   }
 
-  void _saveToHistory() {
-    final calculation = Calculation(
+  Calculation _createCalculationModel() {
+    return Calculation(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       type: 'steel',
       title: 'Steel Calculator',
@@ -60,8 +61,21 @@ class _SteelCalculatorState extends State<SteelCalculator> {
       },
       timestamp: DateTime.now(),
     );
+  }
 
-    StorageService.saveToHistory(calculation);
+  void _saveToHistory() {
+    StorageService.saveToHistory(_createCalculationModel());
+  }
+
+  Future<void> _bookmark() async {
+    await StorageService.saveCalculation(_createCalculationModel());
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Saved to Bookmarks'),
+        duration: Duration(seconds: 1),
+      ),
+    );
   }
 
   void _reset() {
@@ -77,15 +91,18 @@ class _SteelCalculatorState extends State<SteelCalculator> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Steel Calculator',
-          style: TextStyle(color: Color(0xFF1E3A5F), fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh_rounded),
+            tooltip: 'Reset',
             onPressed: _reset,
           ),
         ],
@@ -101,45 +118,51 @@ class _SteelCalculatorState extends State<SteelCalculator> {
                 child: Column(
                   children: [
                     const Icon(
-                      Icons.settings_input_antenna,
-                      size: 60,
+                      Icons.fence_rounded,
+                      size: 54,
                       color: Color(0xFF607D8B),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Calculate steel bar weight\nfor construction',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: TextStyle(
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             InputField(
               label: 'Bar Length',
               hint: 'Enter length',
               controller: _lengthController,
               suffix: 'm',
+              prefixIcon: Icons.straighten_rounded,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
             InputField(
               label: 'Bar Diameter',
               hint: 'Enter diameter (8/10/12/16/20/25)',
               controller: _diameterController,
               suffix: 'mm',
+              prefixIcon: Icons.panorama_fish_eye_rounded,
+              helperText: 'Common rebar: 8mm, 10mm, 12mm, 16mm, 20mm, 25mm, 32mm',
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
             InputField(
               label: 'Number of Bars',
               hint: 'Enter quantity',
               controller: _quantityController,
               suffix: 'bars',
+              prefixIcon: Icons.format_list_numbered_rounded,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 22),
 
             ElevatedButton(
               onPressed: _calculate,
@@ -148,77 +171,42 @@ class _SteelCalculatorState extends State<SteelCalculator> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
               child: const Text(
                 'Calculate',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ),
 
             if (_hasCalculated) ...[
               const SizedBox(height: 24),
-              Card(
-                color: const Color(0xFF1E3A5F),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Results',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Divider(color: Colors.white54, height: 24),
-                      _buildResultRow(
-                        'Weight per Bar',
-                        '${_weightPerBar.toStringAsFixed(2)} kg',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResultRow(
-                        'Total Weight',
-                        '${_totalWeight.toStringAsFixed(2)} kg',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResultRow(
-                        'In Tonnes',
-                        '${(_totalWeight / 1000).toStringAsFixed(3)} tonnes',
-                      ),
-                    ],
+              ResultCard(
+                title: 'Results',
+                icon: Icons.fence_rounded,
+                onSave: _bookmark,
+                note: 'Standard formula: Weight = D² × L / 162 (D in mm, L in meters)',
+                rows: [
+                  ResultRowItem(
+                    label: 'Total Weight',
+                    value: '${_totalWeight.toStringAsFixed(2)} kg',
+                    isPrimary: true,
                   ),
-                ),
+                  ResultRowItem(
+                    label: 'In Tonnes',
+                    value: '${(_totalWeight / 1000).toStringAsFixed(3)} tonnes',
+                  ),
+                  ResultRowItem(
+                    label: 'Weight per Bar',
+                    value: '${_weightPerBar.toStringAsFixed(2)} kg',
+                  ),
+                ],
               ),
             ],
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildResultRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.white70,
-          ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFFF8C00),
-          ),
-        ),
-      ],
     );
   }
 

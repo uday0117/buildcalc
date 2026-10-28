@@ -9,6 +9,7 @@ class StorageService {
   static const String _historyKey = 'calculation_history';
   static const String _savedKey = 'saved_calculations';
   static const String _projectsKey = 'project_management';
+  static const String _favoritesKey = 'favorite_calculators';
 
   // Save calculation to history
   static Future<void> saveToHistory(Calculation calculation) async {
@@ -112,5 +113,38 @@ class StorageService {
   static Future<void> clearHistory() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_historyKey);
+  }
+
+  // Get recent calculations with limit
+  static Future<List<Calculation>> getRecentCalculations({int limit = 5}) async {
+    final history = await getHistory();
+    if (history.length <= limit) return history;
+    return history.sublist(0, limit);
+  }
+
+  // Favorites management
+  static Future<Set<String>> getFavoriteCalculatorIds() async {
+    final prefs = await SharedPreferences.getInstance();
+    final list = prefs.getStringList(_favoritesKey);
+    if (list == null) return {};
+    return list.toSet();
+  }
+
+  static Future<bool> toggleFavoriteCalculator(String calculatorId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final current = (prefs.getStringList(_favoritesKey) ?? []).toSet();
+    final isFavNow = !current.contains(calculatorId);
+    if (isFavNow) {
+      current.add(calculatorId);
+    } else {
+      current.remove(calculatorId);
+    }
+    await prefs.setStringList(_favoritesKey, current.toList());
+    return isFavNow;
+  }
+
+  static Future<bool> isFavoriteCalculator(String calculatorId) async {
+    final favorites = await getFavoriteCalculatorIds();
+    return favorites.contains(calculatorId);
   }
 }

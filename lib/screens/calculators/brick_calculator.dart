@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/calculation.dart';
 import '../../services/storage_service.dart';
 import '../../widgets/input_field.dart';
+import '../../widgets/result_card.dart';
 
 class BrickCalculator extends StatefulWidget {
   const BrickCalculator({super.key});
@@ -15,7 +16,7 @@ class _BrickCalculatorState extends State<BrickCalculator> {
   final _lengthController = TextEditingController();
   final _heightController = TextEditingController();
   final _thicknessController = TextEditingController();
-  
+
   double _bricksRequired = 0;
   double _wallArea = 0;
   bool _hasCalculated = false;
@@ -28,7 +29,7 @@ class _BrickCalculatorState extends State<BrickCalculator> {
     if (length > 0 && height > 0 && thickness > 0) {
       // Calculate wall area
       _wallArea = length * height;
-      
+
       // Standard brick size: 190mm x 90mm x 90mm
       // Bricks per square meter varies by wall thickness
       double bricksPerSqm;
@@ -39,9 +40,9 @@ class _BrickCalculatorState extends State<BrickCalculator> {
       } else {
         bricksPerSqm = 150; // Triple brick wall
       }
-      
+
       _bricksRequired = _wallArea * bricksPerSqm;
-      
+
       // Add 10% wastage
       _bricksRequired = _bricksRequired * 1.1;
 
@@ -57,8 +58,8 @@ class _BrickCalculatorState extends State<BrickCalculator> {
     }
   }
 
-  void _saveToHistory() {
-    final calculation = Calculation(
+  Calculation _createCalculationModel() {
+    return Calculation(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       type: 'brick',
       title: 'Brick Calculator',
@@ -73,8 +74,21 @@ class _BrickCalculatorState extends State<BrickCalculator> {
       },
       timestamp: DateTime.now(),
     );
+  }
 
-    StorageService.saveToHistory(calculation);
+  void _saveToHistory() {
+    StorageService.saveToHistory(_createCalculationModel());
+  }
+
+  Future<void> _bookmark() async {
+    await StorageService.saveCalculation(_createCalculationModel());
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Saved to Bookmarks'),
+        duration: Duration(seconds: 1),
+      ),
+    );
   }
 
   void _reset() {
@@ -90,15 +104,18 @@ class _BrickCalculatorState extends State<BrickCalculator> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Brick Calculator',
-          style: TextStyle(color: Color(0xFF1E3A5F), fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh_rounded),
+            tooltip: 'Reset',
             onPressed: _reset,
           ),
         ],
@@ -114,45 +131,51 @@ class _BrickCalculatorState extends State<BrickCalculator> {
                 child: Column(
                   children: [
                     const Icon(
-                      Icons.grid_4x4,
-                      size: 60,
+                      Icons.grid_4x4_rounded,
+                      size: 54,
                       color: Color(0xFFD32F2F),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Calculate number of bricks\nrequired for wall construction',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: TextStyle(
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             InputField(
               label: 'Wall Length',
               hint: 'Enter length',
               controller: _lengthController,
               suffix: 'm',
+              prefixIcon: Icons.straighten_rounded,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
             InputField(
               label: 'Wall Height',
               hint: 'Enter height',
               controller: _heightController,
               suffix: 'm',
+              prefixIcon: Icons.height_rounded,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
             InputField(
               label: 'Wall Thickness',
               hint: 'Enter thickness (115/230/345)',
               controller: _thicknessController,
               suffix: 'mm',
+              prefixIcon: Icons.line_weight_rounded,
+              helperText: 'Standard: 115mm (single) or 230mm (double)',
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 22),
 
             ElevatedButton(
               onPressed: _calculate,
@@ -161,80 +184,38 @@ class _BrickCalculatorState extends State<BrickCalculator> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
               child: const Text(
                 'Calculate',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ),
 
             if (_hasCalculated) ...[
               const SizedBox(height: 24),
-              Card(
-                color: const Color(0xFF1E3A5F),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Results',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Divider(color: Colors.white54, height: 24),
-                      _buildResultRow(
-                        'Wall Area',
-                        '${_wallArea.toStringAsFixed(2)} m²',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResultRow(
-                        'Bricks Required',
-                        '${_bricksRequired.toStringAsFixed(0)} bricks',
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        '(Includes 10% wastage)',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ],
+              ResultCard(
+                title: 'Results',
+                icon: Icons.grid_4x4_rounded,
+                onSave: _bookmark,
+                note: 'Includes 10% wastage factor for cuts and transport breakage',
+                rows: [
+                  ResultRowItem(
+                    label: 'Bricks Required',
+                    value: '${_bricksRequired.toStringAsFixed(0)} bricks',
+                    isPrimary: true,
                   ),
-                ),
+                  ResultRowItem(
+                    label: 'Wall Area',
+                    value: '${_wallArea.toStringAsFixed(2)} m²',
+                  ),
+                ],
               ),
             ],
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildResultRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.white70,
-          ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFFF8C00),
-          ),
-        ),
-      ],
     );
   }
 

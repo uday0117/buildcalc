@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../models/calculation.dart';
+import '../../services/storage_service.dart';
 import '../../widgets/input_field.dart';
+import '../../widgets/result_card.dart';
 
 class CostEstimator extends StatefulWidget {
   const CostEstimator({super.key});
@@ -34,11 +37,45 @@ class _CostEstimatorState extends State<CostEstimator> {
       setState(() {
         _hasCalculated = true;
       });
+
+      _saveToHistory();
     } else {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Please enter area')));
     }
+  }
+
+  Calculation _createCalculationModel() {
+    return Calculation(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      type: 'cost_estimator',
+      title: 'Construction Cost Estimator',
+      inputs: {
+        'area': _areaController.text,
+        'construction_type': _constructionType,
+      },
+      results: {
+        'total_cost': _totalCost,
+        'rate_per_sqft': _costPerSqFt,
+      },
+      timestamp: DateTime.now(),
+    );
+  }
+
+  void _saveToHistory() {
+    StorageService.saveToHistory(_createCalculationModel());
+  }
+
+  Future<void> _bookmark() async {
+    await StorageService.saveCalculation(_createCalculationModel());
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Saved to Bookmarks'),
+        duration: Duration(seconds: 1),
+      ),
+    );
   }
 
   void _reset() {
@@ -53,17 +90,21 @@ class _CostEstimatorState extends State<CostEstimator> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? const Color(0xFF1E293B) : Colors.white;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Construction Cost Estimator',
-          style: TextStyle(
-            color: Color(0xFF1E3A5F),
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _reset),
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded),
+            tooltip: 'Reset',
+            onPressed: _reset,
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -77,102 +118,111 @@ class _CostEstimatorState extends State<CostEstimator> {
                 child: Column(
                   children: [
                     const Icon(
-                      Icons.calculate,
-                      size: 60,
+                      Icons.calculate_rounded,
+                      size: 54,
                       color: Color(0xFFFF8C00),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Estimate construction cost\nbased on area and type',
+                      'Estimate construction cost\nbased on area and quality grade',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: TextStyle(
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             InputField(
               label: 'Construction Area',
               hint: 'Enter total area',
               controller: _areaController,
               suffix: 'sq ft',
+              prefixIcon: Icons.aspect_ratio_rounded,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             // Construction Type Selector
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Construction Type',
+                Text(
+                  'Construction Grade',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF2C3E50),
+                    color: isDark ? Colors.white70 : const Color(0xFF2C3E50),
                   ),
                 ),
                 const SizedBox(height: 12),
                 ..._costRates.keys.map((type) {
+                  final isSelected = _constructionType == type;
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          _constructionType = type;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: _constructionType == type
-                              ? const Color(0xFFFF8C00).withValues(alpha: 0.1)
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: _constructionType == type
-                                ? const Color(0xFFFF8C00)
-                                : Colors.grey.shade300,
-                            width: _constructionType == type ? 2 : 1,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              _constructionType == type
-                                  ? Icons.radio_button_checked
-                                  : Icons.radio_button_unchecked,
-                              color: _constructionType == type
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            _constructionType = type;
+                          });
+                        },
+                        borderRadius: BorderRadius.circular(14),
+                        child: Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? const Color(0xFFFF8C00).withValues(alpha: isDark ? 0.2 : 0.1)
+                                : cardBg,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: isSelected
                                   ? const Color(0xFFFF8C00)
-                                  : Colors.grey,
+                                  : (isDark ? Colors.white12 : Colors.grey.shade300),
+                              width: isSelected ? 2 : 1,
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    type,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: _constructionType == type
-                                          ? const Color(0xFF1E3A5F)
-                                          : Colors.grey[700],
-                                    ),
-                                  ),
-                                  Text(
-                                    '₹${_costRates[type]} per sq ft',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ],
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                isSelected
+                                    ? Icons.radio_button_checked
+                                    : Icons.radio_button_unchecked,
+                                color: isSelected
+                                    ? const Color(0xFFFF8C00)
+                                    : (isDark ? Colors.white38 : Colors.grey),
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      type,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: isSelected
+                                            ? const Color(0xFFFF8C00)
+                                            : (isDark ? Colors.white : const Color(0xFF1E3A5F)),
+                                      ),
+                                    ),
+                                    Text(
+                                      '₹${_costRates[type]?.toStringAsFixed(0)} per sq ft',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: isDark ? Colors.white60 : Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -180,7 +230,7 @@ class _CostEstimatorState extends State<CostEstimator> {
                 }),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 22),
 
             ElevatedButton(
               onPressed: _calculate,
@@ -189,115 +239,47 @@ class _CostEstimatorState extends State<CostEstimator> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
               child: const Text(
                 'Calculate Cost',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ),
 
             if (_hasCalculated) ...[
               const SizedBox(height: 24),
-              Card(
-                color: const Color(0xFF1E3A5F),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Estimated Cost',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Divider(color: Colors.white54, height: 24),
-                      _buildResultRow('Construction Type', _constructionType),
-                      const SizedBox(height: 12),
-                      _buildResultRow(
-                        'Rate per sq ft',
-                        '₹${_costPerSqFt.toStringAsFixed(0)}',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResultRow('Area', '${_areaController.text} sq ft'),
-                      const Divider(color: Colors.white54, height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Total Cost',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                '₹${_totalCost.toStringAsFixed(0)}',
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFFF8C00),
-                                ),
-                              ),
-                              Text(
-                                '₹${(_totalCost / 100000).toStringAsFixed(2)} Lakhs',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          'Note: This is an approximate estimate. Actual costs may vary based on location, materials, and other factors.',
-                          style: TextStyle(fontSize: 12, color: Colors.white70),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
+              ResultCard(
+                title: 'Estimated Cost',
+                icon: Icons.calculate_rounded,
+                onSave: _bookmark,
+                note: 'Approximate estimate. Actual costs may vary based on location, materials, and contractor rates.',
+                rows: [
+                  ResultRowItem(
+                    label: 'Total Cost',
+                    value: '₹${_totalCost.toStringAsFixed(0)}',
+                    isPrimary: true,
+                    subtitle: '≈ ₹${(_totalCost / 100000).toStringAsFixed(2)} Lakhs',
                   ),
-                ),
+                  ResultRowItem(
+                    label: 'Construction Grade',
+                    value: _constructionType,
+                  ),
+                  ResultRowItem(
+                    label: 'Rate per sq ft',
+                    value: '₹${_costPerSqFt.toStringAsFixed(0)}',
+                  ),
+                  ResultRowItem(
+                    label: 'Area',
+                    value: '${_areaController.text} sq ft',
+                  ),
+                ],
               ),
             ],
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildResultRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, color: Colors.white70),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-      ],
     );
   }
 

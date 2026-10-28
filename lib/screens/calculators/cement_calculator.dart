@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/calculation.dart';
 import '../../services/storage_service.dart';
 import '../../widgets/input_field.dart';
+import '../../widgets/result_card.dart';
 
 class CementCalculator extends StatefulWidget {
   const CementCalculator({super.key});
@@ -15,7 +16,7 @@ class _CementCalculatorState extends State<CementCalculator> {
   final _lengthController = TextEditingController();
   final _widthController = TextEditingController();
   final _thicknessController = TextEditingController();
-  
+
   double _cementBags = 0;
   double _sandCubicMeters = 0;
   double _volume = 0;
@@ -29,20 +30,20 @@ class _CementCalculatorState extends State<CementCalculator> {
     if (length > 0 && width > 0 && thickness > 0) {
       // Convert thickness from mm to m
       final thicknessInMeters = thickness / 1000;
-      
+
       // Calculate volume in cubic meters
       _volume = length * width * thicknessInMeters;
-      
+
       // Cement calculation (1:6 ratio)
       // Dry volume = Wet volume * 1.54
       final dryVolume = _volume * 1.54;
-      
+
       // Cement = (dry volume * cement ratio) / sum of ratios
       final cementVolume = (dryVolume * 1) / 7;
-      
+
       // 1 bag of cement = 0.0347 cubic meters
       _cementBags = cementVolume / 0.0347;
-      
+
       // Sand calculation
       _sandCubicMeters = (dryVolume * 6) / 7;
 
@@ -59,8 +60,8 @@ class _CementCalculatorState extends State<CementCalculator> {
     }
   }
 
-  void _saveToHistory() {
-    final calculation = Calculation(
+  Calculation _createCalculationModel() {
+    return Calculation(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       type: 'cement',
       title: 'Cement Calculator',
@@ -76,8 +77,21 @@ class _CementCalculatorState extends State<CementCalculator> {
       },
       timestamp: DateTime.now(),
     );
+  }
 
-    StorageService.saveToHistory(calculation);
+  void _saveToHistory() {
+    StorageService.saveToHistory(_createCalculationModel());
+  }
+
+  Future<void> _bookmark() async {
+    await StorageService.saveCalculation(_createCalculationModel());
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Saved to Bookmarks'),
+        duration: Duration(seconds: 1),
+      ),
+    );
   }
 
   void _reset() {
@@ -94,15 +108,18 @@ class _CementCalculatorState extends State<CementCalculator> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Cement Calculator',
-          style: TextStyle(color: Color(0xFF1E3A5F), fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh_rounded),
+            tooltip: 'Reset',
             onPressed: _reset,
           ),
         ],
@@ -118,45 +135,50 @@ class _CementCalculatorState extends State<CementCalculator> {
                 child: Column(
                   children: [
                     const Icon(
-                      Icons.architecture,
-                      size: 60,
+                      Icons.architecture_rounded,
+                      size: 54,
                       color: Color(0xFF795548),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Calculate cement and sand\nrequired for construction',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: TextStyle(
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             InputField(
               label: 'Length',
               hint: 'Enter length',
               controller: _lengthController,
               suffix: 'm',
+              prefixIcon: Icons.straighten_rounded,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
             InputField(
               label: 'Width',
               hint: 'Enter width',
               controller: _widthController,
               suffix: 'm',
+              prefixIcon: Icons.square_foot_rounded,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
             InputField(
               label: 'Thickness',
               hint: 'Enter thickness',
               controller: _thicknessController,
               suffix: 'mm',
+              prefixIcon: Icons.layers_rounded,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 22),
 
             ElevatedButton(
               onPressed: _calculate,
@@ -165,77 +187,42 @@ class _CementCalculatorState extends State<CementCalculator> {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
               child: const Text(
                 'Calculate',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
             ),
 
             if (_hasCalculated) ...[
               const SizedBox(height: 24),
-              Card(
-                color: const Color(0xFF1E3A5F),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Results',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const Divider(color: Colors.white54, height: 24),
-                      _buildResultRow(
-                        'Volume',
-                        '${_volume.toStringAsFixed(2)} m³',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResultRow(
-                        'Cement Required',
-                        '${_cementBags.toStringAsFixed(2)} bags',
-                      ),
-                      const SizedBox(height: 12),
-                      _buildResultRow(
-                        'Sand Required',
-                        '${_sandCubicMeters.toStringAsFixed(2)} m³',
-                      ),
-                    ],
+              ResultCard(
+                title: 'Results',
+                icon: Icons.architecture_rounded,
+                onSave: _bookmark,
+                note: 'Based on standard 1:6 mix ratio with dry volume factor 1.54',
+                rows: [
+                  ResultRowItem(
+                    label: 'Cement Required',
+                    value: '${_cementBags.toStringAsFixed(2)} bags',
+                    isPrimary: true,
                   ),
-                ),
+                  ResultRowItem(
+                    label: 'Sand Required',
+                    value: '${_sandCubicMeters.toStringAsFixed(2)} m³',
+                  ),
+                  ResultRowItem(
+                    label: 'Volume',
+                    value: '${_volume.toStringAsFixed(2)} m³',
+                  ),
+                ],
               ),
             ],
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildResultRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.white70,
-          ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFFFF8C00),
-          ),
-        ),
-      ],
     );
   }
 
