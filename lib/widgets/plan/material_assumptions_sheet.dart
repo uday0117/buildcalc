@@ -13,7 +13,8 @@ class MaterialAssumptionsSheet extends StatefulWidget {
   });
 
   @override
-  State<MaterialAssumptionsSheet> createState() => _MaterialAssumptionsSheetState();
+  State<MaterialAssumptionsSheet> createState() =>
+      _MaterialAssumptionsSheetState();
 }
 
 class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
@@ -76,82 +77,124 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
   }
 
   void _initControllers() {
-    _wallHeightCtrl = TextEditingController(text: _draft.wallHeightFeet.toString());
-    _extWallThickCtrl =
-        TextEditingController(text: (_draft.exteriorWallThicknessFeet * 12.0).toStringAsFixed(1));
-    _intWallThickCtrl =
-        TextEditingController(text: (_draft.interiorWallThicknessFeet * 12.0).toStringAsFixed(1));
+    _wallHeightCtrl = TextEditingController(
+      text: _draft.wallHeightFeet.toString(),
+    );
+    _extWallThickCtrl = TextEditingController(
+      text: (_draft.exteriorWallThicknessFeet * 12.0).toStringAsFixed(1),
+    );
+    _intWallThickCtrl = TextEditingController(
+      text: (_draft.interiorWallThicknessFeet * 12.0).toStringAsFixed(1),
+    );
 
-    _customBrickLenCtrl =
-        TextEditingController(text: _draft.customBrickLengthInches.toString());
-    _customBrickWidthCtrl =
-        TextEditingController(text: _draft.customBrickWidthInches.toString());
-    _customBrickHeightCtrl =
-        TextEditingController(text: _draft.customBrickHeightInches.toString());
-    _mortarJointCtrl =
-        TextEditingController(text: _draft.mortarJointThicknessInches.toString());
-    _brickWastageCtrl =
-        TextEditingController(text: _draft.brickWastagePercent.toString());
+    _customBrickLenCtrl = TextEditingController(
+      text: _draft.customBrickLengthInches.toString(),
+    );
+    _customBrickWidthCtrl = TextEditingController(
+      text: _draft.customBrickWidthInches.toString(),
+    );
+    _customBrickHeightCtrl = TextEditingController(
+      text: _draft.customBrickHeightInches.toString(),
+    );
+    _mortarJointCtrl = TextEditingController(
+      text: _draft.mortarJointThicknessInches.toString(),
+    );
+    _brickWastageCtrl = TextEditingController(
+      text: _draft.brickWastagePercent.toString(),
+    );
 
-    _intPlasterThickCtrl =
-        TextEditingController(text: _draft.interiorPlasterThicknessInches.toString());
-    _extPlasterThickCtrl =
-        TextEditingController(text: _draft.exteriorPlasterThicknessInches.toString());
-    _plasterWastageCtrl =
-        TextEditingController(text: _draft.plasterWastagePercent.toString());
+    _intPlasterThickCtrl = TextEditingController(
+      text: _draft.interiorPlasterThicknessInches.toString(),
+    );
+    _extPlasterThickCtrl = TextEditingController(
+      text: _draft.exteriorPlasterThicknessInches.toString(),
+    );
+    _plasterWastageCtrl = TextEditingController(
+      text: _draft.plasterWastagePercent.toString(),
+    );
 
-    _intPaintCoverageCtrl =
-        TextEditingController(text: _draft.interiorPaintCoverageSqFtPerLiter.toString());
-    _extPaintCoverageCtrl =
-        TextEditingController(text: _draft.exteriorPaintCoverageSqFtPerLiter.toString());
-    _primerCoverageCtrl =
-        TextEditingController(text: _draft.primerCoverageSqFtPerLiter.toString());
-    _paintWastageCtrl =
-        TextEditingController(text: _draft.paintWastagePercent.toString());
+    _intPaintCoverageCtrl = TextEditingController(
+      text: _draft.interiorPaintCoverageSqFtPerLiter.toString(),
+    );
+    _extPaintCoverageCtrl = TextEditingController(
+      text: _draft.exteriorPaintCoverageSqFtPerLiter.toString(),
+    );
+    _primerCoverageCtrl = TextEditingController(
+      text: _draft.primerCoverageSqFtPerLiter.toString(),
+    );
+    _paintWastageCtrl = TextEditingController(
+      text: _draft.paintWastagePercent.toString(),
+    );
 
-    _floorTileLenCtrl =
-        TextEditingController(text: _draft.floorTileLengthInches.toString());
-    _floorTileWidthCtrl =
-        TextEditingController(text: _draft.floorTileWidthInches.toString());
-    _tilesPerBoxCtrl =
-        TextEditingController(text: _draft.tilesPerBox.toString());
-    _tileWastageCtrl =
-        TextEditingController(text: _draft.tileWastagePercent.toString());
-    _dadoHeightCtrl =
-        TextEditingController(text: _draft.bathroomDadoHeightFeet.toString());
-    _kitchenBacksplashCtrl =
-        TextEditingController(text: _draft.kitchenBacksplashAreaSqFt.toString());
+    _floorTileLenCtrl = TextEditingController(
+      text: _draft.floorTileLengthInches.toString(),
+    );
+    _floorTileWidthCtrl = TextEditingController(
+      text: _draft.floorTileWidthInches.toString(),
+    );
+    _tilesPerBoxCtrl = TextEditingController(
+      text: _draft.tilesPerBox.toString(),
+    );
+    _tileWastageCtrl = TextEditingController(
+      text: _draft.tileWastagePercent.toString(),
+    );
+    _dadoHeightCtrl = TextEditingController(
+      text: _draft.bathroomDadoHeightFeet.toString(),
+    );
+    _kitchenBacksplashCtrl = TextEditingController(
+      text: _draft.kitchenBacksplashAreaSqFt.toString(),
+    );
 
-    _roofSlabThickCtrl =
-        TextEditingController(text: _draft.roofSlabThicknessInches.toString());
-    _roofSlabOverhangCtrl =
-        TextEditingController(text: _draft.roofSlabOverhangFeet.toString());
-    _lintelDepthCtrl =
-        TextEditingController(text: _draft.lintelDepthInches.toString());
-    _lintelBearingCtrl =
-        TextEditingController(text: _draft.lintelBearingFeet.toString());
-    _plinthWidthCtrl =
-        TextEditingController(text: _draft.plinthBeamWidthInches.toString());
-    _plinthDepthCtrl =
-        TextEditingController(text: _draft.plinthBeamDepthInches.toString());
-    _concreteWastageCtrl =
-        TextEditingController(text: _draft.concreteWastagePercent.toString());
+    _roofSlabThickCtrl = TextEditingController(
+      text: _draft.roofSlabThicknessInches.toString(),
+    );
+    _roofSlabOverhangCtrl = TextEditingController(
+      text: _draft.roofSlabOverhangFeet.toString(),
+    );
+    _lintelDepthCtrl = TextEditingController(
+      text: _draft.lintelDepthInches.toString(),
+    );
+    _lintelBearingCtrl = TextEditingController(
+      text: _draft.lintelBearingFeet.toString(),
+    );
+    _plinthWidthCtrl = TextEditingController(
+      text: _draft.plinthBeamWidthInches.toString(),
+    );
+    _plinthDepthCtrl = TextEditingController(
+      text: _draft.plinthBeamDepthInches.toString(),
+    );
+    _concreteWastageCtrl = TextEditingController(
+      text: _draft.concreteWastagePercent.toString(),
+    );
 
     _currencyCtrl = TextEditingController(text: _draft.currencySymbol);
-    _brickRateCtrl = TextEditingController(text: _draft.brickRatePerUnit.toString());
-    _cementRateCtrl = TextEditingController(text: _draft.cementRatePerBag.toString());
-    _sandRateCtrl = TextEditingController(text: _draft.sandRatePerCuFt.toString());
-    _aggRateCtrl = TextEditingController(text: _draft.aggregateRatePerCuFt.toString());
-    _intPaintRateCtrl =
-        TextEditingController(text: _draft.interiorPaintRatePerLiter.toString());
-    _extPaintRateCtrl =
-        TextEditingController(text: _draft.exteriorPaintRatePerLiter.toString());
-    _primerRateCtrl =
-        TextEditingController(text: _draft.primerRatePerLiter.toString());
-    _floorTileRateCtrl =
-        TextEditingController(text: _draft.floorTileRatePerSqFt.toString());
-    _wallTileRateCtrl =
-        TextEditingController(text: _draft.wallTileRatePerSqFt.toString());
+    _brickRateCtrl = TextEditingController(
+      text: _draft.brickRatePerUnit.toString(),
+    );
+    _cementRateCtrl = TextEditingController(
+      text: _draft.cementRatePerBag.toString(),
+    );
+    _sandRateCtrl = TextEditingController(
+      text: _draft.sandRatePerCuFt.toString(),
+    );
+    _aggRateCtrl = TextEditingController(
+      text: _draft.aggregateRatePerCuFt.toString(),
+    );
+    _intPaintRateCtrl = TextEditingController(
+      text: _draft.interiorPaintRatePerLiter.toString(),
+    );
+    _extPaintRateCtrl = TextEditingController(
+      text: _draft.exteriorPaintRatePerLiter.toString(),
+    );
+    _primerRateCtrl = TextEditingController(
+      text: _draft.primerRatePerLiter.toString(),
+    );
+    _floorTileRateCtrl = TextEditingController(
+      text: _draft.floorTileRatePerSqFt.toString(),
+    );
+    _wallTileRateCtrl = TextEditingController(
+      text: _draft.wallTileRatePerSqFt.toString(),
+    );
   }
 
   @override
@@ -200,60 +243,80 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
 
   void _apply() {
     final updated = _draft.copyWith(
-      wallHeightFeet: double.tryParse(_wallHeightCtrl.text) ?? _draft.wallHeightFeet,
+      wallHeightFeet:
+          double.tryParse(_wallHeightCtrl.text) ?? _draft.wallHeightFeet,
       exteriorWallThicknessFeet:
           (double.tryParse(_extWallThickCtrl.text) ?? 9.0) / 12.0,
       interiorWallThicknessFeet:
           (double.tryParse(_intWallThickCtrl.text) ?? 4.5) / 12.0,
       customBrickLengthInches:
-          double.tryParse(_customBrickLenCtrl.text) ?? _draft.customBrickLengthInches,
+          double.tryParse(_customBrickLenCtrl.text) ??
+          _draft.customBrickLengthInches,
       customBrickWidthInches:
-          double.tryParse(_customBrickWidthCtrl.text) ?? _draft.customBrickWidthInches,
+          double.tryParse(_customBrickWidthCtrl.text) ??
+          _draft.customBrickWidthInches,
       customBrickHeightInches:
-          double.tryParse(_customBrickHeightCtrl.text) ?? _draft.customBrickHeightInches,
+          double.tryParse(_customBrickHeightCtrl.text) ??
+          _draft.customBrickHeightInches,
       mortarJointThicknessInches:
-          double.tryParse(_mortarJointCtrl.text) ?? _draft.mortarJointThicknessInches,
+          double.tryParse(_mortarJointCtrl.text) ??
+          _draft.mortarJointThicknessInches,
       brickWastagePercent:
           double.tryParse(_brickWastageCtrl.text) ?? _draft.brickWastagePercent,
       interiorPlasterThicknessInches:
-          double.tryParse(_intPlasterThickCtrl.text) ?? _draft.interiorPlasterThicknessInches,
+          double.tryParse(_intPlasterThickCtrl.text) ??
+          _draft.interiorPlasterThicknessInches,
       exteriorPlasterThicknessInches:
-          double.tryParse(_extPlasterThickCtrl.text) ?? _draft.exteriorPlasterThicknessInches,
+          double.tryParse(_extPlasterThickCtrl.text) ??
+          _draft.exteriorPlasterThicknessInches,
       plasterWastagePercent:
-          double.tryParse(_plasterWastageCtrl.text) ?? _draft.plasterWastagePercent,
+          double.tryParse(_plasterWastageCtrl.text) ??
+          _draft.plasterWastagePercent,
       interiorPaintCoverageSqFtPerLiter:
-          double.tryParse(_intPaintCoverageCtrl.text) ?? _draft.interiorPaintCoverageSqFtPerLiter,
+          double.tryParse(_intPaintCoverageCtrl.text) ??
+          _draft.interiorPaintCoverageSqFtPerLiter,
       exteriorPaintCoverageSqFtPerLiter:
-          double.tryParse(_extPaintCoverageCtrl.text) ?? _draft.exteriorPaintCoverageSqFtPerLiter,
+          double.tryParse(_extPaintCoverageCtrl.text) ??
+          _draft.exteriorPaintCoverageSqFtPerLiter,
       primerCoverageSqFtPerLiter:
-          double.tryParse(_primerCoverageCtrl.text) ?? _draft.primerCoverageSqFtPerLiter,
+          double.tryParse(_primerCoverageCtrl.text) ??
+          _draft.primerCoverageSqFtPerLiter,
       paintWastagePercent:
           double.tryParse(_paintWastageCtrl.text) ?? _draft.paintWastagePercent,
       floorTileLengthInches:
-          double.tryParse(_floorTileLenCtrl.text) ?? _draft.floorTileLengthInches,
+          double.tryParse(_floorTileLenCtrl.text) ??
+          _draft.floorTileLengthInches,
       floorTileWidthInches:
-          double.tryParse(_floorTileWidthCtrl.text) ?? _draft.floorTileWidthInches,
+          double.tryParse(_floorTileWidthCtrl.text) ??
+          _draft.floorTileWidthInches,
       tilesPerBox: int.tryParse(_tilesPerBoxCtrl.text) ?? _draft.tilesPerBox,
       tileWastagePercent:
           double.tryParse(_tileWastageCtrl.text) ?? _draft.tileWastagePercent,
       bathroomDadoHeightFeet:
-          double.tryParse(_dadoHeightCtrl.text) ?? _draft.bathroomDadoHeightFeet,
+          double.tryParse(_dadoHeightCtrl.text) ??
+          _draft.bathroomDadoHeightFeet,
       kitchenBacksplashAreaSqFt:
-          double.tryParse(_kitchenBacksplashCtrl.text) ?? _draft.kitchenBacksplashAreaSqFt,
+          double.tryParse(_kitchenBacksplashCtrl.text) ??
+          _draft.kitchenBacksplashAreaSqFt,
       roofSlabThicknessInches:
-          double.tryParse(_roofSlabThickCtrl.text) ?? _draft.roofSlabThicknessInches,
+          double.tryParse(_roofSlabThickCtrl.text) ??
+          _draft.roofSlabThicknessInches,
       roofSlabOverhangFeet:
-          double.tryParse(_roofSlabOverhangCtrl.text) ?? _draft.roofSlabOverhangFeet,
+          double.tryParse(_roofSlabOverhangCtrl.text) ??
+          _draft.roofSlabOverhangFeet,
       lintelDepthInches:
           double.tryParse(_lintelDepthCtrl.text) ?? _draft.lintelDepthInches,
       lintelBearingFeet:
           double.tryParse(_lintelBearingCtrl.text) ?? _draft.lintelBearingFeet,
       plinthBeamWidthInches:
-          double.tryParse(_plinthWidthCtrl.text) ?? _draft.plinthBeamWidthInches,
+          double.tryParse(_plinthWidthCtrl.text) ??
+          _draft.plinthBeamWidthInches,
       plinthBeamDepthInches:
-          double.tryParse(_plinthDepthCtrl.text) ?? _draft.plinthBeamDepthInches,
+          double.tryParse(_plinthDepthCtrl.text) ??
+          _draft.plinthBeamDepthInches,
       concreteWastagePercent:
-          double.tryParse(_concreteWastageCtrl.text) ?? _draft.concreteWastagePercent,
+          double.tryParse(_concreteWastageCtrl.text) ??
+          _draft.concreteWastagePercent,
       currencySymbol: _currencyCtrl.text.isNotEmpty ? _currencyCtrl.text : '₹',
       brickRatePerUnit:
           double.tryParse(_brickRateCtrl.text) ?? _draft.brickRatePerUnit,
@@ -264,13 +327,16 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
       aggregateRatePerCuFt:
           double.tryParse(_aggRateCtrl.text) ?? _draft.aggregateRatePerCuFt,
       interiorPaintRatePerLiter:
-          double.tryParse(_intPaintRateCtrl.text) ?? _draft.interiorPaintRatePerLiter,
+          double.tryParse(_intPaintRateCtrl.text) ??
+          _draft.interiorPaintRatePerLiter,
       exteriorPaintRatePerLiter:
-          double.tryParse(_extPaintRateCtrl.text) ?? _draft.exteriorPaintRatePerLiter,
+          double.tryParse(_extPaintRateCtrl.text) ??
+          _draft.exteriorPaintRatePerLiter,
       primerRatePerLiter:
           double.tryParse(_primerRateCtrl.text) ?? _draft.primerRatePerLiter,
       floorTileRatePerSqFt:
-          double.tryParse(_floorTileRateCtrl.text) ?? _draft.floorTileRatePerSqFt,
+          double.tryParse(_floorTileRateCtrl.text) ??
+          _draft.floorTileRatePerSqFt,
       wallTileRatePerSqFt:
           double.tryParse(_wallTileRateCtrl.text) ?? _draft.wallTileRatePerSqFt,
     );
@@ -325,7 +391,10 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
                           Flexible(
                             child: Text(
                               'Assumptions & Material Rates',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -335,7 +404,10 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
                     TextButton.icon(
                       onPressed: _resetDefaults,
                       icon: const Icon(Icons.refresh_rounded, size: 16),
-                      label: const Text('Reset Defaults', style: TextStyle(fontSize: 12)),
+                      label: const Text(
+                        'Reset Defaults',
+                        style: TextStyle(fontSize: 12),
+                      ),
                     ),
                   ],
                 ),
@@ -347,7 +419,9 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
             controller: _tabController,
             isScrollable: true,
             labelColor: const Color(0xFFFF8C00),
-            unselectedLabelColor: isDark ? Colors.white60 : Colors.grey.shade700,
+            unselectedLabelColor: isDark
+                ? Colors.white60
+                : Colors.grey.shade700,
             indicatorColor: const Color(0xFFFF8C00),
             tabs: const [
               Tab(text: 'Walls & Masonry'),
@@ -394,7 +468,9 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
                 const SizedBox(width: 12),
                 Expanded(
                   child: FilledButton.icon(
-                    style: FilledButton.styleFrom(backgroundColor: const Color(0xFFFF8C00)),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFFFF8C00),
+                    ),
                     onPressed: _apply,
                     icon: const Icon(Icons.check_rounded),
                     label: const Text('Apply Changes'),
@@ -592,8 +668,14 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
           ],
         ),
         SwitchListTile(
-          title: const Text('Include Ceiling Plaster', style: TextStyle(fontSize: 14)),
-          subtitle: const Text('Applies plaster coating over interior room slab ceilings', style: TextStyle(fontSize: 12)),
+          title: const Text(
+            'Include Ceiling Plaster',
+            style: TextStyle(fontSize: 14),
+          ),
+          subtitle: const Text(
+            'Applies plaster coating over interior room slab ceilings',
+            style: TextStyle(fontSize: 12),
+          ),
           value: _draft.includeCeilingPlaster,
           activeThumbColor: const Color(0xFFFF8C00),
           onChanged: (val) {
@@ -605,7 +687,10 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
         const Divider(height: 28),
         _buildSectionTitle('Paints & Primers'),
         SwitchListTile(
-          title: const Text('Include Interior Base Primer', style: TextStyle(fontSize: 14)),
+          title: const Text(
+            'Include Interior Base Primer',
+            style: TextStyle(fontSize: 14),
+          ),
           value: _draft.includePrimer,
           activeThumbColor: const Color(0xFFFF8C00),
           onChanged: (val) {
@@ -615,7 +700,10 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
           },
         ),
         SwitchListTile(
-          title: const Text('Include Ceiling Painting', style: TextStyle(fontSize: 14)),
+          title: const Text(
+            'Include Ceiling Painting',
+            style: TextStyle(fontSize: 14),
+          ),
           value: _draft.includeCeilingPaint,
           activeThumbColor: const Color(0xFFFF8C00),
           onChanged: (val) {
@@ -709,8 +797,14 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
         const Divider(height: 28),
         _buildSectionTitle('Wall Dado Tiles (Bathrooms & Kitchen)'),
         SwitchListTile(
-          title: const Text('Include Bathroom Wall Dado', style: TextStyle(fontSize: 14)),
-          subtitle: const Text('Ceramic wall tiles up to specified height minus doors', style: TextStyle(fontSize: 12)),
+          title: const Text(
+            'Include Bathroom Wall Dado',
+            style: TextStyle(fontSize: 14),
+          ),
+          subtitle: const Text(
+            'Ceramic wall tiles up to specified height minus doors',
+            style: TextStyle(fontSize: 12),
+          ),
           value: _draft.includeBathroomWallTiles,
           activeThumbColor: const Color(0xFFFF8C00),
           onChanged: (val) {
@@ -727,7 +821,10 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
           ),
         const SizedBox(height: 12),
         SwitchListTile(
-          title: const Text('Include Kitchen Backsplash Tiles', style: TextStyle(fontSize: 14)),
+          title: const Text(
+            'Include Kitchen Backsplash Tiles',
+            style: TextStyle(fontSize: 14),
+          ),
           value: _draft.includeKitchenBacksplash,
           activeThumbColor: const Color(0xFFFF8C00),
           onChanged: (val) {
@@ -755,11 +852,17 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
           decoration: BoxDecoration(
             color: const Color(0xFF1E3A5F).withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFF1E3A5F).withValues(alpha: 0.2)),
+            border: Border.all(
+              color: const Color(0xFF1E3A5F).withValues(alpha: 0.2),
+            ),
           ),
           child: const Row(
             children: [
-              Icon(Icons.info_outline_rounded, color: Color(0xFF1E3A5F), size: 20),
+              Icon(
+                Icons.info_outline_rounded,
+                color: Color(0xFF1E3A5F),
+                size: 20,
+              ),
               SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -799,8 +902,14 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
         const Divider(height: 28),
         _buildSectionTitle('Explicit Concrete Elements'),
         SwitchListTile(
-          title: const Text('1. Roof Slab', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          subtitle: const Text('Continuous concrete ceiling slab over built-up area footprint', style: TextStyle(fontSize: 12)),
+          title: const Text(
+            '1. Roof Slab',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          subtitle: const Text(
+            'Continuous concrete ceiling slab over built-up area footprint',
+            style: TextStyle(fontSize: 12),
+          ),
           value: _draft.includeRoofSlab,
           activeThumbColor: const Color(0xFFFF8C00),
           onChanged: (val) {
@@ -832,8 +941,14 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
           const SizedBox(height: 8),
         ],
         SwitchListTile(
-          title: const Text('2. Lintel Beams over Openings', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          subtitle: const Text('Horizontal concrete lintels over doors & windows', style: TextStyle(fontSize: 12)),
+          title: const Text(
+            '2. Lintel Beams over Openings',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          subtitle: const Text(
+            'Horizontal concrete lintels over doors & windows',
+            style: TextStyle(fontSize: 12),
+          ),
           value: _draft.includeLintelBeams,
           activeThumbColor: const Color(0xFFFF8C00),
           onChanged: (val) {
@@ -865,8 +980,14 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
           const SizedBox(height: 8),
         ],
         SwitchListTile(
-          title: const Text('3. Plinth Beam / Foundation Tie Band', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          subtitle: const Text('Reinforced concrete band along total ground physical walls', style: TextStyle(fontSize: 12)),
+          title: const Text(
+            '3. Plinth Beam / Foundation Tie Band',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          subtitle: const Text(
+            'Reinforced concrete band along total ground physical walls',
+            style: TextStyle(fontSize: 12),
+          ),
           value: _draft.includePlinthBeam,
           activeThumbColor: const Color(0xFFFF8C00),
           onChanged: (val) {
@@ -1042,5 +1163,6 @@ class _MaterialAssumptionsSheetState extends State<MaterialAssumptionsSheet>
 }
 
 class TextInputKeyData extends TextInputType {
-  const TextInputKeyData({super.signed, super.decimal}) : super.numberWithOptions();
+  const TextInputKeyData({super.signed, super.decimal})
+    : super.numberWithOptions();
 }

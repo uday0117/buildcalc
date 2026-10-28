@@ -20,7 +20,8 @@ class Plan3DInteractiveCanvas extends StatefulWidget {
   });
 
   @override
-  State<Plan3DInteractiveCanvas> createState() => _Plan3DInteractiveCanvasState();
+  State<Plan3DInteractiveCanvas> createState() =>
+      _Plan3DInteractiveCanvasState();
 }
 
 class _Plan3DInteractiveCanvasState extends State<Plan3DInteractiveCanvas> {
@@ -106,11 +107,7 @@ class _Plan3DInteractiveCanvasState extends State<Plan3DInteractiveCanvas> {
             ),
 
             // Top-Left 3D Orientation Compass
-            Positioned(
-              left: 14,
-              top: 14,
-              child: _buildCompassWidget(isDark),
-            ),
+            Positioned(left: 14, top: 14, child: _buildCompassWidget(isDark)),
           ],
         ),
       ),
@@ -124,7 +121,9 @@ class _Plan3DInteractiveCanvasState extends State<Plan3DInteractiveCanvas> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: (isDark ? const Color(0xFF1E293B) : Colors.white).withValues(alpha: 0.88),
+        color: (isDark ? const Color(0xFF1E293B) : Colors.white).withValues(
+          alpha: 0.88,
+        ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: isDark ? Colors.white12 : Colors.black12),
         boxShadow: [

@@ -39,12 +39,16 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
   @override
   void initState() {
     super.initState();
-    _config = widget.initialConfig ?? ElevationBuilder.buildElevationFromPlan(widget.plan);
+    _config =
+        widget.initialConfig ??
+        ElevationBuilder.buildElevationFromPlan(widget.plan);
     _loadSavedConcepts();
   }
 
   Future<void> _loadSavedConcepts() async {
-    final list = await ElevationStorageService.getElevationsForPlan(widget.plan.id);
+    final list = await ElevationStorageService.getElevationsForPlan(
+      widget.plan.id,
+    );
     if (!mounted) return;
     setState(() {
       _savedConcepts = list;
@@ -97,10 +101,8 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => ElevationAIStudioSheet(
-        config: _config,
-        onExportImage: _exportImage,
-      ),
+      builder: (ctx) =>
+          ElevationAIStudioSheet(config: _config, onExportImage: _exportImage),
     );
   }
 
@@ -148,7 +150,9 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: FilledButton.styleFrom(backgroundColor: const Color(0xFFFF8C00)),
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFFFF8C00),
+            ),
             child: const Text('Save Concept'),
           ),
         ],
@@ -158,7 +162,9 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
     if (shouldSave == true && mounted) {
       setState(() => _isSaving = true);
       final updated = _config.copyWith(
-        name: nameCtrl.text.trim().isNotEmpty ? nameCtrl.text.trim() : _config.name,
+        name: nameCtrl.text.trim().isNotEmpty
+            ? nameCtrl.text.trim()
+            : _config.name,
         notes: notesCtrl.text.trim(),
       );
       await ElevationStorageService.saveElevation(updated);
@@ -170,14 +176,18 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Elevation "${updated.name}" saved successfully!')),
+        SnackBar(
+          content: Text('Elevation "${updated.name}" saved successfully!'),
+        ),
       );
     }
   }
 
   Future<void> _exportImage() async {
     try {
-      final boundary = _repaintBoundaryKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      final boundary =
+          _repaintBoundaryKey.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
       if (boundary == null) return;
 
       final ui.Image image = await boundary.toImage(pixelRatio: 2.5);
@@ -186,7 +196,9 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
 
       final pngBytes = byteData.buffer.asUint8List();
       final tempDir = Directory.systemTemp;
-      final file = File('${tempDir.path}/elevation_${widget.plan.id}_${DateTime.now().millisecondsSinceEpoch}.png');
+      final file = File(
+        '${tempDir.path}/elevation_${widget.plan.id}_${DateTime.now().millisecondsSinceEpoch}.png',
+      );
       await file.writeAsBytes(pngBytes);
 
       await Share.shareXFiles(
@@ -196,7 +208,10 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
     } catch (e) {
       // Fallback to text specification share if file sharing fails
       final report = ElevationBuilder.generateSpecificationReport(_config);
-      await Share.share(report, subject: '${_config.name} - Front Elevation Specification');
+      await Share.share(
+        report,
+        subject: '${_config.name} - Front Elevation Specification',
+      );
     }
   }
 
@@ -204,7 +219,11 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        icon: const Icon(Icons.info_outline_rounded, color: Color(0xFFFF8C00), size: 36),
+        icon: const Icon(
+          Icons.info_outline_rounded,
+          color: Color(0xFFFF8C00),
+          size: 36,
+        ),
         title: const Text('Architectural Elevation Notice'),
         content: const Column(
           mainAxisSize: MainAxisSize.min,
@@ -227,7 +246,9 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
         actions: [
           FilledButton(
             onPressed: () => Navigator.pop(ctx),
-            style: FilledButton.styleFrom(backgroundColor: const Color(0xFFFF8C00)),
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFFFF8C00),
+            ),
             child: const Text('Understood'),
           ),
         ],
@@ -241,7 +262,9 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
     final plan = widget.plan;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
+          : const Color(0xFFF1F5F9),
       appBar: AppBar(
         titleSpacing: 0,
         leading: IconButton(
@@ -259,12 +282,18 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
                   child: Text(
                     plan.name,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFF8C00).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(6),
@@ -298,14 +327,21 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
           ),
           // AI Studio & Export
           IconButton(
-            icon: const Icon(Icons.auto_awesome_rounded, color: Color(0xFFFF8C00)),
+            icon: const Icon(
+              Icons.auto_awesome_rounded,
+              color: Color(0xFFFF8C00),
+            ),
             tooltip: 'AI Concept Studio & Export',
             onPressed: _openAIStudioSheet,
           ),
           // Save Concept
           IconButton(
             icon: _isSaving
-                ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
                 : const Icon(Icons.bookmark_border_rounded),
             tooltip: 'Save Concept',
             onPressed: _isSaving ? null : _saveConcept,
@@ -325,7 +361,10 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
             if (!_isBannerDismissed)
               Container(
                 margin: const EdgeInsets.fromLTRB(14, 8, 14, 4),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: (isDark ? const Color(0xFF1E293B) : Colors.white),
                   borderRadius: BorderRadius.circular(10),
@@ -335,7 +374,11 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.villa_outlined, size: 18, color: Color(0xFFFF8C00)),
+                    const Icon(
+                      Icons.villa_outlined,
+                      size: 18,
+                      color: Color(0xFFFF8C00),
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -349,7 +392,8 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
                     IconButton(
                       icon: const Icon(Icons.close, size: 14),
                       visualDensity: VisualDensity.compact,
-                      onPressed: () => setState(() => _isBannerDismissed = true),
+                      onPressed: () =>
+                          setState(() => _isBannerDismissed = true),
                     ),
                   ],
                 ),
@@ -402,22 +446,31 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
                                     size: 14,
                                     color: isSelected ? Colors.white : null,
                                   ),
-                                  label: Text(style.label, style: const TextStyle(fontSize: 11)),
+                                  label: Text(
+                                    style.label,
+                                    style: const TextStyle(fontSize: 11),
+                                  ),
                                   selected: isSelected,
                                   selectedColor: const Color(0xFFFF8C00),
                                   labelStyle: TextStyle(
                                     color: isSelected ? Colors.white : null,
-                                    fontWeight: isSelected ? FontWeight.bold : null,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : null,
                                   ),
                                   onSelected: (val) {
                                     if (val) {
-                                      final palette = style == ElevationStyle.traditional
+                                      final palette =
+                                          style == ElevationStyle.traditional
                                           ? ElevationColorPalette.warmTerracotta
                                           : style == ElevationStyle.minimalist
-                                              ? ElevationColorPalette.minimalistMonochrome
-                                              : style == ElevationStyle.contemporary
-                                                  ? ElevationColorPalette.contemporarySlate
-                                                  : ElevationColorPalette.modernIvoryWood;
+                                          ? ElevationColorPalette
+                                                .minimalistMonochrome
+                                          : style == ElevationStyle.contemporary
+                                          ? ElevationColorPalette
+                                                .contemporarySlate
+                                          : ElevationColorPalette
+                                                .modernIvoryWood;
                                       setState(() {
                                         _config = _config.copyWith(
                                           style: style,
@@ -425,10 +478,14 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
                                           accentColor: palette.accent,
                                           trimColor: palette.trim,
                                           glassColor: palette.glass,
-                                          roofStyle: style == ElevationStyle.traditional
+                                          roofStyle:
+                                              style ==
+                                                  ElevationStyle.traditional
                                               ? RoofStyle.pitchedTile
                                               : RoofStyle.flatParapet,
-                                          finishPreset: style == ElevationStyle.traditional
+                                          finishPreset:
+                                              style ==
+                                                  ElevationStyle.traditional
                                               ? FinishPreset.exposedBrick
                                               : FinishPreset.smoothPlaster,
                                         );
@@ -446,10 +503,16 @@ class _PlanElevationScreenState extends State<PlanElevationScreen> {
                       FilledButton.tonalIcon(
                         onPressed: _openConfigSheet,
                         style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
                         ),
                         icon: const Icon(Icons.tune_rounded, size: 16),
-                        label: const Text('Customize', style: TextStyle(fontSize: 11)),
+                        label: const Text(
+                          'Customize',
+                          style: TextStyle(fontSize: 11),
+                        ),
                       ),
                     ],
                   ),

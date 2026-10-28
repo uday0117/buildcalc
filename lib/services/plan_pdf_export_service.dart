@@ -22,19 +22,26 @@ class PlanPdfExportService {
     PlanUnit? displayUnit,
   }) async {
     final pdf = pw.Document(
-      title: metadata.title.isNotEmpty ? metadata.title : '${plan.name} - 2D Floor Plan',
-      author: metadata.companyName.isNotEmpty ? metadata.companyName : 'BuildCalc Architectural',
+      title: metadata.title.isNotEmpty
+          ? metadata.title
+          : '${plan.name} - 2D Floor Plan',
+      author: metadata.companyName.isNotEmpty
+          ? metadata.companyName
+          : 'BuildCalc Architectural',
     );
 
     final unit = displayUnit ?? plan.unit;
-    final imageBytes = planImageBytes ?? await PlanImageExportService.renderPlanToPng(plan: plan);
+    final imageBytes =
+        planImageBytes ??
+        await PlanImageExportService.renderPlanToPng(plan: plan);
     final pdfImage = pw.MemoryImage(imageBytes);
 
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(32),
-        header: (context) => _buildPdfHeader(metadata, plan, '2D ARCHITECTURAL FLOOR PLAN'),
+        header: (context) =>
+            _buildPdfHeader(metadata, plan, '2D ARCHITECTURAL FLOOR PLAN'),
         footer: (context) => _buildPdfFooter(context),
         build: (context) => [
           pw.SizedBox(height: 12),
@@ -79,7 +86,9 @@ class PlanPdfExportService {
                 decoration: const pw.BoxDecoration(color: PdfColors.grey100),
                 children: [
                   _tableCell('Plot Dimensions', isHeader: true),
-                  _tableCell('${unit.formatLength(plan.plotWidthFeet)} × ${unit.formatLength(plan.plotLengthFeet)}'),
+                  _tableCell(
+                    '${unit.formatLength(plan.plotWidthFeet)} × ${unit.formatLength(plan.plotLengthFeet)}',
+                  ),
                   _tableCell('Total Plot Area', isHeader: true),
                   _tableCell(unit.formatArea(plan.totalPlotAreaSqFt)),
                 ],
@@ -89,7 +98,9 @@ class PlanPdfExportService {
                   _tableCell('Built-up Area', isHeader: true),
                   _tableCell(unit.formatArea(plan.totalBuiltUpAreaSqFt)),
                   _tableCell('Ground Coverage', isHeader: true),
-                  _tableCell('${plan.groundCoveragePercent.toStringAsFixed(1)}%'),
+                  _tableCell(
+                    '${plan.groundCoveragePercent.toStringAsFixed(1)}%',
+                  ),
                 ],
               ),
               pw.TableRow(
@@ -98,7 +109,9 @@ class PlanPdfExportService {
                   _tableCell('Layout Configuration', isHeader: true),
                   _tableCell(plan.layoutType),
                   _tableCell('Total Rooms / Openings', isHeader: true),
-                  _tableCell('${plan.rooms.length} rooms / ${plan.rooms.fold<int>(0, (s, r) => s + r.openings.length)} openings'),
+                  _tableCell(
+                    '${plan.rooms.length} rooms / ${plan.rooms.fold<int>(0, (s, r) => s + r.openings.length)} openings',
+                  ),
                 ],
               ),
             ],
@@ -117,9 +130,15 @@ class PlanPdfExportService {
           pw.SizedBox(height: 6),
           pw.TableHelper.fromTextArray(
             border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
-            headerDecoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1E3A5F)),
+            headerDecoration: const pw.BoxDecoration(
+              color: PdfColor.fromInt(0xFF1E3A5F),
+            ),
             headerHeight: 24,
-            headerStyle: pw.TextStyle(color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 9),
+            headerStyle: pw.TextStyle(
+              color: PdfColors.white,
+              fontWeight: pw.FontWeight.bold,
+              fontSize: 9,
+            ),
             cellStyle: const pw.TextStyle(fontSize: 8.5),
             cellAlignment: pw.Alignment.centerLeft,
             headers: [
@@ -134,9 +153,23 @@ class PlanPdfExportService {
             data: plan.rooms.asMap().entries.map((entry) {
               final idx = entry.key + 1;
               final r = entry.value;
-              final doorsCount = r.openings.where((o) => o.type == OpeningType.door || o.type == OpeningType.doubleDoor || o.type == OpeningType.slidingDoor).length;
-              final windowsCount = r.openings.where((o) => o.type == OpeningType.window || o.type == OpeningType.ventilation).length;
-              final openingsStr = '${r.openings.length} ($doorsCount D, $windowsCount W)';
+              final doorsCount = r.openings
+                  .where(
+                    (o) =>
+                        o.type == OpeningType.door ||
+                        o.type == OpeningType.doubleDoor ||
+                        o.type == OpeningType.slidingDoor,
+                  )
+                  .length;
+              final windowsCount = r.openings
+                  .where(
+                    (o) =>
+                        o.type == OpeningType.window ||
+                        o.type == OpeningType.ventilation,
+                  )
+                  .length;
+              final openingsStr =
+                  '${r.openings.length} ($doorsCount D, $windowsCount W)';
               final perimeterFeet = (r.width + r.length) * 2;
 
               return [
@@ -163,9 +196,22 @@ class PlanPdfExportService {
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('PROJECT NOTES & REMARKS:', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors.brown900)),
+                  pw.Text(
+                    'PROJECT NOTES & REMARKS:',
+                    style: pw.TextStyle(
+                      fontSize: 9,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.brown900,
+                    ),
+                  ),
                   pw.SizedBox(height: 3),
-                  pw.Text(metadata.notes, style: const pw.TextStyle(fontSize: 8.5, color: PdfColors.brown800)),
+                  pw.Text(
+                    metadata.notes,
+                    style: const pw.TextStyle(
+                      fontSize: 8.5,
+                      color: PdfColors.brown800,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -190,8 +236,12 @@ class PlanPdfExportService {
     PlanUnit displayUnit = PlanUnit.feet,
   }) async {
     final pdf = pw.Document(
-      title: metadata.title.isNotEmpty ? metadata.title : '${plan.name} - Material & Cost Estimate',
-      author: metadata.companyName.isNotEmpty ? metadata.companyName : 'BuildCalc Estimator',
+      title: metadata.title.isNotEmpty
+          ? metadata.title
+          : '${plan.name} - Material & Cost Estimate',
+      author: metadata.companyName.isNotEmpty
+          ? metadata.companyName
+          : 'BuildCalc Estimator',
     );
 
     final currency = _safeCurrency(assumptions.currencySymbol);
@@ -202,7 +252,11 @@ class PlanPdfExportService {
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(32),
-        header: (context) => _buildPdfHeader(metadata, plan, 'BILL OF QUANTITIES & COST ESTIMATE'),
+        header: (context) => _buildPdfHeader(
+          metadata,
+          plan,
+          'BILL OF QUANTITIES & COST ESTIMATE',
+        ),
         footer: (context) => _buildPdfFooter(context),
         build: (context) => [
           pw.SizedBox(height: 10),
@@ -215,7 +269,10 @@ class PlanPdfExportService {
 
           // Hero Executive Summary Banner
           pw.Container(
-            padding: const pw.EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            padding: const pw.EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 12,
+            ),
             decoration: const pw.BoxDecoration(
               color: PdfColor.fromInt(0xFF1E3A5F),
               borderRadius: pw.BorderRadius.all(pw.Radius.circular(6)),
@@ -253,15 +310,24 @@ class PlanPdfExportService {
                   children: [
                     pw.Text(
                       'Built-up Area: ${displayUnit.formatArea(report.totalBuiltUpAreaSqFt)}',
-                      style: const pw.TextStyle(color: PdfColors.grey200, fontSize: 9.5),
+                      style: const pw.TextStyle(
+                        color: PdfColors.grey200,
+                        fontSize: 9.5,
+                      ),
                     ),
                     pw.Text(
                       'Carpet Area: ${displayUnit.formatArea(report.totalCarpetAreaSqFt)}',
-                      style: const pw.TextStyle(color: PdfColors.grey200, fontSize: 9.5),
+                      style: const pw.TextStyle(
+                        color: PdfColors.grey200,
+                        fontSize: 9.5,
+                      ),
                     ),
                     pw.Text(
                       'Net Masonry: ${numFormat.format(report.netMasonryVolumeCuFt)} cu.ft',
-                      style: const pw.TextStyle(color: PdfColors.grey200, fontSize: 9.5),
+                      style: const pw.TextStyle(
+                        color: PdfColors.grey200,
+                        fontSize: 9.5,
+                      ),
                     ),
                   ],
                 ),
@@ -278,17 +344,25 @@ class PlanPdfExportService {
                 decoration: const pw.BoxDecoration(color: PdfColors.grey100),
                 children: [
                   _tableCell('Physical Wall Length', isHeader: true),
-                  _tableCell('${numFormat.format(report.totalPhysicalWallLengthFeet)} ft (${numFormat.format(report.exteriorWallLengthFeet)} ft Ext + ${numFormat.format(report.interiorSharedWallLengthFeet)} ft Shared Int)'),
+                  _tableCell(
+                    '${numFormat.format(report.totalPhysicalWallLengthFeet)} ft (${numFormat.format(report.exteriorWallLengthFeet)} ft Ext + ${numFormat.format(report.interiorSharedWallLengthFeet)} ft Shared Int)',
+                  ),
                   _tableCell('Masonry Volume', isHeader: true),
-                  _tableCell('${numFormat.format(report.netMasonryVolumeCuFt)} cu.ft (Gross: ${numFormat.format(report.grossMasonryVolumeCuFt)} cu.ft)'),
+                  _tableCell(
+                    '${numFormat.format(report.netMasonryVolumeCuFt)} cu.ft (Gross: ${numFormat.format(report.grossMasonryVolumeCuFt)} cu.ft)',
+                  ),
                 ],
               ),
               pw.TableRow(
                 children: [
                   _tableCell('Deducted Openings', isHeader: true),
-                  _tableCell('${report.totalOpeningsCount} openings (${numFormat.format(report.totalOpeningsAreaSqFt)} sq.ft deducted)'),
+                  _tableCell(
+                    '${report.totalOpeningsCount} openings (${numFormat.format(report.totalOpeningsAreaSqFt)} sq.ft deducted)',
+                  ),
                   _tableCell('Openings Volume Deduction', isHeader: true),
-                  _tableCell('${numFormat.format(report.openingsDeductionVolumeCuFt)} cu.ft'),
+                  _tableCell(
+                    '${numFormat.format(report.openingsDeductionVolumeCuFt)} cu.ft',
+                  ),
                 ],
               ),
             ],
@@ -307,9 +381,15 @@ class PlanPdfExportService {
           pw.SizedBox(height: 6),
           pw.TableHelper.fromTextArray(
             border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
-            headerDecoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1E3A5F)),
+            headerDecoration: const pw.BoxDecoration(
+              color: PdfColor.fromInt(0xFF1E3A5F),
+            ),
             headerHeight: 22,
-            headerStyle: pw.TextStyle(color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 8.5),
+            headerStyle: pw.TextStyle(
+              color: PdfColors.white,
+              fontWeight: pw.FontWeight.bold,
+              fontSize: 8.5,
+            ),
             cellStyle: const pw.TextStyle(fontSize: 8),
             cellAlignment: pw.Alignment.centerLeft,
             headers: metadata.includeRatesAndCosts
@@ -384,10 +464,19 @@ class PlanPdfExportService {
                       child: pw.Column(
                         crossAxisAlignment: pw.CrossAxisAlignment.start,
                         children: [
-                          _specRow('Masonry Unit:', '${assumptions.masonryType.label} (joint ${assumptions.mortarJointThicknessInches}")'),
-                          _specRow('Wall Heights:', 'Ceiling ${assumptions.wallHeightFeet} ft (Ext ${assumptions.exteriorWallThicknessFeet} ft, Int ${assumptions.interiorWallThicknessFeet} ft)'),
+                          _specRow(
+                            'Masonry Unit:',
+                            '${assumptions.masonryType.label} (joint ${assumptions.mortarJointThicknessInches}")',
+                          ),
+                          _specRow(
+                            'Wall Heights:',
+                            'Ceiling ${assumptions.wallHeightFeet} ft (Ext ${assumptions.exteriorWallThicknessFeet} ft, Int ${assumptions.interiorWallThicknessFeet} ft)',
+                          ),
                           _specRow('Mortar Mix:', assumptions.mortarMix.label),
-                          _specRow('Plaster Details:', '${assumptions.plasterMix.label} (Int ${assumptions.interiorPlasterThicknessInches}", Ext ${assumptions.exteriorPlasterThicknessInches}")'),
+                          _specRow(
+                            'Plaster Details:',
+                            '${assumptions.plasterMix.label} (Int ${assumptions.interiorPlasterThicknessInches}", Ext ${assumptions.exteriorPlasterThicknessInches}")',
+                          ),
                         ],
                       ),
                     ),
@@ -396,10 +485,24 @@ class PlanPdfExportService {
                       child: pw.Column(
                         crossAxisAlignment: pw.CrossAxisAlignment.start,
                         children: [
-                          _specRow('RCC Elements:', assumptions.includeRoofSlab ? '${assumptions.roofSlabThicknessInches}" slab (${assumptions.concreteGrade.label})' : 'Masonry superstructure'),
-                          _specRow('Paint Coverage:', '${assumptions.interiorPaintCoverageSqFtPerLiter} sq.ft/L (${assumptions.interiorPaintCoats} coats)'),
-                          _specRow('Wastage Factors:', 'Bricks ${assumptions.brickWastagePercent}%, Plaster ${assumptions.plasterWastagePercent}%, Tiles ${assumptions.tileWastagePercent}%'),
-                          _specRow('Rates Applied:', 'Brk: $currency${assumptions.brickRatePerUnit} | Cmt: $currency${assumptions.cementRatePerBag} | Sand: $currency${assumptions.sandRatePerCuFt}/cu.ft'),
+                          _specRow(
+                            'RCC Elements:',
+                            assumptions.includeRoofSlab
+                                ? '${assumptions.roofSlabThicknessInches}" slab (${assumptions.concreteGrade.label})'
+                                : 'Masonry superstructure',
+                          ),
+                          _specRow(
+                            'Paint Coverage:',
+                            '${assumptions.interiorPaintCoverageSqFtPerLiter} sq.ft/L (${assumptions.interiorPaintCoats} coats)',
+                          ),
+                          _specRow(
+                            'Wastage Factors:',
+                            'Bricks ${assumptions.brickWastagePercent}%, Plaster ${assumptions.plasterWastagePercent}%, Tiles ${assumptions.tileWastagePercent}%',
+                          ),
+                          _specRow(
+                            'Rates Applied:',
+                            'Brk: $currency${assumptions.brickRatePerUnit} | Cmt: $currency${assumptions.cementRatePerBag} | Sand: $currency${assumptions.sandRatePerCuFt}/cu.ft',
+                          ),
                         ],
                       ),
                     ),
@@ -423,9 +526,15 @@ class PlanPdfExportService {
             pw.SizedBox(height: 6),
             pw.TableHelper.fromTextArray(
               border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
-              headerDecoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF334155)),
+              headerDecoration: const pw.BoxDecoration(
+                color: PdfColor.fromInt(0xFF334155),
+              ),
               headerHeight: 20,
-              headerStyle: pw.TextStyle(color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 8),
+              headerStyle: pw.TextStyle(
+                color: PdfColors.white,
+                fontWeight: pw.FontWeight.bold,
+                fontSize: 8,
+              ),
               cellStyle: const pw.TextStyle(fontSize: 8),
               cellAlignment: pw.Alignment.centerLeft,
               headers: [
@@ -461,9 +570,22 @@ class PlanPdfExportService {
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('ESTIMATE REMARKS & SITE CONDITIONS:', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold, color: PdfColors.brown900)),
+                  pw.Text(
+                    'ESTIMATE REMARKS & SITE CONDITIONS:',
+                    style: pw.TextStyle(
+                      fontSize: 9,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.brown900,
+                    ),
+                  ),
                   pw.SizedBox(height: 3),
-                  pw.Text(metadata.notes, style: const pw.TextStyle(fontSize: 8.5, color: PdfColors.brown800)),
+                  pw.Text(
+                    metadata.notes,
+                    style: const pw.TextStyle(
+                      fontSize: 8.5,
+                      color: PdfColors.brown800,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -507,12 +629,21 @@ class PlanPdfExportService {
 
   // --- Internal PDF Layout Helpers ---
 
-  static pw.Widget _buildPdfHeader(ReportMetadata metadata, FloorPlan plan, String reportTypeTitle) {
+  static pw.Widget _buildPdfHeader(
+    ReportMetadata metadata,
+    FloorPlan plan,
+    String reportTypeTitle,
+  ) {
     final dateFormat = DateFormat('yyyy-MM-dd HH:mm');
     return pw.Container(
       padding: const pw.EdgeInsets.only(bottom: 8),
       decoration: const pw.BoxDecoration(
-        border: pw.Border(bottom: pw.BorderSide(color: PdfColor.fromInt(0xFF1E3A5F), width: 1.5)),
+        border: pw.Border(
+          bottom: pw.BorderSide(
+            color: PdfColor.fromInt(0xFF1E3A5F),
+            width: 1.5,
+          ),
+        ),
       ),
       child: pw.Row(
         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -533,14 +664,21 @@ class PlanPdfExportService {
                   ),
                   pw.SizedBox(width: 6),
                   pw.Container(
-                    padding: const pw.EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                    padding: const pw.EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 2,
+                    ),
                     decoration: const pw.BoxDecoration(
                       color: PdfColor.fromInt(0xFFFF8C00),
                       borderRadius: pw.BorderRadius.all(pw.Radius.circular(3)),
                     ),
                     child: pw.Text(
                       'PRO',
-                      style: pw.TextStyle(color: PdfColors.white, fontSize: 8, fontWeight: pw.FontWeight.bold),
+                      style: pw.TextStyle(
+                        color: PdfColors.white,
+                        fontSize: 8,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -548,7 +686,11 @@ class PlanPdfExportService {
               pw.SizedBox(height: 2),
               pw.Text(
                 reportTypeTitle,
-                style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey700, letterSpacing: 0.8),
+                style: const pw.TextStyle(
+                  fontSize: 9,
+                  color: PdfColors.grey700,
+                  letterSpacing: 0.8,
+                ),
               ),
             ],
           ),
@@ -556,12 +698,21 @@ class PlanPdfExportService {
             crossAxisAlignment: pw.CrossAxisAlignment.end,
             children: [
               pw.Text(
-                metadata.projectName.isNotEmpty ? metadata.projectName : plan.name,
-                style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold, color: const PdfColor.fromInt(0xFF0F172A)),
+                metadata.projectName.isNotEmpty
+                    ? metadata.projectName
+                    : plan.name,
+                style: pw.TextStyle(
+                  fontSize: 11,
+                  fontWeight: pw.FontWeight.bold,
+                  color: const PdfColor.fromInt(0xFF0F172A),
+                ),
               ),
               pw.Text(
                 'Date: ${dateFormat.format(metadata.createdAt)}',
-                style: const pw.TextStyle(fontSize: 8.5, color: PdfColors.grey600),
+                style: const pw.TextStyle(
+                  fontSize: 8.5,
+                  color: PdfColors.grey600,
+                ),
               ),
             ],
           ),
@@ -575,7 +726,9 @@ class PlanPdfExportService {
       margin: const pw.EdgeInsets.only(top: 8),
       padding: const pw.EdgeInsets.only(top: 6),
       decoration: const pw.BoxDecoration(
-        border: pw.Border(top: pw.BorderSide(color: PdfColors.grey300, width: 0.5)),
+        border: pw.Border(
+          top: pw.BorderSide(color: PdfColors.grey300, width: 0.5),
+        ),
       ),
       child: pw.Row(
         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -586,7 +739,11 @@ class PlanPdfExportService {
           ),
           pw.Text(
             'Page ${context.pageNumber} of ${context.pagesCount}',
-            style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700),
+            style: pw.TextStyle(
+              fontSize: 8,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.grey700,
+            ),
           ),
         ],
       ),
@@ -609,12 +766,47 @@ class PlanPdfExportService {
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('CLIENT / CUSTOMER DETAILS:', style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold, color: const PdfColor.fromInt(0xFF1E3A5F))),
+                  pw.Text(
+                    'CLIENT / CUSTOMER DETAILS:',
+                    style: pw.TextStyle(
+                      fontSize: 8.5,
+                      fontWeight: pw.FontWeight.bold,
+                      color: const PdfColor.fromInt(0xFF1E3A5F),
+                    ),
+                  ),
                   pw.SizedBox(height: 2),
-                  if (metadata.clientName.isNotEmpty) pw.Text(metadata.clientName, style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold)),
-                  if (metadata.clientPhone.isNotEmpty) pw.Text('Phone: ${metadata.clientPhone}', style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
-                  if (metadata.clientEmail.isNotEmpty) pw.Text('Email: ${metadata.clientEmail}', style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
-                  if (metadata.projectLocation.isNotEmpty) pw.Text('Site: ${metadata.projectLocation}', style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
+                  if (metadata.clientName.isNotEmpty)
+                    pw.Text(
+                      metadata.clientName,
+                      style: pw.TextStyle(
+                        fontSize: 8.5,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  if (metadata.clientPhone.isNotEmpty)
+                    pw.Text(
+                      'Phone: ${metadata.clientPhone}',
+                      style: const pw.TextStyle(
+                        fontSize: 8,
+                        color: PdfColors.grey700,
+                      ),
+                    ),
+                  if (metadata.clientEmail.isNotEmpty)
+                    pw.Text(
+                      'Email: ${metadata.clientEmail}',
+                      style: const pw.TextStyle(
+                        fontSize: 8,
+                        color: PdfColors.grey700,
+                      ),
+                    ),
+                  if (metadata.projectLocation.isNotEmpty)
+                    pw.Text(
+                      'Site: ${metadata.projectLocation}',
+                      style: const pw.TextStyle(
+                        fontSize: 8,
+                        color: PdfColors.grey700,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -625,12 +817,47 @@ class PlanPdfExportService {
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text('PREPARED BY / ARCHITECT / CONTRACTOR:', style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold, color: const PdfColor.fromInt(0xFF1E3A5F))),
+                  pw.Text(
+                    'PREPARED BY / ARCHITECT / CONTRACTOR:',
+                    style: pw.TextStyle(
+                      fontSize: 8.5,
+                      fontWeight: pw.FontWeight.bold,
+                      color: const PdfColor.fromInt(0xFF1E3A5F),
+                    ),
+                  ),
                   pw.SizedBox(height: 2),
-                  if (metadata.companyName.isNotEmpty) pw.Text(metadata.companyName, style: pw.TextStyle(fontSize: 8.5, fontWeight: pw.FontWeight.bold)),
-                  if (metadata.preparedBy.isNotEmpty) pw.Text('Engineer/Designer: ${metadata.preparedBy}', style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
-                  if (metadata.companyPhone.isNotEmpty) pw.Text('Contact: ${metadata.companyPhone}', style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
-                  if (metadata.companyAddress.isNotEmpty) pw.Text(metadata.companyAddress, style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700)),
+                  if (metadata.companyName.isNotEmpty)
+                    pw.Text(
+                      metadata.companyName,
+                      style: pw.TextStyle(
+                        fontSize: 8.5,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  if (metadata.preparedBy.isNotEmpty)
+                    pw.Text(
+                      'Engineer/Designer: ${metadata.preparedBy}',
+                      style: const pw.TextStyle(
+                        fontSize: 8,
+                        color: PdfColors.grey700,
+                      ),
+                    ),
+                  if (metadata.companyPhone.isNotEmpty)
+                    pw.Text(
+                      'Contact: ${metadata.companyPhone}',
+                      style: const pw.TextStyle(
+                        fontSize: 8,
+                        color: PdfColors.grey700,
+                      ),
+                    ),
+                  if (metadata.companyAddress.isNotEmpty)
+                    pw.Text(
+                      metadata.companyAddress,
+                      style: const pw.TextStyle(
+                        fontSize: 8,
+                        color: PdfColors.grey700,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -652,12 +879,20 @@ class PlanPdfExportService {
         children: [
           pw.Text(
             'STATUTORY NOTICE & ENGINEERING DISCLAIMER:',
-            style: pw.TextStyle(fontSize: 7.5, fontWeight: pw.FontWeight.bold, color: PdfColors.grey800),
+            style: pw.TextStyle(
+              fontSize: 7.5,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.grey800,
+            ),
           ),
           pw.SizedBox(height: 2),
           pw.Text(
             'This drawing and material estimation report is generated based on geometric mathematical parameters, nominal masonry deductions, and user-configured unit rates. Actual site conditions, soil bearing capacities, seismic structural codes, concrete mix designs, local labor logistics, and contractor margins must be independently verified by a licensed civil engineer or registered architect prior to execution.',
-            style: const pw.TextStyle(fontSize: 6.8, color: PdfColors.grey700, lineSpacing: 1.2),
+            style: const pw.TextStyle(
+              fontSize: 6.8,
+              color: PdfColors.grey700,
+              lineSpacing: 1.2,
+            ),
           ),
         ],
       ),
@@ -672,7 +907,9 @@ class PlanPdfExportService {
         style: pw.TextStyle(
           fontSize: 8.5,
           fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
-          color: isHeader ? const PdfColor.fromInt(0xFF1E3A5F) : PdfColors.black,
+          color: isHeader
+              ? const PdfColor.fromInt(0xFF1E3A5F)
+              : PdfColors.black,
         ),
       ),
     );
@@ -693,13 +930,20 @@ class PlanPdfExportService {
         children: [
           pw.Text(
             label,
-            style: pw.TextStyle(fontSize: 7.8, fontWeight: pw.FontWeight.bold, color: PdfColors.grey800),
+            style: pw.TextStyle(
+              fontSize: 7.8,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.grey800,
+            ),
           ),
           pw.SizedBox(width: 4),
           pw.Expanded(
             child: pw.Text(
               value,
-              style: const pw.TextStyle(fontSize: 7.8, color: PdfColors.grey700),
+              style: const pw.TextStyle(
+                fontSize: 7.8,
+                color: PdfColors.grey700,
+              ),
             ),
           ),
         ],

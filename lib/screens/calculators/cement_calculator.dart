@@ -54,9 +54,9 @@ class _CementCalculatorState extends State<CementCalculator> {
       // Save to history
       _saveToHistory();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter all values')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter all values')));
     }
   }
 
@@ -202,7 +202,8 @@ class _CementCalculatorState extends State<CementCalculator> {
                 title: 'Results',
                 icon: Icons.architecture_rounded,
                 onSave: _bookmark,
-                note: 'Based on standard 1:6 mix ratio with dry volume factor 1.54',
+                note:
+                    'Based on standard 1:6 mix ratio with dry volume factor 1.54',
                 rows: [
                   ResultRowItem(
                     label: 'Cement Required',

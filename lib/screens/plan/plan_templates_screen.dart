@@ -11,10 +11,7 @@ import 'plan_editor_screen.dart';
 class PlanTemplatesScreen extends StatefulWidget {
   final bool selectOnly;
 
-  const PlanTemplatesScreen({
-    super.key,
-    this.selectOnly = false,
-  });
+  const PlanTemplatesScreen({super.key, this.selectOnly = false});
 
   @override
   State<PlanTemplatesScreen> createState() => _PlanTemplatesScreenState();
@@ -64,7 +61,9 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Template duplicated as "${freshPlan.name}" in Saved Plans!'),
+        content: Text(
+          'Template duplicated as "${freshPlan.name}" in Saved Plans!',
+        ),
         backgroundColor: const Color(0xFF1E3A5F),
         action: SnackBarAction(
           label: 'Open in Editor',
@@ -123,9 +122,14 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
                           )
                         : null,
                     isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
                     filled: true,
-                    fillColor: isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+                    fillColor: isDark
+                        ? const Color(0xFF0F172A)
+                        : const Color(0xFFF1F5F9),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -150,8 +154,12 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
                           checkmarkColor: Colors.white,
                           labelStyle: TextStyle(
                             fontSize: 12,
-                            fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                            color: isSel ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                            fontWeight: isSel
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isSel
+                                ? Colors.white
+                                : (isDark ? Colors.white70 : Colors.black87),
                           ),
                           onSelected: (_) => setState(() => _selectedBhk = bhk),
                         ),
@@ -165,23 +173,32 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: ReadyMadePlanCatalog.plotDimensionFilterOptions.map((dim) {
-                      final isSel = _selectedDimension == dim;
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ChoiceChip(
-                          label: Text(dim),
-                          selected: isSel,
-                          selectedColor: const Color(0xFF0284C7),
-                          labelStyle: TextStyle(
-                            fontSize: 11,
-                            fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                            color: isSel ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
-                          ),
-                          onSelected: (_) => setState(() => _selectedDimension = dim),
-                        ),
-                      );
-                    }).toList(),
+                    children: ReadyMadePlanCatalog.plotDimensionFilterOptions
+                        .map((dim) {
+                          final isSel = _selectedDimension == dim;
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: ChoiceChip(
+                              label: Text(dim),
+                              selected: isSel,
+                              selectedColor: const Color(0xFF0284C7),
+                              labelStyle: TextStyle(
+                                fontSize: 11,
+                                fontWeight: isSel
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                color: isSel
+                                    ? Colors.white
+                                    : (isDark
+                                          ? Colors.white70
+                                          : Colors.black87),
+                              ),
+                              onSelected: (_) =>
+                                  setState(() => _selectedDimension = dim),
+                            ),
+                          );
+                        })
+                        .toList(),
                   ),
                 ),
               ],
@@ -194,7 +211,9 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
             margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFDC2626).withValues(alpha: isDark ? 0.12 : 0.08),
+              color: const Color(
+                0xFFDC2626,
+              ).withValues(alpha: isDark ? 0.12 : 0.08),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: const Color(0xFFDC2626).withValues(alpha: 0.25),
@@ -243,7 +262,8 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
                 ? const EmptyStateView(
                     icon: Icons.search_off_rounded,
                     title: 'No Matching Layouts',
-                    message: 'Try adjusting your BHK category or plot dimension filters.',
+                    message:
+                        'Try adjusting your BHK category or plot dimension filters.',
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
@@ -275,9 +295,7 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
       elevation: isDark ? 1 : 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
-        side: BorderSide(
-          color: isDark ? Colors.white12 : Colors.grey[200]!,
-        ),
+        side: BorderSide(color: isDark ? Colors.white12 : Colors.grey[200]!),
       ),
       color: isDark ? const Color(0xFF1E293B) : Colors.white,
       clipBehavior: Clip.antiAlias,
@@ -296,9 +314,14 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFF8C00).withValues(alpha: 0.15),
+                              color: const Color(
+                                0xFFFF8C00,
+                              ).withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -312,9 +335,14 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
                           ),
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF0284C7).withValues(alpha: 0.12),
+                              color: const Color(
+                                0xFF0284C7,
+                              ).withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -382,7 +410,10 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
                     right: 8,
                     bottom: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.black.withValues(alpha: 0.65),
                         borderRadius: BorderRadius.circular(8),
@@ -390,7 +421,11 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.zoom_in_rounded, size: 14, color: Colors.white),
+                          Icon(
+                            Icons.zoom_in_rounded,
+                            size: 14,
+                            color: Colors.white,
+                          ),
                           SizedBox(width: 4),
                           Text(
                             'Tap to Preview',
@@ -411,9 +446,18 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildCardMetric('Plot Area', '${template.plotAreaSqFt.toInt()} sq ft'),
-                _buildCardMetric('Built-Up', '${template.totalBuiltUpAreaSqFt.toStringAsFixed(0)} sq ft'),
-                _buildCardMetric('Usable Area', '${template.usablePlotAreaSqFt.toInt()} sq ft'),
+                _buildCardMetric(
+                  'Plot Area',
+                  '${template.plotAreaSqFt.toInt()} sq ft',
+                ),
+                _buildCardMetric(
+                  'Built-Up',
+                  '${template.totalBuiltUpAreaSqFt.toStringAsFixed(0)} sq ft',
+                ),
+                _buildCardMetric(
+                  'Usable Area',
+                  '${template.usablePlotAreaSqFt.toInt()} sq ft',
+                ),
                 _buildCardMetric('Rooms', '${template.roomCount} Rooms'),
               ],
             ),
@@ -430,7 +474,11 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.straighten_rounded, size: 14, color: Colors.grey),
+                const Icon(
+                  Icons.straighten_rounded,
+                  size: 14,
+                  color: Colors.grey,
+                ),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
@@ -452,7 +500,8 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => TemplatePreviewSheet.show(context, template),
+                    onPressed: () =>
+                        TemplatePreviewSheet.show(context, template),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       shape: RoundedRectangleBorder(
@@ -490,10 +539,7 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 10, color: Colors.grey),
-        ),
+        Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
         const SizedBox(height: 1),
         Text(
           value,
@@ -532,7 +578,11 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
                 '• Setback and Ground Coverage requirements vary significantly between municipalities and zoning classifications.\n'
                 '• Floor Area Ratio (FAR/FSI) determines the total permissible built-up area.\n'
                 '• Soil conditions, earthquake zones, and structural load calculations require licensed engineering certification before commencing construction.',
-                style: TextStyle(fontSize: 11.5, height: 1.4, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 11.5,
+                  height: 1.4,
+                  color: Colors.grey,
+                ),
               ),
             ],
           ),

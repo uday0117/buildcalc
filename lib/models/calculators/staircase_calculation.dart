@@ -98,10 +98,6 @@ class StaircaseResult {
   });
 
   factory StaircaseResult.failure(String message) {
-    return StaircaseResult(
-      isValid: false,
-      errorMessage: message,
-    );
+    return StaircaseResult(isValid: false, errorMessage: message);
   }
 }
-

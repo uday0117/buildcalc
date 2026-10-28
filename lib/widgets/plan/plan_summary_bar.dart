@@ -73,16 +73,25 @@ class PlanSummaryBar extends StatelessWidget {
                 onTap: onEstimateMaterials,
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF059669).withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: const Color(0xFF059669).withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: const Color(0xFF059669).withValues(alpha: 0.3),
+                    ),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.calculate_outlined, size: 15, color: Color(0xFF059669)),
+                      Icon(
+                        Icons.calculate_outlined,
+                        size: 15,
+                        color: Color(0xFF059669),
+                      ),
                       SizedBox(width: 4),
                       Text(
                         'Materials Estimate',
@@ -109,7 +118,11 @@ class PlanSummaryBar extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.warning_amber_rounded, size: 16, color: Colors.red.shade700),
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      size: 16,
+                      color: Colors.red.shade700,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       '${overlapping.length} room overlap(s)',
@@ -178,4 +191,3 @@ class PlanSummaryBar extends StatelessWidget {
     );
   }
 }
-

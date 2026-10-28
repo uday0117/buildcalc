@@ -54,11 +54,15 @@ class PlanCanvasPainter extends CustomPainter {
 
   void _drawGrid(Canvas canvas, Size size) {
     final minorPaint = Paint()
-      ..color = (isDark ? Colors.white : const Color(0xFF1E3A5F)).withValues(alpha: 0.05)
+      ..color = (isDark ? Colors.white : const Color(0xFF1E3A5F)).withValues(
+        alpha: 0.05,
+      )
       ..strokeWidth = 1.0;
 
     final majorPaint = Paint()
-      ..color = (isDark ? Colors.white : const Color(0xFF1E3A5F)).withValues(alpha: 0.12)
+      ..color = (isDark ? Colors.white : const Color(0xFF1E3A5F)).withValues(
+        alpha: 0.12,
+      )
       ..strokeWidth = 1.2;
 
     // Minor grid every 1 ft, Major grid every 5 ft
@@ -104,7 +108,8 @@ class PlanCanvasPainter extends CustomPainter {
 
     // Setback guide line (3ft from boundary)
     final setbackFeet = 2.0;
-    if (plan.plotWidthFeet > setbackFeet * 3 && plan.plotLengthFeet > setbackFeet * 3) {
+    if (plan.plotWidthFeet > setbackFeet * 3 &&
+        plan.plotLengthFeet > setbackFeet * 3) {
       final setbackRect = Rect.fromLTWH(
         setbackFeet * scale,
         setbackFeet * scale,
@@ -143,8 +148,16 @@ class PlanCanvasPainter extends CustomPainter {
     canvas.drawLine(Offset(0, plotL), Offset(mLen, plotL), markerPaint);
     canvas.drawLine(Offset(0, plotL), Offset(0, plotL - mLen), markerPaint);
     // Bottom-right
-    canvas.drawLine(Offset(plotW, plotL), Offset(plotW - mLen, plotL), markerPaint);
-    canvas.drawLine(Offset(plotW, plotL), Offset(plotW, plotL - mLen), markerPaint);
+    canvas.drawLine(
+      Offset(plotW, plotL),
+      Offset(plotW - mLen, plotL),
+      markerPaint,
+    );
+    canvas.drawLine(
+      Offset(plotW, plotL),
+      Offset(plotW, plotL - mLen),
+      markerPaint,
+    );
 
     // Plot width annotation (top)
     _drawDimensionLine(
@@ -216,10 +229,7 @@ class PlanCanvasPainter extends CustomPainter {
     );
 
     final fullSpan = TextSpan(
-      children: [
-        nameSpan,
-        if (r.height >= 45 && r.width >= 50) detailSpan,
-      ],
+      children: [nameSpan, if (r.height >= 45 && r.width >= 50) detailSpan],
     );
 
     final tp = TextPainter(
@@ -229,10 +239,7 @@ class PlanCanvasPainter extends CustomPainter {
     );
     tp.layout(maxWidth: r.width - 8);
 
-    final pos = Offset(
-      r.center.dx - tp.width / 2,
-      r.center.dy - tp.height / 2,
-    );
+    final pos = Offset(r.center.dx - tp.width / 2, r.center.dy - tp.height / 2);
 
     // Pill background for readability over grid/walls
     final bgRect = RRect.fromRectAndRadius(
@@ -245,7 +252,9 @@ class PlanCanvasPainter extends CustomPainter {
     );
 
     final labelBgPaint = Paint()
-      ..color = (isDark ? const Color(0xFF1E293B) : Colors.white).withValues(alpha: 0.88)
+      ..color = (isDark ? const Color(0xFF1E293B) : Colors.white).withValues(
+        alpha: 0.88,
+      )
       ..style = PaintingStyle.fill;
     canvas.drawRRect(bgRect, labelBgPaint);
 
@@ -257,7 +266,8 @@ class PlanCanvasPainter extends CustomPainter {
     final wallPaint = Paint()
       ..color = isDark ? const Color(0xFF64748B) : const Color(0xFF1E293B)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = math.max(2.5, 0.45 * scale) // ~5.5 inches scaled
+      ..strokeWidth = math
+          .max(2.5, 0.45 * scale) // ~5.5 inches scaled
       ..strokeCap = StrokeCap.square
       ..strokeJoin = StrokeJoin.miter;
 
@@ -285,7 +295,12 @@ class PlanCanvasPainter extends CustomPainter {
     }
   }
 
-  void _drawDoor(Canvas canvas, PlanRoom room, PlanOpening op, bool isSelected) {
+  void _drawDoor(
+    Canvas canvas,
+    PlanRoom room,
+    PlanOpening op,
+    bool isSelected,
+  ) {
     final r = Rect.fromLTWH(
       room.x * scale,
       room.y * scale,
@@ -307,14 +322,18 @@ class PlanCanvasPainter extends CustomPainter {
       ..strokeWidth = math.max(3.0, 0.5 * scale);
 
     final doorLinePaint = Paint()
-      ..color = isSelected ? const Color(0xFFFF8C00) : (isDark ? Colors.amberAccent : const Color(0xFF8B4513))
+      ..color = isSelected
+          ? const Color(0xFFFF8C00)
+          : (isDark ? Colors.amberAccent : const Color(0xFF8B4513))
       ..style = PaintingStyle.stroke
       ..strokeWidth = isSelected ? 3.0 : 2.2;
 
     final arcPaint = Paint()
       ..color = isSelected
           ? const Color(0xFFFF8C00)
-          : (isDark ? Colors.amber.withValues(alpha: 0.6) : const Color(0xFF8B4513).withValues(alpha: 0.6))
+          : (isDark
+                ? Colors.amber.withValues(alpha: 0.6)
+                : const Color(0xFF8B4513).withValues(alpha: 0.6))
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
 
@@ -391,7 +410,12 @@ class PlanCanvasPainter extends CustomPainter {
     }
   }
 
-  void _drawWindow(Canvas canvas, PlanRoom room, PlanOpening op, bool isSelected) {
+  void _drawWindow(
+    Canvas canvas,
+    PlanRoom room,
+    PlanOpening op,
+    bool isSelected,
+  ) {
     final r = Rect.fromLTWH(
       room.x * scale,
       room.y * scale,
@@ -420,7 +444,8 @@ class PlanCanvasPainter extends CustomPainter {
     final wallThick = math.max(2.5, 0.45 * scale);
     final halfThick = wallThick / 2;
 
-    if (op.wallSide == PlanWallSide.north || op.wallSide == PlanWallSide.south) {
+    if (op.wallSide == PlanWallSide.north ||
+        op.wallSide == PlanWallSide.south) {
       final y = op.wallSide == PlanWallSide.north ? r.top : r.bottom;
       final p1 = Offset(r.left + opOffset, y);
       final p2 = Offset(p1.dx + opW, y);
@@ -429,13 +454,29 @@ class PlanCanvasPainter extends CustomPainter {
       canvas.drawLine(p1, p2, clearPaint);
 
       // Outer line, inner line, glass center line
-      canvas.drawLine(Offset(p1.dx, y - halfThick), Offset(p2.dx, y - halfThick), windowPaint);
-      canvas.drawLine(Offset(p1.dx, y + halfThick), Offset(p2.dx, y + halfThick), windowPaint);
+      canvas.drawLine(
+        Offset(p1.dx, y - halfThick),
+        Offset(p2.dx, y - halfThick),
+        windowPaint,
+      );
+      canvas.drawLine(
+        Offset(p1.dx, y + halfThick),
+        Offset(p2.dx, y + halfThick),
+        windowPaint,
+      );
       canvas.drawLine(p1, p2, glassPaint);
 
       // End caps
-      canvas.drawLine(Offset(p1.dx, y - halfThick), Offset(p1.dx, y + halfThick), windowPaint);
-      canvas.drawLine(Offset(p2.dx, y - halfThick), Offset(p2.dx, y + halfThick), windowPaint);
+      canvas.drawLine(
+        Offset(p1.dx, y - halfThick),
+        Offset(p1.dx, y + halfThick),
+        windowPaint,
+      );
+      canvas.drawLine(
+        Offset(p2.dx, y - halfThick),
+        Offset(p2.dx, y + halfThick),
+        windowPaint,
+      );
     } else {
       final x = op.wallSide == PlanWallSide.west ? r.left : r.right;
       final p1 = Offset(x, r.top + opOffset);
@@ -443,12 +484,28 @@ class PlanCanvasPainter extends CustomPainter {
 
       canvas.drawLine(p1, p2, clearPaint);
 
-      canvas.drawLine(Offset(x - halfThick, p1.dy), Offset(x - halfThick, p2.dy), windowPaint);
-      canvas.drawLine(Offset(x + halfThick, p1.dy), Offset(x + halfThick, p2.dy), windowPaint);
+      canvas.drawLine(
+        Offset(x - halfThick, p1.dy),
+        Offset(x - halfThick, p2.dy),
+        windowPaint,
+      );
+      canvas.drawLine(
+        Offset(x + halfThick, p1.dy),
+        Offset(x + halfThick, p2.dy),
+        windowPaint,
+      );
       canvas.drawLine(p1, p2, glassPaint);
 
-      canvas.drawLine(Offset(x - halfThick, p1.dy), Offset(x + halfThick, p1.dy), windowPaint);
-      canvas.drawLine(Offset(x - halfThick, p2.dy), Offset(x + halfThick, p2.dy), windowPaint);
+      canvas.drawLine(
+        Offset(x - halfThick, p1.dy),
+        Offset(x + halfThick, p1.dy),
+        windowPaint,
+      );
+      canvas.drawLine(
+        Offset(x - halfThick, p2.dy),
+        Offset(x + halfThick, p2.dy),
+        windowPaint,
+      );
     }
   }
 
@@ -498,8 +555,12 @@ class PlanCanvasPainter extends CustomPainter {
     // Edge handles (pill shape)
     void drawEdgePill(Offset center, bool isHorizontal, ResizeHandle h) {
       final isHActive = activeHandle == h;
-      final w = isHorizontal ? (isHActive ? 18.0 : 14.0) : (isHActive ? 8.0 : 6.0);
-      final l = isHorizontal ? (isHActive ? 8.0 : 6.0) : (isHActive ? 18.0 : 14.0);
+      final w = isHorizontal
+          ? (isHActive ? 18.0 : 14.0)
+          : (isHActive ? 8.0 : 6.0);
+      final l = isHorizontal
+          ? (isHActive ? 8.0 : 6.0)
+          : (isHActive ? 18.0 : 14.0);
       final pillRect = RRect.fromRectAndRadius(
         Rect.fromCenter(center: center, width: w, height: l),
         const Radius.circular(3),
@@ -531,21 +592,33 @@ class PlanCanvasPainter extends CustomPainter {
     // End ticks
     final tickLen = 4.0;
     if (isVertical) {
-      canvas.drawLine(Offset(start.dx - tickLen, start.dy), Offset(start.dx + tickLen, start.dy), linePaint);
-      canvas.drawLine(Offset(end.dx - tickLen, end.dy), Offset(end.dx + tickLen, end.dy), linePaint);
+      canvas.drawLine(
+        Offset(start.dx - tickLen, start.dy),
+        Offset(start.dx + tickLen, start.dy),
+        linePaint,
+      );
+      canvas.drawLine(
+        Offset(end.dx - tickLen, end.dy),
+        Offset(end.dx + tickLen, end.dy),
+        linePaint,
+      );
     } else {
-      canvas.drawLine(Offset(start.dx, start.dy - tickLen), Offset(start.dx, start.dy + tickLen), linePaint);
-      canvas.drawLine(Offset(end.dx, end.dy - tickLen), Offset(end.dx, end.dy + tickLen), linePaint);
+      canvas.drawLine(
+        Offset(start.dx, start.dy - tickLen),
+        Offset(start.dx, start.dy + tickLen),
+        linePaint,
+      );
+      canvas.drawLine(
+        Offset(end.dx, end.dy - tickLen),
+        Offset(end.dx, end.dy + tickLen),
+        linePaint,
+      );
     }
 
     // Text
     final span = TextSpan(
       text: text,
-      style: TextStyle(
-        color: color,
-        fontSize: 10,
-        fontWeight: FontWeight.w600,
-      ),
+      style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w600),
     );
     final tp = TextPainter(
       text: span,
@@ -563,7 +636,10 @@ class PlanCanvasPainter extends CustomPainter {
       tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
       canvas.restore();
     } else {
-      tp.paint(canvas, Offset(center.dx - tp.width / 2, center.dy - tp.height - 2));
+      tp.paint(
+        canvas,
+        Offset(center.dx - tp.width / 2, center.dy - tp.height - 2),
+      );
     }
   }
 
@@ -606,8 +682,15 @@ class PlanCanvasPainter extends CustomPainter {
         fontWeight: FontWeight.bold,
       ),
     );
-    final nTp = TextPainter(text: nSpan, textDirection: TextDirection.ltr)..layout();
-    nTp.paint(canvas, Offset(compassCenter.dx - nTp.width / 2, compassCenter.dy - compassRad - 12));
+    final nTp = TextPainter(text: nSpan, textDirection: TextDirection.ltr)
+      ..layout();
+    nTp.paint(
+      canvas,
+      Offset(
+        compassCenter.dx - nTp.width / 2,
+        compassCenter.dy - compassRad - 12,
+      ),
+    );
 
     // Scale Bar (Bottom of plot)
     final scaleBarFeet = 10.0;
@@ -617,9 +700,21 @@ class PlanCanvasPainter extends CustomPainter {
     final scalePaint = Paint()
       ..color = isDark ? Colors.white70 : const Color(0xFF1E3A5F)
       ..strokeWidth = 2.0;
-    canvas.drawLine(barStart, Offset(barStart.dx + barW, barStart.dy), scalePaint);
-    canvas.drawLine(Offset(barStart.dx, barStart.dy - 3), Offset(barStart.dx, barStart.dy + 3), scalePaint);
-    canvas.drawLine(Offset(barStart.dx + barW, barStart.dy - 3), Offset(barStart.dx + barW, barStart.dy + 3), scalePaint);
+    canvas.drawLine(
+      barStart,
+      Offset(barStart.dx + barW, barStart.dy),
+      scalePaint,
+    );
+    canvas.drawLine(
+      Offset(barStart.dx, barStart.dy - 3),
+      Offset(barStart.dx, barStart.dy + 3),
+      scalePaint,
+    );
+    canvas.drawLine(
+      Offset(barStart.dx + barW, barStart.dy - 3),
+      Offset(barStart.dx + barW, barStart.dy + 3),
+      scalePaint,
+    );
 
     final scaleSpan = TextSpan(
       text: unit.formatLength(scaleBarFeet),
@@ -629,8 +724,12 @@ class PlanCanvasPainter extends CustomPainter {
         fontWeight: FontWeight.w600,
       ),
     );
-    final sTp = TextPainter(text: scaleSpan, textDirection: TextDirection.ltr)..layout();
-    sTp.paint(canvas, Offset(barStart.dx + barW / 2 - sTp.width / 2, barStart.dy + 4));
+    final sTp = TextPainter(text: scaleSpan, textDirection: TextDirection.ltr)
+      ..layout();
+    sTp.paint(
+      canvas,
+      Offset(barStart.dx + barW / 2 - sTp.width / 2, barStart.dy + 4),
+    );
   }
 
   void _drawDashedRect(Canvas canvas, Rect rect, Paint paint) {
@@ -672,4 +771,3 @@ class PlanCanvasPainter extends CustomPainter {
         oldDelegate.scale != scale;
   }
 }
-

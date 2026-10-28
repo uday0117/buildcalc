@@ -64,9 +64,9 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
     if (res.isValid) {
       _saveToHistory(res);
     } else if (res.errorMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(res.errorMessage!)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(res.errorMessage!)));
     }
   }
 
@@ -208,7 +208,8 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
                 UnitSelector<int>(
                   values: const [1, 2],
                   selectedValue: _flightCount,
-                  labelBuilder: (val) => val == 1 ? 'Single Flight' : 'Dog-legged (2 Flights)',
+                  labelBuilder: (val) =>
+                      val == 1 ? 'Single Flight' : 'Dog-legged (2 Flights)',
                   onSelected: (val) {
                     setState(() => _flightCount = val);
                     _calculate();
@@ -335,10 +336,7 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 6),
-              StaircaseSketchWidget(
-                input: _lastInput!,
-                result: res,
-              ),
+              StaircaseSketchWidget(input: _lastInput!, result: res),
 
               // Warnings banner if any
               if (res.warnings.isNotEmpty) ...[
@@ -355,15 +353,20 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.warning_amber_rounded,
-                              size: 18, color: Colors.amber.shade800),
+                          Icon(
+                            Icons.warning_amber_rounded,
+                            size: 18,
+                            color: Colors.amber.shade800,
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             'Design Comfort & Code Considerations',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.amber[200] : Colors.amber[900],
+                              color: isDark
+                                  ? Colors.amber[200]
+                                  : Colors.amber[900],
                             ),
                           ),
                         ],
@@ -393,16 +396,19 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
                 title: 'Staircase Dimensions',
                 icon: Icons.square_foot_rounded,
                 onSave: _bookmark,
-                note: 'Step formula: Blondel rule (2R + T = ${res.blondelComfortIndexMm.toStringAsFixed(0)} mm)',
+                note:
+                    'Step formula: Blondel rule (2R + T = ${res.blondelComfortIndexMm.toStringAsFixed(0)} mm)',
                 rows: [
                   ResultRowItem(
                     label: 'Number of Risers',
-                    value: '${res.totalRisers} risers (${res.actualRiserMm.toStringAsFixed(1)} mm each)',
+                    value:
+                        '${res.totalRisers} risers (${res.actualRiserMm.toStringAsFixed(1)} mm each)',
                     isPrimary: true,
                   ),
                   ResultRowItem(
                     label: 'Number of Treads',
-                    value: '${res.totalTreads} treads (${res.actualTreadMm.toStringAsFixed(0)} mm run)',
+                    value:
+                        '${res.totalTreads} treads (${res.actualTreadMm.toStringAsFixed(0)} mm run)',
                   ),
                   ResultRowItem(
                     label: 'Total Flight Going (Run)',
@@ -425,7 +431,8 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
               ResultCard(
                 title: 'Concrete & Materials Estimate',
                 icon: Icons.layers_rounded,
-                note: 'Quantities include 54% dry volume factor for ${_selectedGrade.name}',
+                note:
+                    'Quantities include 54% dry volume factor for ${_selectedGrade.name}',
                 rows: [
                   ResultRowItem(
                     label: 'Total Wet Concrete',
@@ -438,15 +445,18 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
                   ),
                   ResultRowItem(
                     label: 'Sand',
-                    value: '${res.sandM3.toStringAsFixed(2)} m³ (${res.sandTonnes.toStringAsFixed(2)} tonnes)',
+                    value:
+                        '${res.sandM3.toStringAsFixed(2)} m³ (${res.sandTonnes.toStringAsFixed(2)} tonnes)',
                   ),
                   ResultRowItem(
                     label: 'Coarse Aggregate',
-                    value: '${res.aggregateM3.toStringAsFixed(2)} m³ (${res.aggregateTonnes.toStringAsFixed(2)} tonnes)',
+                    value:
+                        '${res.aggregateM3.toStringAsFixed(2)} m³ (${res.aggregateTonnes.toStringAsFixed(2)} tonnes)',
                   ),
                   ResultRowItem(
                     label: 'Estimated Steel Rebar',
-                    value: '~${res.estimatedSteelKg.toStringAsFixed(0)} kg (rule of thumb ~85 kg/m³)',
+                    value:
+                        '~${res.estimatedSteelKg.toStringAsFixed(0)} kg (rule of thumb ~85 kg/m³)',
                   ),
                 ],
               ),
@@ -457,7 +467,9 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E293B) : Colors.grey.shade100,
+                  color: isDark
+                      ? const Color(0xFF1E293B)
+                      : Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isDark ? Colors.white12 : Colors.grey.shade300,
@@ -504,4 +516,3 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
     super.dispose();
   }
 }
-

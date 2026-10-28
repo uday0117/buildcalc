@@ -12,10 +12,7 @@ import 'plan_elevation_screen.dart';
 class Plan3DViewScreen extends StatefulWidget {
   final FloorPlan plan;
 
-  const Plan3DViewScreen({
-    super.key,
-    required this.plan,
-  });
+  const Plan3DViewScreen({super.key, required this.plan});
 
   @override
   State<Plan3DViewScreen> createState() => _Plan3DViewScreenState();
@@ -40,7 +37,10 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
 
   void _initScene() {
     // Initial camera distance scaled by plot size
-    final maxPlotDim = math.max(widget.plan.plotWidthFeet, widget.plan.plotLengthFeet);
+    final maxPlotDim = math.max(
+      widget.plan.plotWidthFeet,
+      widget.plan.plotLengthFeet,
+    );
     final initialDistance = (maxPlotDim * 1.85).clamp(35.0, 180.0);
 
     _camera = Camera3DState(
@@ -76,7 +76,10 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
 
   void _resetCamera() {
     setState(() {
-      final maxPlotDim = math.max(widget.plan.plotWidthFeet, widget.plan.plotLengthFeet);
+      final maxPlotDim = math.max(
+        widget.plan.plotWidthFeet,
+        widget.plan.plotLengthFeet,
+      );
       _camera.distance = (maxPlotDim * 1.85).clamp(35.0, 180.0);
       _camera.reset();
     });
@@ -96,7 +99,8 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
 
   void _toggleProjectionMode() {
     setState(() {
-      _camera.projectionMode = _camera.projectionMode == ProjectionMode.perspective
+      _camera.projectionMode =
+          _camera.projectionMode == ProjectionMode.perspective
           ? ProjectionMode.isometric
           : ProjectionMode.perspective;
     });
@@ -136,7 +140,9 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
     final unit = plan.unit;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
+          : const Color(0xFFF1F5F9),
       appBar: AppBar(
         titleSpacing: 0,
         leading: IconButton(
@@ -154,12 +160,18 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
                   child: Text(
                     plan.name,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFF8C00).withValues(alpha: 0.18),
                     borderRadius: BorderRadius.circular(6),
@@ -189,7 +201,8 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
                   ? Icons.view_in_ar_rounded
                   : Icons.grid_view_rounded,
             ),
-            tooltip: 'Switch to ${_camera.projectionMode == ProjectionMode.perspective ? 'Isometric' : 'Perspective'} Mode',
+            tooltip:
+                'Switch to ${_camera.projectionMode == ProjectionMode.perspective ? 'Isometric' : 'Perspective'} Mode',
             onPressed: _toggleProjectionMode,
           ),
           // Materials & Colors
@@ -226,7 +239,10 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
             if (_validation.hasWarnings && !_isWarningDismissed)
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.amber.shade50,
                   borderRadius: BorderRadius.circular(10),
@@ -234,20 +250,28 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.warning_amber_rounded, size: 18, color: Colors.amber.shade900),
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      size: 18,
+                      color: Colors.amber.shade900,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         _validation.warnings.first,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 11, color: Colors.amber.shade900),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.amber.shade900,
+                        ),
                       ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close, size: 14),
                       visualDensity: VisualDensity.compact,
-                      onPressed: () => setState(() => _isWarningDismissed = true),
+                      onPressed: () =>
+                          setState(() => _isWarningDismissed = true),
                     ),
                   ],
                 ),
@@ -349,11 +373,22 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
                             onTap: _openMaterialSheet,
                             borderRadius: BorderRadius.circular(20),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 7,
+                              ),
                               decoration: BoxDecoration(
-                                color: (isDark ? const Color(0xFF1E293B) : Colors.white).withValues(alpha: 0.9),
+                                color:
+                                    (isDark
+                                            ? const Color(0xFF1E293B)
+                                            : Colors.white)
+                                        .withValues(alpha: 0.9),
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: isDark ? Colors.white12 : Colors.black12),
+                                border: Border.all(
+                                  color: isDark
+                                      ? Colors.white12
+                                      : Colors.black12,
+                                ),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withValues(alpha: 0.08),
@@ -365,11 +400,18 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(_cutawayMode.icon, size: 16, color: const Color(0xFFFF8C00)),
+                                  Icon(
+                                    _cutawayMode.icon,
+                                    size: 16,
+                                    color: const Color(0xFFFF8C00),
+                                  ),
                                   const SizedBox(width: 6),
                                   Text(
                                     _cutawayMode.label,
-                                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -402,7 +444,11 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
                 color: Colors.red.shade50,
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.layers_clear_rounded, size: 48, color: Colors.red.shade600),
+              child: Icon(
+                Icons.layers_clear_rounded,
+                size: 48,
+                color: Colors.red.shade600,
+              ),
             ),
             const SizedBox(height: 16),
             const Text(
@@ -425,7 +471,9 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1E3A5F),
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ],
@@ -434,7 +482,12 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
     );
   }
 
-  Widget _buildBottomBar(BuildContext context, FloorPlan plan, PlanUnit unit, bool isDark) {
+  Widget _buildBottomBar(
+    BuildContext context,
+    FloorPlan plan,
+    PlanUnit unit,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -456,7 +509,10 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
               children: [
                 Text(
                   '${unit.formatDimensions(plan.plotWidthFeet, plan.plotLengthFeet)} Plot',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
                 ),
                 Text(
                   'Built-up: ${unit.formatArea(plan.totalBuiltUpAreaSqFt)} • 10 ft Ceiling',
@@ -468,10 +524,15 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
           FilledButton.icon(
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.edit_road_rounded, size: 16),
-            label: const Text('Back to 2D Plan', style: TextStyle(fontSize: 12)),
+            label: const Text(
+              'Back to 2D Plan',
+              style: TextStyle(fontSize: 12),
+            ),
             style: FilledButton.styleFrom(
               backgroundColor: const Color(0xFF1E3A5F),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
           ),
         ],
@@ -486,7 +547,9 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
     required bool isDark,
   }) {
     return Material(
-      color: (isDark ? const Color(0xFF1E293B) : Colors.white).withValues(alpha: 0.9),
+      color: (isDark ? const Color(0xFF1E293B) : Colors.white).withValues(
+        alpha: 0.9,
+      ),
       shape: const CircleBorder(),
       elevation: 2,
       child: InkWell(
@@ -503,4 +566,3 @@ class _Plan3DViewScreenState extends State<Plan3DViewScreen> {
     );
   }
 }
-

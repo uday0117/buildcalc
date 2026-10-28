@@ -17,10 +17,14 @@ class ExcavationCalculatorService {
       return ExcavationResult.failure('Quantity must be at least 1.');
     }
     if (input.workingSpace < 0) {
-      return ExcavationResult.failure('Working space allowance cannot be negative.');
+      return ExcavationResult.failure(
+        'Working space allowance cannot be negative.',
+      );
     }
     if (input.truckCapacityM3 <= 0) {
-      return ExcavationResult.failure('Truck capacity must be greater than zero.');
+      return ExcavationResult.failure(
+        'Truck capacity must be greater than zero.',
+      );
     }
 
     final warnings = <String>[];
@@ -52,10 +56,12 @@ class ExcavationCalculatorService {
 
     // Required loose soil needed to produce compacted backfill
     final compactionMultiplier = 1.0 + (input.compactionFactorPercent / 100.0);
-    final requiredCompactedBackfillM3 = inSituBackfillVoidM3 * compactionMultiplier;
+    final requiredCompactedBackfillM3 =
+        inSituBackfillVoidM3 * compactionMultiplier;
 
     // Loose volume consumed for backfilling
-    final looseSoilConsumedForBackfill = inSituBackfillVoidM3 * bulkingMultiplier;
+    final looseSoilConsumedForBackfill =
+        inSituBackfillVoidM3 * bulkingMultiplier;
 
     final surplusSoilM3 = math.max(
       0.0,
@@ -79,4 +85,3 @@ class ExcavationCalculatorService {
     );
   }
 }
-

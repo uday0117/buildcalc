@@ -10,11 +10,7 @@ import '../../services/plan_material_estimator.dart';
 import '../../services/plan_pdf_export_service.dart';
 import '../../services/plan_share_service.dart';
 
-enum ExportFormat {
-  floorPlanPng,
-  floorPlanPdf,
-  materialEstimatePdf,
-}
+enum ExportFormat { floorPlanPng, floorPlanPdf, materialEstimatePdf }
 
 /// Dialog / Sheet allowing users to customize export options, customer/company metadata,
 /// and share or save 2D floor plans and material calculation reports.
@@ -167,7 +163,9 @@ class _PlanExportDialogState extends State<PlanExportDialog> {
   Future<void> _handleExport({required bool isShareAction}) async {
     setState(() {
       _isExporting = true;
-      _exportStatusMessage = isShareAction ? 'Preparing share file...' : 'Generating document...';
+      _exportStatusMessage = isShareAction
+          ? 'Preparing share file...'
+          : 'Generating document...';
     });
 
     try {
@@ -215,7 +213,8 @@ class _PlanExportDialogState extends State<PlanExportDialog> {
 
         case ExportFormat.materialEstimatePdf:
           _updateStatus('Computing engineering quantities and building PDF...');
-          final assumptions = widget.assumptions ?? const MaterialEstimationAssumptions();
+          final assumptions =
+              widget.assumptions ?? const MaterialEstimationAssumptions();
           final report = PlanMaterialEstimator.estimateMaterials(
             plan: widget.plan,
             assumptions: assumptions,
@@ -264,7 +263,9 @@ class _PlanExportDialogState extends State<PlanExportDialog> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(result.message),
-          backgroundColor: result.isSuccess ? const Color(0xFF059669) : Colors.red,
+          backgroundColor: result.isSuccess
+              ? const Color(0xFF059669)
+              : Colors.red,
           duration: const Duration(seconds: 4),
         ),
       );
@@ -336,7 +337,10 @@ class _PlanExportDialogState extends State<PlanExportDialog> {
                     children: [
                       Text(
                         'Export & Share Plan',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         'Generate architectural PNG/PDF & cost reports',
@@ -356,7 +360,11 @@ class _PlanExportDialogState extends State<PlanExportDialog> {
             // Format Selection Chips
             const Text(
               'EXPORT FORMAT',
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
             ),
             const SizedBox(height: 8),
             SingleChildScrollView(
@@ -535,7 +543,9 @@ class _PlanExportDialogState extends State<PlanExportDialog> {
                 CheckboxListTile(
                   contentPadding: EdgeInsets.zero,
                   dense: true,
-                  title: const Text('Remember company details for future exports'),
+                  title: const Text(
+                    'Remember company details for future exports',
+                  ),
                   value: _rememberCompany,
                   onChanged: (val) {
                     setState(() => _rememberCompany = val ?? false);
@@ -549,8 +559,12 @@ class _PlanExportDialogState extends State<PlanExportDialog> {
               CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
                 dense: true,
-                title: const Text('Include material rates and estimated total cost'),
-                subtitle: const Text('Uncheck to export quantities and engineering formulas only'),
+                title: const Text(
+                  'Include material rates and estimated total cost',
+                ),
+                subtitle: const Text(
+                  'Uncheck to export quantities and engineering formulas only',
+                ),
                 value: _includeRatesAndCosts,
                 onChanged: (val) {
                   setState(() => _includeRatesAndCosts = val ?? true);
@@ -564,7 +578,8 @@ class _PlanExportDialogState extends State<PlanExportDialog> {
                 labelText: 'Project Notes & Site Remarks (Optional)',
                 border: OutlineInputBorder(),
                 isDense: true,
-                hintText: 'e.g. Ground floor only; excludes municipal approval fees',
+                hintText:
+                    'e.g. Ground floor only; excludes municipal approval fees',
               ),
             ),
             const SizedBox(height: 20),
@@ -580,7 +595,10 @@ class _PlanExportDialogState extends State<PlanExportDialog> {
                       const SizedBox(height: 10),
                       Text(
                         _exportStatusMessage,
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),
@@ -647,9 +665,11 @@ class _PlanExportDialogState extends State<PlanExportDialog> {
           setState(() {
             _selectedFormat = format;
             if (format == ExportFormat.materialEstimatePdf) {
-              _titleController.text = '${widget.plan.name} - Bill of Quantities & Material Estimate';
+              _titleController.text =
+                  '${widget.plan.name} - Bill of Quantities & Material Estimate';
             } else if (format == ExportFormat.floorPlanPdf) {
-              _titleController.text = '${widget.plan.name} - 2D Architectural Floor Plan';
+              _titleController.text =
+                  '${widget.plan.name} - 2D Architectural Floor Plan';
             } else {
               _titleController.text = '${widget.plan.name} - 2D Plan Image';
             }

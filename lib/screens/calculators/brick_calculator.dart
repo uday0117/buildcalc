@@ -52,9 +52,9 @@ class _BrickCalculatorState extends State<BrickCalculator> {
 
       _saveToHistory();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter all values')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter all values')));
     }
   }
 
@@ -68,10 +68,7 @@ class _BrickCalculatorState extends State<BrickCalculator> {
         'height': _heightController.text,
         'thickness': _thicknessController.text,
       },
-      results: {
-        'bricks_required': _bricksRequired,
-        'wall_area': _wallArea,
-      },
+      results: {'bricks_required': _bricksRequired, 'wall_area': _wallArea},
       timestamp: DateTime.now(),
     );
   }
@@ -199,7 +196,8 @@ class _BrickCalculatorState extends State<BrickCalculator> {
                 title: 'Results',
                 icon: Icons.grid_4x4_rounded,
                 onSave: _bookmark,
-                note: 'Includes 10% wastage factor for cuts and transport breakage',
+                note:
+                    'Includes 10% wastage factor for cuts and transport breakage',
                 rows: [
                   ResultRowItem(
                     label: 'Bricks Required',

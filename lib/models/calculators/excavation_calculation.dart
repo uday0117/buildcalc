@@ -14,9 +14,11 @@ class ExcavationInput {
   final double depth; // in meters
   final int quantity; // number of pits/trenches
   final double workingSpace; // side clearance around pit (in meters, e.g. 0.3)
-  final double structureVolumeM3; // inside concrete structure volume for backfill
+  final double
+  structureVolumeM3; // inside concrete structure volume for backfill
   final double bulkingFactorPercent; // soil expansion % (e.g. 20%)
-  final double compactionFactorPercent; // soil compaction % for backfill (e.g. 15%)
+  final double
+  compactionFactorPercent; // soil compaction % for backfill (e.g. 15%)
   final double truckCapacityM3; // dumper capacity in m³ (e.g. 5.0)
 
   const ExcavationInput({
@@ -67,10 +69,6 @@ class ExcavationResult {
   });
 
   factory ExcavationResult.failure(String message) {
-    return ExcavationResult(
-      isValid: false,
-      errorMessage: message,
-    );
+    return ExcavationResult(isValid: false, errorMessage: message);
   }
 }
-

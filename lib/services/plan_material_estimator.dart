@@ -4,13 +4,15 @@ import '../models/plan/material_estimation_models.dart';
 import '../models/plan/plan_models.dart';
 
 class PlanMaterialEstimator {
-  static const double cuFtPerCementBag = 1.226; // 1 bag (50 kg) of cement = 1.226 cu ft (~0.0347 m3)
+  static const double cuFtPerCementBag =
+      1.226; // 1 bag (50 kg) of cement = 1.226 cu ft (~0.0347 m3)
   static const double tolerance = 0.05; // 0.05 ft geometry tolerance
 
   /// Generate the complete material estimation report from floor plan geometry and assumptions
   static PlanMaterialEstimateReport estimateMaterials({
     required FloorPlan plan,
-    MaterialEstimationAssumptions assumptions = const MaterialEstimationAssumptions(),
+    MaterialEstimationAssumptions assumptions =
+        const MaterialEstimationAssumptions(),
   }) {
     if (plan.rooms.isEmpty) {
       return PlanMaterialEstimateReport(
@@ -38,8 +40,14 @@ class PlanMaterialEstimator {
 
     // 1. Calculate room-wise carpet areas and overlapping area
     final overlappingAreaSqFt = _calculateOverlappingArea(plan.rooms);
-    final rawCarpetAreaSqFt = plan.rooms.fold<double>(0.0, (s, r) => s + r.areaSqFt);
-    final netCarpetAreaSqFt = math.max(0.0, rawCarpetAreaSqFt - overlappingAreaSqFt);
+    final rawCarpetAreaSqFt = plan.rooms.fold<double>(
+      0.0,
+      (s, r) => s + r.areaSqFt,
+    );
+    final netCarpetAreaSqFt = math.max(
+      0.0,
+      rawCarpetAreaSqFt - overlappingAreaSqFt,
+    );
 
     // 2. Extract deduplicated physical walls (exterior vs shared interior partition walls)
     final physicalWalls = extractPhysicalWalls(plan.rooms, assumptions);
@@ -66,7 +74,8 @@ class PlanMaterialEstimator {
       totalOpeningsCount += wall.openings.length;
     }
 
-    final totalPhysicalWallLength = exteriorWallLength + interiorSharedWallLength;
+    final totalPhysicalWallLength =
+        exteriorWallLength + interiorSharedWallLength;
 
     // Built-up area: net room carpet + physical wall footprint
     double wallFootprintArea = 0.0;
@@ -124,14 +133,12 @@ class PlanMaterialEstimator {
     final List<_RawWallSegment> rawSegments = [];
 
     // 1. Process Horizontal Edges
-    final horizontalClusters = _clusterEdges(
-      rooms,
-      isHorizontal: true,
-    );
+    final horizontalClusters = _clusterEdges(rooms, isHorizontal: true);
 
     for (final cluster in horizontalClusters.entries) {
       final y = cluster.key;
-      final edges = cluster.value; // List of _RoomEdge along this horizontal line
+      final edges =
+          cluster.value; // List of _RoomEdge along this horizontal line
 
       // Collect all key x-coordinates (endpoints of edges and room bounds intersecting this line)
       final Set<double> xPoints = {};
@@ -157,11 +164,13 @@ class PlanMaterialEstimator {
         final midX = (x1 + x2) / 2.0;
 
         // Check if midpoint is inside any other room interior (ignore boundary)
-        final isInsideAnyRoom = rooms.any((r) =>
-            (r.x + tolerance) < midX &&
-            midX < (r.x + r.width - tolerance) &&
-            (r.y + tolerance) < y &&
-            y < (r.y + r.length - tolerance));
+        final isInsideAnyRoom = rooms.any(
+          (r) =>
+              (r.x + tolerance) < midX &&
+              midX < (r.x + r.width - tolerance) &&
+              (r.y + tolerance) < y &&
+              y < (r.y + r.length - tolerance),
+        );
 
         if (isInsideAnyRoom) continue;
 
@@ -175,23 +184,22 @@ class PlanMaterialEstimator {
         final roomIds = coveringEdges.map((e) => e.roomId).toSet().toList();
         final isExterior = coveringEdges.length == 1;
 
-        rawSegments.add(_RawWallSegment(
-          startX: x1,
-          startY: y,
-          endX: x2,
-          endY: y,
-          isHorizontal: true,
-          isExterior: isExterior,
-          roomIds: roomIds,
-        ));
+        rawSegments.add(
+          _RawWallSegment(
+            startX: x1,
+            startY: y,
+            endX: x2,
+            endY: y,
+            isHorizontal: true,
+            isExterior: isExterior,
+            roomIds: roomIds,
+          ),
+        );
       }
     }
 
     // 2. Process Vertical Edges
-    final verticalClusters = _clusterEdges(
-      rooms,
-      isHorizontal: false,
-    );
+    final verticalClusters = _clusterEdges(rooms, isHorizontal: false);
 
     for (final cluster in verticalClusters.entries) {
       final x = cluster.key;
@@ -219,11 +227,13 @@ class PlanMaterialEstimator {
 
         final midY = (y1 + y2) / 2.0;
 
-        final isInsideAnyRoom = rooms.any((r) =>
-            (r.x + tolerance) < x &&
-            x < (r.x + r.width - tolerance) &&
-            (r.y + tolerance) < midY &&
-            midY < (r.y + r.length - tolerance));
+        final isInsideAnyRoom = rooms.any(
+          (r) =>
+              (r.x + tolerance) < x &&
+              x < (r.x + r.width - tolerance) &&
+              (r.y + tolerance) < midY &&
+              midY < (r.y + r.length - tolerance),
+        );
 
         if (isInsideAnyRoom) continue;
 
@@ -236,15 +246,17 @@ class PlanMaterialEstimator {
         final roomIds = coveringEdges.map((e) => e.roomId).toSet().toList();
         final isExterior = coveringEdges.length == 1;
 
-        rawSegments.add(_RawWallSegment(
-          startX: x,
-          startY: y1,
-          endX: x,
-          endY: y2,
-          isHorizontal: false,
-          isExterior: isExterior,
-          roomIds: roomIds,
-        ));
+        rawSegments.add(
+          _RawWallSegment(
+            startX: x,
+            startY: y1,
+            endX: x,
+            endY: y2,
+            isHorizontal: false,
+            isExterior: isExterior,
+            roomIds: roomIds,
+          ),
+        );
       }
     }
 
@@ -263,19 +275,21 @@ class PlanMaterialEstimator {
       final length = seg.length;
       final openings = _findOpeningsForSegment(seg, rooms);
 
-      physicalWalls.add(PhysicalWallSegment(
-        id: 'wall_${seg.isExterior ? 'ext' : 'int'}_${wallIdx++}',
-        startX: seg.startX,
-        startY: seg.startY,
-        endX: seg.endX,
-        endY: seg.endY,
-        lengthFeet: length,
-        heightFeet: assumptions.wallHeightFeet,
-        thicknessFeet: thickness,
-        isExterior: seg.isExterior,
-        roomIds: seg.roomIds,
-        openings: openings,
-      ));
+      physicalWalls.add(
+        PhysicalWallSegment(
+          id: 'wall_${seg.isExterior ? 'ext' : 'int'}_${wallIdx++}',
+          startX: seg.startX,
+          startY: seg.startY,
+          endX: seg.endX,
+          endY: seg.endY,
+          lengthFeet: length,
+          heightFeet: assumptions.wallHeightFeet,
+          thicknessFeet: thickness,
+          isExterior: seg.isExterior,
+          roomIds: seg.roomIds,
+          openings: openings,
+        ),
+      );
     }
 
     return physicalWalls;
@@ -360,7 +374,9 @@ class PlanMaterialEstimator {
   }
 
   /// Merges adjacent collinear segments with identical exterior status
-  static List<_RawWallSegment> _mergeAdjacentSegments(List<_RawWallSegment> segments) {
+  static List<_RawWallSegment> _mergeAdjacentSegments(
+    List<_RawWallSegment> segments,
+  ) {
     if (segments.isEmpty) return [];
 
     // Separate horizontal and vertical
@@ -484,14 +500,17 @@ class PlanMaterialEstimator {
         final segStart = seg.isHorizontal ? seg.startX : seg.startY;
         final segEnd = seg.isHorizontal ? seg.endX : seg.endY;
 
-        final hasOverlap = opInterval.start >= segStart - tolerance &&
+        final hasOverlap =
+            opInterval.start >= segStart - tolerance &&
             opInterval.end <= segEnd + tolerance;
 
         if (hasOverlap) {
           // Check if this opening is already accounted for (e.g. shared wall door defined on both rooms)
-          final isDuplicate = recordedIntervals.any((iv) =>
-              (iv.start - opInterval.start).abs() <= 0.3 &&
-              (iv.end - opInterval.end).abs() <= 0.3);
+          final isDuplicate = recordedIntervals.any(
+            (iv) =>
+                (iv.start - opInterval.start).abs() <= 0.3 &&
+                (iv.end - opInterval.end).abs() <= 0.3,
+          );
 
           if (!isDuplicate) {
             matched.add(op);
@@ -593,29 +612,33 @@ class PlanMaterialEstimator {
 
       // Wall tiles: Bathroom dado and kitchen backsplash
       double wallTileArea = 0.0;
-      if (room.type == RoomType.bathroom && assumptions.includeBathroomWallTiles) {
+      if (room.type == RoomType.bathroom &&
+          assumptions.includeBathroomWallTiles) {
         final grossDado = perimeter * assumptions.bathroomDadoHeightFeet;
         wallTileArea = math.max(0.0, grossDado - doorOpeningsArea);
-      } else if (room.type == RoomType.kitchen && assumptions.includeKitchenBacksplash) {
+      } else if (room.type == RoomType.kitchen &&
+          assumptions.includeKitchenBacksplash) {
         wallTileArea = assumptions.kitchenBacksplashAreaSqFt;
       }
 
-      list.add(RoomQuantityBreakdown(
-        roomId: room.id,
-        roomName: room.name,
-        roomType: room.type,
-        widthFeet: room.width,
-        lengthFeet: room.length,
-        carpetAreaSqFt: carpetArea,
-        perimeterFeet: perimeter,
-        openingsCount: room.openings.length,
-        openingsAreaSqFt: openingsArea,
-        grossWallSurfaceSqFt: grossWall,
-        netWallSurfaceSqFt: netWall,
-        ceilingAreaSqFt: ceilingArea,
-        floorTileAreaSqFt: floorTileArea,
-        wallTileAreaSqFt: wallTileArea,
-      ));
+      list.add(
+        RoomQuantityBreakdown(
+          roomId: room.id,
+          roomName: room.name,
+          roomType: room.type,
+          widthFeet: room.width,
+          lengthFeet: room.length,
+          carpetAreaSqFt: carpetArea,
+          perimeterFeet: perimeter,
+          openingsCount: room.openings.length,
+          openingsAreaSqFt: openingsArea,
+          grossWallSurfaceSqFt: grossWall,
+          netWallSurfaceSqFt: netWall,
+          ceilingAreaSqFt: ceilingArea,
+          floorTileAreaSqFt: floorTileArea,
+          wallTileAreaSqFt: wallTileArea,
+        ),
+      );
     }
 
     return list;
@@ -643,67 +666,84 @@ class PlanMaterialEstimator {
     final rawBricks = brickVolWithMortar > 0
         ? (netMasonryVolumeCuFt / brickVolWithMortar)
         : 0.0;
-    final totalBricks = (rawBricks * (1.0 + assumptions.brickWastagePercent / 100.0)).ceilToDouble();
+    final totalBricks =
+        (rawBricks * (1.0 + assumptions.brickWastagePercent / 100.0))
+            .ceilToDouble();
     final brickCost = totalBricks * assumptions.brickRatePerUnit;
 
-    items.add(MaterialLineItem(
-      category: MaterialCategory.masonry,
-      name: assumptions.masonryType.label,
-      netQuantity: rawBricks.roundToDouble(),
-      wastagePercent: assumptions.brickWastagePercent,
-      totalQuantity: totalBricks,
-      unit: 'pieces',
-      unitRate: assumptions.brickRatePerUnit,
-      totalCost: brickCost,
-      formulaBreakdown:
-          'Net Wall Vol (${netMasonryVolumeCuFt.toStringAsFixed(1)} cu ft) ÷ Unit Vol with Mortar (${(brickVolWithMortar * 1728).toStringAsFixed(1)} cu in) = ${rawBricks.round()} units. With ${assumptions.brickWastagePercent.toStringAsFixed(1)}% wastage = ${totalBricks.toInt()} units.',
-      assumptionsSummary:
-          'Size: ${assumptions.effectiveBrickLengthInches.toStringAsFixed(1)}"×${assumptions.effectiveBrickWidthInches.toStringAsFixed(1)}"×${assumptions.effectiveBrickHeightInches.toStringAsFixed(1)}" | Mortar Joint: ${assumptions.mortarJointThicknessInches.toStringAsFixed(2)}" | Wastage: ${assumptions.brickWastagePercent.toStringAsFixed(1)}%',
-    ));
+    items.add(
+      MaterialLineItem(
+        category: MaterialCategory.masonry,
+        name: assumptions.masonryType.label,
+        netQuantity: rawBricks.roundToDouble(),
+        wastagePercent: assumptions.brickWastagePercent,
+        totalQuantity: totalBricks,
+        unit: 'pieces',
+        unitRate: assumptions.brickRatePerUnit,
+        totalCost: brickCost,
+        formulaBreakdown:
+            'Net Wall Vol (${netMasonryVolumeCuFt.toStringAsFixed(1)} cu ft) ÷ Unit Vol with Mortar (${(brickVolWithMortar * 1728).toStringAsFixed(1)} cu in) = ${rawBricks.round()} units. With ${assumptions.brickWastagePercent.toStringAsFixed(1)}% wastage = ${totalBricks.toInt()} units.',
+        assumptionsSummary:
+            'Size: ${assumptions.effectiveBrickLengthInches.toStringAsFixed(1)}"×${assumptions.effectiveBrickWidthInches.toStringAsFixed(1)}"×${assumptions.effectiveBrickHeightInches.toStringAsFixed(1)}" | Mortar Joint: ${assumptions.mortarJointThicknessInches.toStringAsFixed(2)}" | Wastage: ${assumptions.brickWastagePercent.toStringAsFixed(1)}%',
+      ),
+    );
 
     // Mortar for Masonry:
     // Wet mortar volume = Net Wall Volume - (raw bricks * actual brick volume)
     final brickOccupiedVol = rawBricks * brickVolActual;
-    final wetMortarVolCuFt = math.max(0.0, netMasonryVolumeCuFt - brickOccupiedVol);
+    final wetMortarVolCuFt = math.max(
+      0.0,
+      netMasonryVolumeCuFt - brickOccupiedVol,
+    );
     final dryMortarVolCuFt = wetMortarVolCuFt * assumptions.mortarDryFactor;
 
-    final mortarCementCuFt = dryMortarVolCuFt * assumptions.mortarMix.cementFraction;
+    final mortarCementCuFt =
+        dryMortarVolCuFt * assumptions.mortarMix.cementFraction;
     final rawMortarCementBags = mortarCementCuFt / cuFtPerCementBag;
-    final totalMortarCementBags = (rawMortarCementBags * 1.05).ceilToDouble(); // 5% bag wastage
-    final mortarCementCost = totalMortarCementBags * assumptions.cementRatePerBag;
+    final totalMortarCementBags = (rawMortarCementBags * 1.05)
+        .ceilToDouble(); // 5% bag wastage
+    final mortarCementCost =
+        totalMortarCementBags * assumptions.cementRatePerBag;
 
-    items.add(MaterialLineItem(
-      category: MaterialCategory.mortar,
-      name: 'Cement (Masonry Mortar)',
-      netQuantity: (rawMortarCementBags * 10).round() / 10.0,
-      wastagePercent: 5.0,
-      totalQuantity: totalMortarCementBags,
-      unit: 'bags (50 kg)',
-      unitRate: assumptions.cementRatePerBag,
-      totalCost: mortarCementCost,
-      formulaBreakdown:
-          'Dry Mortar Vol (${dryMortarVolCuFt.toStringAsFixed(1)} cu ft) × Cement Share (${assumptions.mortarMix.cementParts}/${assumptions.mortarMix.totalParts.toInt()}) = ${mortarCementCuFt.toStringAsFixed(2)} cu ft cement ÷ 1.226 cu ft/bag = ${rawMortarCementBags.toStringAsFixed(1)} bags. +5% wastage = ${totalMortarCementBags.toInt()} bags.',
-      assumptionsSummary:
-          'Mortar Mix ${assumptions.mortarMix.label} | Dry Factor: ${assumptions.mortarDryFactor} | 1 bag = 50 kg (1.226 cu ft)',
-    ));
+    items.add(
+      MaterialLineItem(
+        category: MaterialCategory.mortar,
+        name: 'Cement (Masonry Mortar)',
+        netQuantity: (rawMortarCementBags * 10).round() / 10.0,
+        wastagePercent: 5.0,
+        totalQuantity: totalMortarCementBags,
+        unit: 'bags (50 kg)',
+        unitRate: assumptions.cementRatePerBag,
+        totalCost: mortarCementCost,
+        formulaBreakdown:
+            'Dry Mortar Vol (${dryMortarVolCuFt.toStringAsFixed(1)} cu ft) × Cement Share (${assumptions.mortarMix.cementParts}/${assumptions.mortarMix.totalParts.toInt()}) = ${mortarCementCuFt.toStringAsFixed(2)} cu ft cement ÷ 1.226 cu ft/bag = ${rawMortarCementBags.toStringAsFixed(1)} bags. +5% wastage = ${totalMortarCementBags.toInt()} bags.',
+        assumptionsSummary:
+            'Mortar Mix ${assumptions.mortarMix.label} | Dry Factor: ${assumptions.mortarDryFactor} | 1 bag = 50 kg (1.226 cu ft)',
+      ),
+    );
 
-    final rawMortarSandCuFt = dryMortarVolCuFt * assumptions.mortarMix.sandFraction;
-    final totalMortarSandCuFt = (rawMortarSandCuFt * 1.08).ceilToDouble(); // 8% sand wastage
+    final rawMortarSandCuFt =
+        dryMortarVolCuFt * assumptions.mortarMix.sandFraction;
+    final totalMortarSandCuFt = (rawMortarSandCuFt * 1.08)
+        .ceilToDouble(); // 8% sand wastage
     final mortarSandCost = totalMortarSandCuFt * assumptions.sandRatePerCuFt;
 
-    items.add(MaterialLineItem(
-      category: MaterialCategory.mortar,
-      name: 'Sand / Aggregates (Masonry Mortar)',
-      netQuantity: (rawMortarSandCuFt * 10).round() / 10.0,
-      wastagePercent: 8.0,
-      totalQuantity: totalMortarSandCuFt,
-      unit: 'cu ft',
-      unitRate: assumptions.sandRatePerCuFt,
-      totalCost: mortarSandCost,
-      formulaBreakdown:
-          'Dry Mortar Vol (${dryMortarVolCuFt.toStringAsFixed(1)} cu ft) × Sand Share (${assumptions.mortarMix.sandParts.toInt()}/${assumptions.mortarMix.totalParts.toInt()}) = ${rawMortarSandCuFt.toStringAsFixed(1)} cu ft. +8% handling wastage = ${totalMortarSandCuFt.toInt()} cu ft.',
-      assumptionsSummary: 'Mortar Mix ${assumptions.mortarMix.label} | Bulk Density ~1600 kg/m3',
-    ));
+    items.add(
+      MaterialLineItem(
+        category: MaterialCategory.mortar,
+        name: 'Sand / Aggregates (Masonry Mortar)',
+        netQuantity: (rawMortarSandCuFt * 10).round() / 10.0,
+        wastagePercent: 8.0,
+        totalQuantity: totalMortarSandCuFt,
+        unit: 'cu ft',
+        unitRate: assumptions.sandRatePerCuFt,
+        totalCost: mortarSandCost,
+        formulaBreakdown:
+            'Dry Mortar Vol (${dryMortarVolCuFt.toStringAsFixed(1)} cu ft) × Sand Share (${assumptions.mortarMix.sandParts.toInt()}/${assumptions.mortarMix.totalParts.toInt()}) = ${rawMortarSandCuFt.toStringAsFixed(1)} cu ft. +8% handling wastage = ${totalMortarSandCuFt.toInt()} cu ft.',
+        assumptionsSummary:
+            'Mortar Mix ${assumptions.mortarMix.label} | Bulk Density ~1600 kg/m3',
+      ),
+    );
 
     // ==========================================
     // 2. PLASTER: Interior & Exterior
@@ -716,7 +756,8 @@ class PlanMaterialEstimator {
         totalCeilingPlasterSqFt += rb.ceilingAreaSqFt;
       }
     }
-    final totalInteriorPlasterAreaSqFt = totalInteriorWallPlasterSqFt + totalCeilingPlasterSqFt;
+    final totalInteriorPlasterAreaSqFt =
+        totalInteriorWallPlasterSqFt + totalCeilingPlasterSqFt;
 
     double totalExteriorPlasterAreaSqFt = 0.0;
     for (final wall in physicalWalls) {
@@ -725,8 +766,10 @@ class PlanMaterialEstimator {
       }
     }
 
-    final interiorPlasterThickFeet = assumptions.interiorPlasterThicknessInches / 12.0;
-    final exteriorPlasterThickFeet = assumptions.exteriorPlasterThicknessInches / 12.0;
+    final interiorPlasterThickFeet =
+        assumptions.interiorPlasterThicknessInches / 12.0;
+    final exteriorPlasterThickFeet =
+        assumptions.exteriorPlasterThicknessInches / 12.0;
 
     final wetPlasterVolCuFt =
         (totalInteriorPlasterAreaSqFt * interiorPlasterThickFeet) +
@@ -734,44 +777,55 @@ class PlanMaterialEstimator {
     final dryPlasterVolCuFt = wetPlasterVolCuFt * assumptions.plasterDryFactor;
 
     final rawPlasterCementBags =
-        (dryPlasterVolCuFt * assumptions.plasterMix.cementFraction) / cuFtPerCementBag;
+        (dryPlasterVolCuFt * assumptions.plasterMix.cementFraction) /
+        cuFtPerCementBag;
     final totalPlasterCementBags =
-        (rawPlasterCementBags * (1.0 + assumptions.plasterWastagePercent / 100.0)).ceilToDouble();
-    final plasterCementCost = totalPlasterCementBags * assumptions.cementRatePerBag;
+        (rawPlasterCementBags *
+                (1.0 + assumptions.plasterWastagePercent / 100.0))
+            .ceilToDouble();
+    final plasterCementCost =
+        totalPlasterCementBags * assumptions.cementRatePerBag;
 
-    items.add(MaterialLineItem(
-      category: MaterialCategory.plaster,
-      name: 'Cement (Interior & Exterior Plaster)',
-      netQuantity: (rawPlasterCementBags * 10).round() / 10.0,
-      wastagePercent: assumptions.plasterWastagePercent,
-      totalQuantity: totalPlasterCementBags,
-      unit: 'bags (50 kg)',
-      unitRate: assumptions.cementRatePerBag,
-      totalCost: plasterCementCost,
-      formulaBreakdown:
-          'Plaster Surface: Int (${totalInteriorPlasterAreaSqFt.toStringAsFixed(0)} sq ft @ ${assumptions.interiorPlasterThicknessInches}") + Ext (${totalExteriorPlasterAreaSqFt.toStringAsFixed(0)} sq ft @ ${assumptions.exteriorPlasterThicknessInches}"). Dry Vol: ${dryPlasterVolCuFt.toStringAsFixed(1)} cu ft. With ${assumptions.plasterWastagePercent.toStringAsFixed(1)}% wastage = ${totalPlasterCementBags.toInt()} bags.',
-      assumptionsSummary:
-          'Plaster Mix ${assumptions.plasterMix.label} | Dry Factor: ${assumptions.plasterDryFactor} | Ceiling included: ${assumptions.includeCeilingPlaster}',
-    ));
+    items.add(
+      MaterialLineItem(
+        category: MaterialCategory.plaster,
+        name: 'Cement (Interior & Exterior Plaster)',
+        netQuantity: (rawPlasterCementBags * 10).round() / 10.0,
+        wastagePercent: assumptions.plasterWastagePercent,
+        totalQuantity: totalPlasterCementBags,
+        unit: 'bags (50 kg)',
+        unitRate: assumptions.cementRatePerBag,
+        totalCost: plasterCementCost,
+        formulaBreakdown:
+            'Plaster Surface: Int (${totalInteriorPlasterAreaSqFt.toStringAsFixed(0)} sq ft @ ${assumptions.interiorPlasterThicknessInches}") + Ext (${totalExteriorPlasterAreaSqFt.toStringAsFixed(0)} sq ft @ ${assumptions.exteriorPlasterThicknessInches}"). Dry Vol: ${dryPlasterVolCuFt.toStringAsFixed(1)} cu ft. With ${assumptions.plasterWastagePercent.toStringAsFixed(1)}% wastage = ${totalPlasterCementBags.toInt()} bags.',
+        assumptionsSummary:
+            'Plaster Mix ${assumptions.plasterMix.label} | Dry Factor: ${assumptions.plasterDryFactor} | Ceiling included: ${assumptions.includeCeilingPlaster}',
+      ),
+    );
 
-    final rawPlasterSandCuFt = dryPlasterVolCuFt * assumptions.plasterMix.sandFraction;
+    final rawPlasterSandCuFt =
+        dryPlasterVolCuFt * assumptions.plasterMix.sandFraction;
     final totalPlasterSandCuFt =
-        (rawPlasterSandCuFt * (1.0 + assumptions.plasterWastagePercent / 100.0)).ceilToDouble();
+        (rawPlasterSandCuFt * (1.0 + assumptions.plasterWastagePercent / 100.0))
+            .ceilToDouble();
     final plasterSandCost = totalPlasterSandCuFt * assumptions.sandRatePerCuFt;
 
-    items.add(MaterialLineItem(
-      category: MaterialCategory.plaster,
-      name: 'Sand / Fine Aggregates (Plastering)',
-      netQuantity: (rawPlasterSandCuFt * 10).round() / 10.0,
-      wastagePercent: assumptions.plasterWastagePercent,
-      totalQuantity: totalPlasterSandCuFt,
-      unit: 'cu ft',
-      unitRate: assumptions.sandRatePerCuFt,
-      totalCost: plasterSandCost,
-      formulaBreakdown:
-          'Dry Plaster Vol (${dryPlasterVolCuFt.toStringAsFixed(1)} cu ft) × Sand Share (${assumptions.plasterMix.sandParts.toInt()}/${assumptions.plasterMix.totalParts.toInt()}) = ${rawPlasterSandCuFt.toStringAsFixed(1)} cu ft. With ${assumptions.plasterWastagePercent.toStringAsFixed(1)}% wastage = ${totalPlasterSandCuFt.toInt()} cu ft.',
-      assumptionsSummary: 'Screened Plastering Sand (<2.36 mm) | Mix ${assumptions.plasterMix.label}',
-    ));
+    items.add(
+      MaterialLineItem(
+        category: MaterialCategory.plaster,
+        name: 'Sand / Fine Aggregates (Plastering)',
+        netQuantity: (rawPlasterSandCuFt * 10).round() / 10.0,
+        wastagePercent: assumptions.plasterWastagePercent,
+        totalQuantity: totalPlasterSandCuFt,
+        unit: 'cu ft',
+        unitRate: assumptions.sandRatePerCuFt,
+        totalCost: plasterSandCost,
+        formulaBreakdown:
+            'Dry Plaster Vol (${dryPlasterVolCuFt.toStringAsFixed(1)} cu ft) × Sand Share (${assumptions.plasterMix.sandParts.toInt()}/${assumptions.plasterMix.totalParts.toInt()}) = ${rawPlasterSandCuFt.toStringAsFixed(1)} cu ft. With ${assumptions.plasterWastagePercent.toStringAsFixed(1)}% wastage = ${totalPlasterSandCuFt.toInt()} cu ft.',
+        assumptionsSummary:
+            'Screened Plastering Sand (<2.36 mm) | Mix ${assumptions.plasterMix.label}',
+      ),
+    );
 
     // ==========================================
     // 3. PAINT: Interior, Exterior & Primer
@@ -785,24 +839,29 @@ class PlanMaterialEstimator {
     }
 
     if (assumptions.includePrimer) {
-      final rawPrimerLiters = interiorPaintAreaSqFt / assumptions.primerCoverageSqFtPerLiter;
+      final rawPrimerLiters =
+          interiorPaintAreaSqFt / assumptions.primerCoverageSqFtPerLiter;
       final totalPrimerLiters =
-          (rawPrimerLiters * (1.0 + assumptions.paintWastagePercent / 100.0)).ceilToDouble();
+          (rawPrimerLiters * (1.0 + assumptions.paintWastagePercent / 100.0))
+              .ceilToDouble();
       final primerCost = totalPrimerLiters * assumptions.primerRatePerLiter;
 
-      items.add(MaterialLineItem(
-        category: MaterialCategory.paint,
-        name: 'Interior Wall Primer (1 Coat)',
-        netQuantity: (rawPrimerLiters * 10).round() / 10.0,
-        wastagePercent: assumptions.paintWastagePercent,
-        totalQuantity: totalPrimerLiters,
-        unit: 'liters',
-        unitRate: assumptions.primerRatePerLiter,
-        totalCost: primerCost,
-        formulaBreakdown:
-            'Interior Surface (${interiorPaintAreaSqFt.toStringAsFixed(0)} sq ft) ÷ Coverage (${assumptions.primerCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L) = ${rawPrimerLiters.toStringAsFixed(1)} L. With ${assumptions.paintWastagePercent.toStringAsFixed(1)}% wastage = ${totalPrimerLiters.toInt()} L.',
-        assumptionsSummary: '1 Base Coat | Acrylic Primer | Coverage ${assumptions.primerCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L',
-      ));
+      items.add(
+        MaterialLineItem(
+          category: MaterialCategory.paint,
+          name: 'Interior Wall Primer (1 Coat)',
+          netQuantity: (rawPrimerLiters * 10).round() / 10.0,
+          wastagePercent: assumptions.paintWastagePercent,
+          totalQuantity: totalPrimerLiters,
+          unit: 'liters',
+          unitRate: assumptions.primerRatePerLiter,
+          totalCost: primerCost,
+          formulaBreakdown:
+              'Interior Surface (${interiorPaintAreaSqFt.toStringAsFixed(0)} sq ft) ÷ Coverage (${assumptions.primerCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L) = ${rawPrimerLiters.toStringAsFixed(1)} L. With ${assumptions.paintWastagePercent.toStringAsFixed(1)}% wastage = ${totalPrimerLiters.toInt()} L.',
+          assumptionsSummary:
+              '1 Base Coat | Acrylic Primer | Coverage ${assumptions.primerCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L',
+        ),
+      );
     }
 
     // Interior Paint
@@ -810,46 +869,59 @@ class PlanMaterialEstimator {
         (interiorPaintAreaSqFt * (assumptions.interiorPaintCoats / 2.0)) /
         assumptions.interiorPaintCoverageSqFtPerLiter;
     final totalInteriorPaintLiters =
-        (rawInteriorPaintLiters * (1.0 + assumptions.paintWastagePercent / 100.0)).ceilToDouble();
-    final interiorPaintCost = totalInteriorPaintLiters * assumptions.interiorPaintRatePerLiter;
+        (rawInteriorPaintLiters *
+                (1.0 + assumptions.paintWastagePercent / 100.0))
+            .ceilToDouble();
+    final interiorPaintCost =
+        totalInteriorPaintLiters * assumptions.interiorPaintRatePerLiter;
 
-    items.add(MaterialLineItem(
-      category: MaterialCategory.paint,
-      name: 'Interior Emulsion Paint (${assumptions.interiorPaintCoats} Coats)',
-      netQuantity: (rawInteriorPaintLiters * 10).round() / 10.0,
-      wastagePercent: assumptions.paintWastagePercent,
-      totalQuantity: totalInteriorPaintLiters,
-      unit: 'liters',
-      unitRate: assumptions.interiorPaintRatePerLiter,
-      totalCost: interiorPaintCost,
-      formulaBreakdown:
-          'Interior Surface (${interiorPaintAreaSqFt.toStringAsFixed(0)} sq ft) ÷ Coverage (${assumptions.interiorPaintCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L for 2 coats) × ${assumptions.interiorPaintCoats}/2 = ${rawInteriorPaintLiters.toStringAsFixed(1)} L. With ${assumptions.paintWastagePercent.toStringAsFixed(1)}% wastage = ${totalInteriorPaintLiters.toInt()} L.',
-      assumptionsSummary:
-          '${assumptions.interiorPaintCoats} Coats | Coverage ${assumptions.interiorPaintCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L (2 coats) | Ceiling: ${assumptions.includeCeilingPaint}',
-    ));
+    items.add(
+      MaterialLineItem(
+        category: MaterialCategory.paint,
+        name:
+            'Interior Emulsion Paint (${assumptions.interiorPaintCoats} Coats)',
+        netQuantity: (rawInteriorPaintLiters * 10).round() / 10.0,
+        wastagePercent: assumptions.paintWastagePercent,
+        totalQuantity: totalInteriorPaintLiters,
+        unit: 'liters',
+        unitRate: assumptions.interiorPaintRatePerLiter,
+        totalCost: interiorPaintCost,
+        formulaBreakdown:
+            'Interior Surface (${interiorPaintAreaSqFt.toStringAsFixed(0)} sq ft) ÷ Coverage (${assumptions.interiorPaintCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L for 2 coats) × ${assumptions.interiorPaintCoats}/2 = ${rawInteriorPaintLiters.toStringAsFixed(1)} L. With ${assumptions.paintWastagePercent.toStringAsFixed(1)}% wastage = ${totalInteriorPaintLiters.toInt()} L.',
+        assumptionsSummary:
+            '${assumptions.interiorPaintCoats} Coats | Coverage ${assumptions.interiorPaintCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L (2 coats) | Ceiling: ${assumptions.includeCeilingPaint}',
+      ),
+    );
 
     // Exterior Weatherproof Paint
     final rawExteriorPaintLiters =
-        (totalExteriorPlasterAreaSqFt * (assumptions.exteriorPaintCoats / 2.0)) /
+        (totalExteriorPlasterAreaSqFt *
+            (assumptions.exteriorPaintCoats / 2.0)) /
         assumptions.exteriorPaintCoverageSqFtPerLiter;
     final totalExteriorPaintLiters =
-        (rawExteriorPaintLiters * (1.0 + assumptions.paintWastagePercent / 100.0)).ceilToDouble();
-    final exteriorPaintCost = totalExteriorPaintLiters * assumptions.exteriorPaintRatePerLiter;
+        (rawExteriorPaintLiters *
+                (1.0 + assumptions.paintWastagePercent / 100.0))
+            .ceilToDouble();
+    final exteriorPaintCost =
+        totalExteriorPaintLiters * assumptions.exteriorPaintRatePerLiter;
 
-    items.add(MaterialLineItem(
-      category: MaterialCategory.paint,
-      name: 'Exterior Weatherproof Paint (${assumptions.exteriorPaintCoats} Coats)',
-      netQuantity: (rawExteriorPaintLiters * 10).round() / 10.0,
-      wastagePercent: assumptions.paintWastagePercent,
-      totalQuantity: totalExteriorPaintLiters,
-      unit: 'liters',
-      unitRate: assumptions.exteriorPaintRatePerLiter,
-      totalCost: exteriorPaintCost,
-      formulaBreakdown:
-          'Exterior Surface (${totalExteriorPlasterAreaSqFt.toStringAsFixed(0)} sq ft) ÷ Coverage (${assumptions.exteriorPaintCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L) × ${assumptions.exteriorPaintCoats}/2 = ${rawExteriorPaintLiters.toStringAsFixed(1)} L. With ${assumptions.paintWastagePercent.toStringAsFixed(1)}% wastage = ${totalExteriorPaintLiters.toInt()} L.',
-      assumptionsSummary:
-          '${assumptions.exteriorPaintCoats} Coats | All-Weather Silicon Emulsion | Coverage ${assumptions.exteriorPaintCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L',
-    ));
+    items.add(
+      MaterialLineItem(
+        category: MaterialCategory.paint,
+        name:
+            'Exterior Weatherproof Paint (${assumptions.exteriorPaintCoats} Coats)',
+        netQuantity: (rawExteriorPaintLiters * 10).round() / 10.0,
+        wastagePercent: assumptions.paintWastagePercent,
+        totalQuantity: totalExteriorPaintLiters,
+        unit: 'liters',
+        unitRate: assumptions.exteriorPaintRatePerLiter,
+        totalCost: exteriorPaintCost,
+        formulaBreakdown:
+            'Exterior Surface (${totalExteriorPlasterAreaSqFt.toStringAsFixed(0)} sq ft) ÷ Coverage (${assumptions.exteriorPaintCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L) × ${assumptions.exteriorPaintCoats}/2 = ${rawExteriorPaintLiters.toStringAsFixed(1)} L. With ${assumptions.paintWastagePercent.toStringAsFixed(1)}% wastage = ${totalExteriorPaintLiters.toInt()} L.',
+        assumptionsSummary:
+            '${assumptions.exteriorPaintCoats} Coats | All-Weather Silicon Emulsion | Coverage ${assumptions.exteriorPaintCoverageSqFtPerLiter.toStringAsFixed(0)} sq ft/L',
+      ),
+    );
 
     // ==========================================
     // 4. TILES: Flooring & Wall Dado
@@ -857,27 +929,34 @@ class PlanMaterialEstimator {
     final floorTileAreaSqFt = assumptions.floorTileAreaSqFt;
     final totalFloorAreaToTile = netCarpetAreaSqFt;
 
-    final rawFloorTiles = floorTileAreaSqFt > 0 ? (totalFloorAreaToTile / floorTileAreaSqFt) : 0.0;
+    final rawFloorTiles = floorTileAreaSqFt > 0
+        ? (totalFloorAreaToTile / floorTileAreaSqFt)
+        : 0.0;
     final totalFloorTiles =
-        (rawFloorTiles * (1.0 + assumptions.tileWastagePercent / 100.0)).ceilToDouble();
-    final totalFloorBoxes =
-        (totalFloorTiles / assumptions.tilesPerBox).ceilToDouble();
-    final floorTileCost = totalFloorAreaToTile * assumptions.floorTileRatePerSqFt;
+        (rawFloorTiles * (1.0 + assumptions.tileWastagePercent / 100.0))
+            .ceilToDouble();
+    final totalFloorBoxes = (totalFloorTiles / assumptions.tilesPerBox)
+        .ceilToDouble();
+    final floorTileCost =
+        totalFloorAreaToTile * assumptions.floorTileRatePerSqFt;
 
-    items.add(MaterialLineItem(
-      category: MaterialCategory.tile,
-      name: 'Vitrified Floor Tiles (${assumptions.floorTileLengthInches.toStringAsFixed(0)}" × ${assumptions.floorTileWidthInches.toStringAsFixed(0)}")',
-      netQuantity: (totalFloorAreaToTile * 10).round() / 10.0,
-      wastagePercent: assumptions.tileWastagePercent,
-      totalQuantity: totalFloorBoxes,
-      unit: 'boxes (${totalFloorTiles.toInt()} tiles)',
-      unitRate: assumptions.floorTileRatePerSqFt,
-      totalCost: floorTileCost,
-      formulaBreakdown:
-          'Floor Area (${totalFloorAreaToTile.toStringAsFixed(0)} sq ft) ÷ Tile Area (${floorTileAreaSqFt.toStringAsFixed(2)} sq ft) = ${rawFloorTiles.round()} tiles. With ${assumptions.tileWastagePercent.toStringAsFixed(1)}% cut wastage = ${totalFloorTiles.toInt()} tiles (${totalFloorBoxes.toInt()} boxes of ${assumptions.tilesPerBox}).',
-      assumptionsSummary:
-          'Tile Size: ${assumptions.floorTileLengthInches.toStringAsFixed(0)}"×${assumptions.floorTileWidthInches.toStringAsFixed(0)}" (${floorTileAreaSqFt.toStringAsFixed(2)} sq ft) | ${assumptions.tilesPerBox} tiles/box | Rate per sq ft',
-    ));
+    items.add(
+      MaterialLineItem(
+        category: MaterialCategory.tile,
+        name:
+            'Vitrified Floor Tiles (${assumptions.floorTileLengthInches.toStringAsFixed(0)}" × ${assumptions.floorTileWidthInches.toStringAsFixed(0)}")',
+        netQuantity: (totalFloorAreaToTile * 10).round() / 10.0,
+        wastagePercent: assumptions.tileWastagePercent,
+        totalQuantity: totalFloorBoxes,
+        unit: 'boxes (${totalFloorTiles.toInt()} tiles)',
+        unitRate: assumptions.floorTileRatePerSqFt,
+        totalCost: floorTileCost,
+        formulaBreakdown:
+            'Floor Area (${totalFloorAreaToTile.toStringAsFixed(0)} sq ft) ÷ Tile Area (${floorTileAreaSqFt.toStringAsFixed(2)} sq ft) = ${rawFloorTiles.round()} tiles. With ${assumptions.tileWastagePercent.toStringAsFixed(1)}% cut wastage = ${totalFloorTiles.toInt()} tiles (${totalFloorBoxes.toInt()} boxes of ${assumptions.tilesPerBox}).',
+        assumptionsSummary:
+            'Tile Size: ${assumptions.floorTileLengthInches.toStringAsFixed(0)}"×${assumptions.floorTileWidthInches.toStringAsFixed(0)}" (${floorTileAreaSqFt.toStringAsFixed(2)} sq ft) | ${assumptions.tilesPerBox} tiles/box | Rate per sq ft',
+      ),
+    );
 
     // Wall Dado Tiles (Bathrooms & Kitchen)
     double totalWallTileAreaSqFt = 0.0;
@@ -890,24 +969,28 @@ class PlanMaterialEstimator {
       const wallTileUnitArea = 1.5;
       final rawWallTiles = totalWallTileAreaSqFt / wallTileUnitArea;
       final totalWallTiles =
-          (rawWallTiles * (1.0 + assumptions.tileWastagePercent / 100.0)).ceilToDouble();
+          (rawWallTiles * (1.0 + assumptions.tileWastagePercent / 100.0))
+              .ceilToDouble();
       final totalWallBoxes = (totalWallTiles / 6.0).ceilToDouble();
-      final wallTileCost = totalWallTileAreaSqFt * assumptions.wallTileRatePerSqFt;
+      final wallTileCost =
+          totalWallTileAreaSqFt * assumptions.wallTileRatePerSqFt;
 
-      items.add(MaterialLineItem(
-        category: MaterialCategory.tile,
-        name: 'Ceramic Wall Dado Tiles (Bathrooms & Kitchen)',
-        netQuantity: (totalWallTileAreaSqFt * 10).round() / 10.0,
-        wastagePercent: assumptions.tileWastagePercent,
-        totalQuantity: totalWallBoxes,
-        unit: 'boxes (${totalWallTiles.toInt()} tiles)',
-        unitRate: assumptions.wallTileRatePerSqFt,
-        totalCost: wallTileCost,
-        formulaBreakdown:
-            'Wall Dado Area (${totalWallTileAreaSqFt.toStringAsFixed(0)} sq ft) ÷ 1.5 sq ft/tile = ${rawWallTiles.round()} tiles. With ${assumptions.tileWastagePercent.toStringAsFixed(1)}% wastage = ${totalWallTiles.toInt()} tiles (${totalWallBoxes.toInt()} boxes of 6).',
-        assumptionsSummary:
-            'Bathroom Dado: ${assumptions.bathroomDadoHeightFeet} ft height | Kitchen Backsplash: ${assumptions.kitchenBacksplashAreaSqFt} sq ft | Standard 12"×18" ceramic',
-      ));
+      items.add(
+        MaterialLineItem(
+          category: MaterialCategory.tile,
+          name: 'Ceramic Wall Dado Tiles (Bathrooms & Kitchen)',
+          netQuantity: (totalWallTileAreaSqFt * 10).round() / 10.0,
+          wastagePercent: assumptions.tileWastagePercent,
+          totalQuantity: totalWallBoxes,
+          unit: 'boxes (${totalWallTiles.toInt()} tiles)',
+          unitRate: assumptions.wallTileRatePerSqFt,
+          totalCost: wallTileCost,
+          formulaBreakdown:
+              'Wall Dado Area (${totalWallTileAreaSqFt.toStringAsFixed(0)} sq ft) ÷ 1.5 sq ft/tile = ${rawWallTiles.round()} tiles. With ${assumptions.tileWastagePercent.toStringAsFixed(1)}% wastage = ${totalWallTiles.toInt()} tiles (${totalWallBoxes.toInt()} boxes of 6).',
+          assumptionsSummary:
+              'Bathroom Dado: ${assumptions.bathroomDadoHeightFeet} ft height | Kitchen Backsplash: ${assumptions.kitchenBacksplashAreaSqFt} sq ft | Standard 12"×18" ceramic',
+        ),
+      );
     }
 
     // ==========================================
@@ -921,7 +1004,8 @@ class PlanMaterialEstimator {
     // A. Roof Slab
     if (assumptions.includeRoofSlab) {
       // Built-up area + overhang allowance
-      final overhangFootprintArea = totalBuiltUpAreaSqFt *
+      final overhangFootprintArea =
+          totalBuiltUpAreaSqFt *
           (assumptions.roofSlabOverhangFeet > 0 ? 1.08 : 1.0);
       final slabThickFeet = assumptions.roofSlabThicknessInches / 12.0;
       final slabVol = overhangFootprintArea * slabThickFeet;
@@ -953,7 +1037,8 @@ class PlanMaterialEstimator {
     if (assumptions.includePlinthBeam) {
       final plinthWidthFeet = assumptions.plinthBeamWidthInches / 12.0;
       final plinthDepthFeet = assumptions.plinthBeamDepthInches / 12.0;
-      final plinthVol = totalPhysicalWallLengthFeet * plinthWidthFeet * plinthDepthFeet;
+      final plinthVol =
+          totalPhysicalWallLengthFeet * plinthWidthFeet * plinthDepthFeet;
       totalConcreteVolumeCuFt += plinthVol;
       concreteBreakdownParts.add(
         'Plinth Beam (${totalPhysicalWallLengthFeet.toStringAsFixed(1)} ft length × ${assumptions.plinthBeamWidthInches}" × ${assumptions.plinthBeamDepthInches}" = ${plinthVol.toStringAsFixed(1)} cu ft)',
@@ -961,67 +1046,86 @@ class PlanMaterialEstimator {
     }
 
     if (totalConcreteVolumeCuFt > 0) {
-      final dryConcreteVolCuFt = totalConcreteVolumeCuFt * assumptions.concreteDryFactor;
+      final dryConcreteVolCuFt =
+          totalConcreteVolumeCuFt * assumptions.concreteDryFactor;
 
       final rawConcreteCementBags =
-          (dryConcreteVolCuFt * assumptions.concreteGrade.cementFraction) / cuFtPerCementBag;
+          (dryConcreteVolCuFt * assumptions.concreteGrade.cementFraction) /
+          cuFtPerCementBag;
       final totalConcreteCementBags =
-          (rawConcreteCementBags * (1.0 + assumptions.concreteWastagePercent / 100.0)).ceilToDouble();
-      final concreteCementCost = totalConcreteCementBags * assumptions.cementRatePerBag;
+          (rawConcreteCementBags *
+                  (1.0 + assumptions.concreteWastagePercent / 100.0))
+              .ceilToDouble();
+      final concreteCementCost =
+          totalConcreteCementBags * assumptions.cementRatePerBag;
 
-      items.add(MaterialLineItem(
-        category: MaterialCategory.concrete,
-        name: 'Cement (Concrete - ${assumptions.concreteGrade.label})',
-        netQuantity: (rawConcreteCementBags * 10).round() / 10.0,
-        wastagePercent: assumptions.concreteWastagePercent,
-        totalQuantity: totalConcreteCementBags,
-        unit: 'bags (50 kg)',
-        unitRate: assumptions.cementRatePerBag,
-        totalCost: concreteCementCost,
-        formulaBreakdown:
-            'Explicit Concrete Vol (${totalConcreteVolumeCuFt.toStringAsFixed(1)} cu ft) × Dry Factor (${assumptions.concreteDryFactor}) = ${dryConcreteVolCuFt.toStringAsFixed(1)} cu ft. Cement Share (${assumptions.concreteGrade.cementParts}/${assumptions.concreteGrade.totalParts.toStringAsFixed(1)}) = ${rawConcreteCementBags.toStringAsFixed(1)} bags. With ${assumptions.concreteWastagePercent.toStringAsFixed(1)}% wastage = ${totalConcreteCementBags.toInt()} bags.',
-        assumptionsSummary:
-            'Mix: ${assumptions.concreteGrade.label} | Dry Factor: ${assumptions.concreteDryFactor} | Reinforcement steel NOT inferred',
-      ));
+      items.add(
+        MaterialLineItem(
+          category: MaterialCategory.concrete,
+          name: 'Cement (Concrete - ${assumptions.concreteGrade.label})',
+          netQuantity: (rawConcreteCementBags * 10).round() / 10.0,
+          wastagePercent: assumptions.concreteWastagePercent,
+          totalQuantity: totalConcreteCementBags,
+          unit: 'bags (50 kg)',
+          unitRate: assumptions.cementRatePerBag,
+          totalCost: concreteCementCost,
+          formulaBreakdown:
+              'Explicit Concrete Vol (${totalConcreteVolumeCuFt.toStringAsFixed(1)} cu ft) × Dry Factor (${assumptions.concreteDryFactor}) = ${dryConcreteVolCuFt.toStringAsFixed(1)} cu ft. Cement Share (${assumptions.concreteGrade.cementParts}/${assumptions.concreteGrade.totalParts.toStringAsFixed(1)}) = ${rawConcreteCementBags.toStringAsFixed(1)} bags. With ${assumptions.concreteWastagePercent.toStringAsFixed(1)}% wastage = ${totalConcreteCementBags.toInt()} bags.',
+          assumptionsSummary:
+              'Mix: ${assumptions.concreteGrade.label} | Dry Factor: ${assumptions.concreteDryFactor} | Reinforcement steel NOT inferred',
+        ),
+      );
 
-      final rawConcreteSandCuFt = dryConcreteVolCuFt * assumptions.concreteGrade.sandFraction;
+      final rawConcreteSandCuFt =
+          dryConcreteVolCuFt * assumptions.concreteGrade.sandFraction;
       final totalConcreteSandCuFt =
-          (rawConcreteSandCuFt * (1.0 + assumptions.concreteWastagePercent / 100.0)).ceilToDouble();
-      final concreteSandCost = totalConcreteSandCuFt * assumptions.sandRatePerCuFt;
+          (rawConcreteSandCuFt *
+                  (1.0 + assumptions.concreteWastagePercent / 100.0))
+              .ceilToDouble();
+      final concreteSandCost =
+          totalConcreteSandCuFt * assumptions.sandRatePerCuFt;
 
-      items.add(MaterialLineItem(
-        category: MaterialCategory.concrete,
-        name: 'Sand (Concrete - Fine Aggregates)',
-        netQuantity: (rawConcreteSandCuFt * 10).round() / 10.0,
-        wastagePercent: assumptions.concreteWastagePercent,
-        totalQuantity: totalConcreteSandCuFt,
-        unit: 'cu ft',
-        unitRate: assumptions.sandRatePerCuFt,
-        totalCost: concreteSandCost,
-        formulaBreakdown:
-            'Dry Concrete Vol (${dryConcreteVolCuFt.toStringAsFixed(1)} cu ft) × Sand Share (${assumptions.concreteGrade.sandParts}/${assumptions.concreteGrade.totalParts.toStringAsFixed(1)}) = ${rawConcreteSandCuFt.toStringAsFixed(1)} cu ft. With ${assumptions.concreteWastagePercent.toStringAsFixed(1)}% wastage = ${totalConcreteSandCuFt.toInt()} cu ft.',
-        assumptionsSummary: 'Zone II River Sand / M-Sand for concrete mix',
-      ));
+      items.add(
+        MaterialLineItem(
+          category: MaterialCategory.concrete,
+          name: 'Sand (Concrete - Fine Aggregates)',
+          netQuantity: (rawConcreteSandCuFt * 10).round() / 10.0,
+          wastagePercent: assumptions.concreteWastagePercent,
+          totalQuantity: totalConcreteSandCuFt,
+          unit: 'cu ft',
+          unitRate: assumptions.sandRatePerCuFt,
+          totalCost: concreteSandCost,
+          formulaBreakdown:
+              'Dry Concrete Vol (${dryConcreteVolCuFt.toStringAsFixed(1)} cu ft) × Sand Share (${assumptions.concreteGrade.sandParts}/${assumptions.concreteGrade.totalParts.toStringAsFixed(1)}) = ${rawConcreteSandCuFt.toStringAsFixed(1)} cu ft. With ${assumptions.concreteWastagePercent.toStringAsFixed(1)}% wastage = ${totalConcreteSandCuFt.toInt()} cu ft.',
+          assumptionsSummary: 'Zone II River Sand / M-Sand for concrete mix',
+        ),
+      );
 
-      final rawConcreteAggCuFt = dryConcreteVolCuFt * assumptions.concreteGrade.aggregateFraction;
+      final rawConcreteAggCuFt =
+          dryConcreteVolCuFt * assumptions.concreteGrade.aggregateFraction;
       final totalConcreteAggCuFt =
-          (rawConcreteAggCuFt * (1.0 + assumptions.concreteWastagePercent / 100.0)).ceilToDouble();
-      final concreteAggCost = totalConcreteAggCuFt * assumptions.aggregateRatePerCuFt;
+          (rawConcreteAggCuFt *
+                  (1.0 + assumptions.concreteWastagePercent / 100.0))
+              .ceilToDouble();
+      final concreteAggCost =
+          totalConcreteAggCuFt * assumptions.aggregateRatePerCuFt;
 
-      items.add(MaterialLineItem(
-        category: MaterialCategory.concrete,
-        name: 'Coarse Aggregate / Blue Metal Stone (10-20 mm)',
-        netQuantity: (rawConcreteAggCuFt * 10).round() / 10.0,
-        wastagePercent: assumptions.concreteWastagePercent,
-        totalQuantity: totalConcreteAggCuFt,
-        unit: 'cu ft',
-        unitRate: assumptions.aggregateRatePerCuFt,
-        totalCost: concreteAggCost,
-        formulaBreakdown:
-            'Dry Concrete Vol (${dryConcreteVolCuFt.toStringAsFixed(1)} cu ft) × Stone Share (${assumptions.concreteGrade.aggregateParts}/${assumptions.concreteGrade.totalParts.toStringAsFixed(1)}) = ${rawConcreteAggCuFt.toStringAsFixed(1)} cu ft. With ${assumptions.concreteWastagePercent.toStringAsFixed(1)}% wastage = ${totalConcreteAggCuFt.toInt()} cu ft.',
-        assumptionsSummary:
-            'Elements: ${concreteBreakdownParts.join(', ')} | 20mm graded stone aggregates',
-      ));
+      items.add(
+        MaterialLineItem(
+          category: MaterialCategory.concrete,
+          name: 'Coarse Aggregate / Blue Metal Stone (10-20 mm)',
+          netQuantity: (rawConcreteAggCuFt * 10).round() / 10.0,
+          wastagePercent: assumptions.concreteWastagePercent,
+          totalQuantity: totalConcreteAggCuFt,
+          unit: 'cu ft',
+          unitRate: assumptions.aggregateRatePerCuFt,
+          totalCost: concreteAggCost,
+          formulaBreakdown:
+              'Dry Concrete Vol (${dryConcreteVolCuFt.toStringAsFixed(1)} cu ft) × Stone Share (${assumptions.concreteGrade.aggregateParts}/${assumptions.concreteGrade.totalParts.toStringAsFixed(1)}) = ${rawConcreteAggCuFt.toStringAsFixed(1)} cu ft. With ${assumptions.concreteWastagePercent.toStringAsFixed(1)}% wastage = ${totalConcreteAggCuFt.toInt()} cu ft.',
+          assumptionsSummary:
+              'Elements: ${concreteBreakdownParts.join(', ')} | 20mm graded stone aggregates',
+        ),
+      );
     }
 
     return items;

@@ -18,19 +18,16 @@ class ExportActionResult {
     this.error,
   });
 
-  factory ExportActionResult.success({String? filePath, required String message}) =>
-      ExportActionResult(
-        isSuccess: true,
-        filePath: filePath,
-        message: message,
-      );
+  factory ExportActionResult.success({
+    String? filePath,
+    required String message,
+  }) =>
+      ExportActionResult(isSuccess: true, filePath: filePath, message: message);
 
-  factory ExportActionResult.failure({required String message, Object? error}) =>
-      ExportActionResult(
-        isSuccess: false,
-        message: message,
-        error: error,
-      );
+  factory ExportActionResult.failure({
+    required String message,
+    Object? error,
+  }) => ExportActionResult(isSuccess: false, message: message, error: error);
 }
 
 /// Service providing cross-platform file sharing and saving capabilities.
@@ -114,7 +111,9 @@ class PlanShareService {
       );
 
       return ExportActionResult.success(
-        message: completed ? 'Print / PDF export completed.' : 'PDF dialogue closed.',
+        message: completed
+            ? 'Print / PDF export completed.'
+            : 'PDF dialogue closed.',
       );
     } catch (e) {
       return ExportActionResult.failure(

@@ -33,11 +33,16 @@ class PlanImageExportService {
     );
 
     final picture = recorder.endRecording();
-    final image = await picture.toImage(imageWidth.toInt(), imageHeight.toInt());
+    final image = await picture.toImage(
+      imageWidth.toInt(),
+      imageHeight.toInt(),
+    );
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
 
     if (byteData == null) {
-      throw Exception('Failed to encode 2D floor plan image to PNG byte stream.');
+      throw Exception(
+        'Failed to encode 2D floor plan image to PNG byte stream.',
+      );
     }
 
     return byteData.buffer.asUint8List();
@@ -52,11 +57,14 @@ class PlanImageExportService {
   }) async {
     if (boundaryKey?.currentContext != null) {
       try {
-        final boundary = boundaryKey!.currentContext!.findRenderObject()
-            as RenderRepaintBoundary?;
+        final boundary =
+            boundaryKey!.currentContext!.findRenderObject()
+                as RenderRepaintBoundary?;
         if (boundary != null) {
           final ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
-          final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+          final byteData = await image.toByteData(
+            format: ui.ImageByteFormat.png,
+          );
           if (byteData != null) {
             return byteData.buffer.asUint8List();
           }
@@ -139,7 +147,10 @@ class PlanImageExportService {
     final availW = size.width - (padLeft + padRight);
     final availH = size.height - (padTop + padBottom);
 
-    if (availW <= 0 || availH <= 0 || plan.plotWidthFeet <= 0 || plan.plotLengthFeet <= 0) {
+    if (availW <= 0 ||
+        availH <= 0 ||
+        plan.plotWidthFeet <= 0 ||
+        plan.plotLengthFeet <= 0) {
       return;
     }
 
@@ -161,11 +172,27 @@ class PlanImageExportService {
 
       final stepPixels = scale * 2.0; // Grid line every 2 feet
       if (stepPixels > 10) {
-        for (double x = originX; x <= originX + plotPixelW + 0.1; x += stepPixels) {
-          canvas.drawLine(Offset(x, originY), Offset(x, originY + plotPixelH), gridPaint);
+        for (
+          double x = originX;
+          x <= originX + plotPixelW + 0.1;
+          x += stepPixels
+        ) {
+          canvas.drawLine(
+            Offset(x, originY),
+            Offset(x, originY + plotPixelH),
+            gridPaint,
+          );
         }
-        for (double y = originY; y <= originY + plotPixelH + 0.1; y += stepPixels) {
-          canvas.drawLine(Offset(originX, y), Offset(originX + plotPixelW, y), gridPaint);
+        for (
+          double y = originY;
+          y <= originY + plotPixelH + 0.1;
+          y += stepPixels
+        ) {
+          canvas.drawLine(
+            Offset(originX, y),
+            Offset(originX + plotPixelW, y),
+            gridPaint,
+          );
         }
       }
     }
@@ -284,7 +311,13 @@ class PlanImageExportService {
     }
 
     // 6. Doors & Windows (Openings)
-    _drawAllOpenings(canvas: canvas, plan: plan, originX: originX, originY: originY, scale: scale);
+    _drawAllOpenings(
+      canvas: canvas,
+      plan: plan,
+      originX: originX,
+      originY: originY,
+      scale: scale,
+    );
 
     // 7. Technical Scale Bar and North Arrow at Footer
     _drawNorthArrowAndScale(
@@ -298,7 +331,10 @@ class PlanImageExportService {
   static void _drawHeaderBar(Canvas canvas, Size size, FloorPlan plan) {
     final headerRect = Rect.fromLTWH(30, 30, size.width - 60, 60);
     final headerBg = Paint()..color = const Color(0xFF1E3A5F);
-    canvas.drawRRect(RRect.fromRectAndRadius(headerRect, const Radius.circular(8)), headerBg);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(headerRect, const Radius.circular(8)),
+      headerBg,
+    );
 
     // Title Text
     final titleSpan = TextSpan(
@@ -324,16 +360,15 @@ class PlanImageExportService {
       ],
     );
 
-    final tp = TextPainter(
-      text: titleSpan,
-      textDirection: TextDirection.ltr,
-    )..layout();
+    final tp = TextPainter(text: titleSpan, textDirection: TextDirection.ltr)
+      ..layout();
 
     tp.paint(canvas, const Offset(46, 42));
 
     // Right subtitle info
     final subSpan = TextSpan(
-      text: 'Layout: ${plan.layoutType}  |  Plot: ${plan.unit.formatArea(plan.totalPlotAreaSqFt)}  |  Built-up: ${plan.unit.formatArea(plan.totalBuiltUpAreaSqFt)}',
+      text:
+          'Layout: ${plan.layoutType}  |  Plot: ${plan.unit.formatArea(plan.totalPlotAreaSqFt)}  |  Built-up: ${plan.unit.formatArea(plan.totalBuiltUpAreaSqFt)}',
       style: const TextStyle(
         color: Color(0xFFE2E8F0),
         fontSize: 11,
@@ -341,10 +376,8 @@ class PlanImageExportService {
       ),
     );
 
-    final subTp = TextPainter(
-      text: subSpan,
-      textDirection: TextDirection.ltr,
-    )..layout();
+    final subTp = TextPainter(text: subSpan, textDirection: TextDirection.ltr)
+      ..layout();
 
     subTp.paint(canvas, Offset(size.width - 46 - subTp.width, 52));
   }
@@ -366,11 +399,27 @@ class PlanImageExportService {
     // Ticks at ends
     const tickLen = 5.0;
     if (isVertical) {
-      canvas.drawLine(Offset(p1.dx - tickLen, p1.dy), Offset(p1.dx + tickLen, p1.dy), linePaint);
-      canvas.drawLine(Offset(p2.dx - tickLen, p2.dy), Offset(p2.dx + tickLen, p2.dy), linePaint);
+      canvas.drawLine(
+        Offset(p1.dx - tickLen, p1.dy),
+        Offset(p1.dx + tickLen, p1.dy),
+        linePaint,
+      );
+      canvas.drawLine(
+        Offset(p2.dx - tickLen, p2.dy),
+        Offset(p2.dx + tickLen, p2.dy),
+        linePaint,
+      );
     } else {
-      canvas.drawLine(Offset(p1.dx, p1.dy - tickLen), Offset(p1.dx, p1.dy + tickLen), linePaint);
-      canvas.drawLine(Offset(p2.dx, p2.dy - tickLen), Offset(p2.dx, p2.dy + tickLen), linePaint);
+      canvas.drawLine(
+        Offset(p1.dx, p1.dy - tickLen),
+        Offset(p1.dx, p1.dy + tickLen),
+        linePaint,
+      );
+      canvas.drawLine(
+        Offset(p2.dx, p2.dy - tickLen),
+        Offset(p2.dx, p2.dy + tickLen),
+        linePaint,
+      );
     }
 
     final tp = TextPainter(
@@ -387,9 +436,15 @@ class PlanImageExportService {
 
     final center = Offset((p1.dx + p2.dx) / 2, (p1.dy + p2.dy) / 2);
     if (isVertical) {
-      tp.paint(canvas, Offset(center.dx - tp.width - 6, center.dy - tp.height / 2));
+      tp.paint(
+        canvas,
+        Offset(center.dx - tp.width - 6, center.dy - tp.height / 2),
+      );
     } else {
-      tp.paint(canvas, Offset(center.dx - tp.width / 2, center.dy - tp.height - 4));
+      tp.paint(
+        canvas,
+        Offset(center.dx - tp.width / 2, center.dy - tp.height - 4),
+      );
     }
   }
 
@@ -522,8 +577,16 @@ class PlanImageExportService {
     final barStart = Offset(36, origin.dy);
     final barEnd = Offset(36 + scaleBarPixels, origin.dy);
     canvas.drawLine(barStart, barEnd, barPaint);
-    canvas.drawLine(Offset(barStart.dx, barStart.dy - 4), Offset(barStart.dx, barStart.dy + 4), barPaint);
-    canvas.drawLine(Offset(barEnd.dx, barEnd.dy - 4), Offset(barEnd.dx, barEnd.dy + 4), barPaint);
+    canvas.drawLine(
+      Offset(barStart.dx, barStart.dy - 4),
+      Offset(barStart.dx, barStart.dy + 4),
+      barPaint,
+    );
+    canvas.drawLine(
+      Offset(barEnd.dx, barEnd.dy - 4),
+      Offset(barEnd.dx, barEnd.dy + 4),
+      barPaint,
+    );
 
     final scaleText = TextPainter(
       text: TextSpan(

@@ -16,7 +16,8 @@ class ElevationComparisonSheet extends StatefulWidget {
   });
 
   @override
-  State<ElevationComparisonSheet> createState() => _ElevationComparisonSheetState();
+  State<ElevationComparisonSheet> createState() =>
+      _ElevationComparisonSheetState();
 }
 
 class _ElevationComparisonSheetState extends State<ElevationComparisonSheet> {
@@ -75,7 +76,11 @@ class _ElevationComparisonSheetState extends State<ElevationComparisonSheet> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               child: Row(
                 children: [
-                  const Icon(Icons.compare_arrows_rounded, color: Color(0xFFFF8C00), size: 22),
+                  const Icon(
+                    Icons.compare_arrows_rounded,
+                    color: Color(0xFFFF8C00),
+                    size: 22,
+                  ),
                   const SizedBox(width: 8),
                   const Text(
                     'Compare Facade Concepts',
@@ -120,30 +125,53 @@ class _ElevationComparisonSheetState extends State<ElevationComparisonSheet> {
                 children: [
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
-                        color: (isDark ? const Color(0xFF1E293B) : Colors.white),
+                        color: (isDark
+                            ? const Color(0xFF1E293B)
+                            : Colors.white),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: const Color(0xFFFF8C00)),
                       ),
                       child: Text(
                         'A: ${_conceptA.name}',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFFF8C00)),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFFF8C00),
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: Text('VS', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey)),
+                    child: Text(
+                      'VS',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                        color: Colors.grey,
+                      ),
+                    ),
                   ),
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
-                        color: (isDark ? const Color(0xFF1E293B) : Colors.white),
+                        color: (isDark
+                            ? const Color(0xFF1E293B)
+                            : Colors.white),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+                        border: Border.all(
+                          color: Colors.grey.withValues(alpha: 0.3),
+                        ),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<ElevationConfig>(
@@ -157,7 +185,10 @@ class _ElevationComparisonSheetState extends State<ElevationComparisonSheet> {
                           items: widget.availableConfigs.map((c) {
                             return DropdownMenuItem(
                               value: c,
-                              child: Text('B: ${c.name}', overflow: TextOverflow.ellipsis),
+                              child: Text(
+                                'B: ${c.name}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             );
                           }).toList(),
                           onChanged: (val) {
@@ -184,9 +215,15 @@ class _ElevationComparisonSheetState extends State<ElevationComparisonSheet> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                          color: isDark
+                              ? const Color(0xFF1E293B)
+                              : Colors.white,
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: isDark ? Colors.white12 : Colors.grey.shade200),
+                          border: Border.all(
+                            color: isDark
+                                ? Colors.white12
+                                : Colors.grey.shade200,
+                          ),
                         ),
                         clipBehavior: Clip.antiAlias,
                         child: Stack(
@@ -203,14 +240,21 @@ class _ElevationComparisonSheetState extends State<ElevationComparisonSheet> {
                               top: 6,
                               left: 6,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFFF8C00),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: const Text(
                                   'CONCEPT A',
-                                  style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
@@ -223,9 +267,15 @@ class _ElevationComparisonSheetState extends State<ElevationComparisonSheet> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                          color: isDark
+                              ? const Color(0xFF1E293B)
+                              : Colors.white,
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: isDark ? Colors.white12 : Colors.grey.shade200),
+                          border: Border.all(
+                            color: isDark
+                                ? Colors.white12
+                                : Colors.grey.shade200,
+                          ),
                         ),
                         clipBehavior: Clip.antiAlias,
                         child: Stack(
@@ -242,14 +292,21 @@ class _ElevationComparisonSheetState extends State<ElevationComparisonSheet> {
                               top: 6,
                               left: 6,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.blue.shade700,
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: const Text(
                                   'CONCEPT B',
-                                  style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
@@ -273,19 +330,61 @@ class _ElevationComparisonSheetState extends State<ElevationComparisonSheet> {
                 decoration: BoxDecoration(
                   color: isDark ? const Color(0xFF1E293B) : Colors.white,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: isDark ? Colors.white12 : Colors.grey.shade200),
+                  border: Border.all(
+                    color: isDark ? Colors.white12 : Colors.grey.shade200,
+                  ),
                 ),
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
-                    _buildCompareRow('Design Style', _conceptA.style.label, _conceptB.style.label, isDark),
-                    _buildCompareRow('Floor Typology', _conceptA.floorCountLabel, _conceptB.floorCountLabel, isDark),
-                    _buildCompareRow('Total Height', '${_conceptA.totalHeightFeet.toStringAsFixed(1)} ft', '${_conceptB.totalHeightFeet.toStringAsFixed(1)} ft', isDark),
-                    _buildCompareRow('Wall Finish', _conceptA.finishPreset.label, _conceptB.finishPreset.label, isDark),
-                    _buildCompareRow('Roof Silhouette', _conceptA.roofStyle.label, _conceptB.roofStyle.label, isDark),
-                    _buildCompareRow('Window Style', _conceptA.windowStyle.label, _conceptB.windowStyle.label, isDark),
-                    _buildCompareRow('Balcony Enclosure', _conceptA.balconyOption.label, _conceptB.balconyOption.label, isDark),
-                    _buildColorCompareRow('Base Palette', _conceptA, _conceptB, isDark),
+                    _buildCompareRow(
+                      'Design Style',
+                      _conceptA.style.label,
+                      _conceptB.style.label,
+                      isDark,
+                    ),
+                    _buildCompareRow(
+                      'Floor Typology',
+                      _conceptA.floorCountLabel,
+                      _conceptB.floorCountLabel,
+                      isDark,
+                    ),
+                    _buildCompareRow(
+                      'Total Height',
+                      '${_conceptA.totalHeightFeet.toStringAsFixed(1)} ft',
+                      '${_conceptB.totalHeightFeet.toStringAsFixed(1)} ft',
+                      isDark,
+                    ),
+                    _buildCompareRow(
+                      'Wall Finish',
+                      _conceptA.finishPreset.label,
+                      _conceptB.finishPreset.label,
+                      isDark,
+                    ),
+                    _buildCompareRow(
+                      'Roof Silhouette',
+                      _conceptA.roofStyle.label,
+                      _conceptB.roofStyle.label,
+                      isDark,
+                    ),
+                    _buildCompareRow(
+                      'Window Style',
+                      _conceptA.windowStyle.label,
+                      _conceptB.windowStyle.label,
+                      isDark,
+                    ),
+                    _buildCompareRow(
+                      'Balcony Enclosure',
+                      _conceptA.balconyOption.label,
+                      _conceptB.balconyOption.label,
+                      isDark,
+                    ),
+                    _buildColorCompareRow(
+                      'Base Palette',
+                      _conceptA,
+                      _conceptB,
+                      isDark,
+                    ),
                   ],
                 ),
               ),
@@ -309,7 +408,9 @@ class _ElevationComparisonSheetState extends State<ElevationComparisonSheet> {
                         widget.onSelectConcept(_conceptB);
                         Navigator.pop(context);
                       },
-                      style: FilledButton.styleFrom(backgroundColor: const Color(0xFFFF8C00)),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF8C00),
+                      ),
                       icon: const Icon(Icons.check_rounded, size: 16),
                       label: const Text('Switch to Concept B'),
                     ),
@@ -366,7 +467,12 @@ class _ElevationComparisonSheetState extends State<ElevationComparisonSheet> {
     );
   }
 
-  Widget _buildColorCompareRow(String label, ElevationConfig a, ElevationConfig b, bool isDark) {
+  Widget _buildColorCompareRow(
+    String label,
+    ElevationConfig a,
+    ElevationConfig b,
+    bool isDark,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(

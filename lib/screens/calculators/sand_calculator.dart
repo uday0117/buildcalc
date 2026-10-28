@@ -48,9 +48,9 @@ class _SandCalculatorState extends State<SandCalculator> {
 
       _saveToHistory();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter all values')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter all values')));
     }
   }
 

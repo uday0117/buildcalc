@@ -84,40 +84,40 @@ class ReportMetadata {
       preparedBy.trim().isNotEmpty;
 
   Map<String, dynamic> toJson() => {
-        'title': title,
-        'projectName': projectName,
-        'clientName': clientName,
-        'clientPhone': clientPhone,
-        'clientEmail': clientEmail,
-        'companyName': companyName,
-        'companyAddress': companyAddress,
-        'companyPhone': companyPhone,
-        'companyEmail': companyEmail,
-        'preparedBy': preparedBy,
-        'projectLocation': projectLocation,
-        'notes': notes,
-        'includeRatesAndCosts': includeRatesAndCosts,
-        'createdAt': createdAt.toIso8601String(),
-      };
+    'title': title,
+    'projectName': projectName,
+    'clientName': clientName,
+    'clientPhone': clientPhone,
+    'clientEmail': clientEmail,
+    'companyName': companyName,
+    'companyAddress': companyAddress,
+    'companyPhone': companyPhone,
+    'companyEmail': companyEmail,
+    'preparedBy': preparedBy,
+    'projectLocation': projectLocation,
+    'notes': notes,
+    'includeRatesAndCosts': includeRatesAndCosts,
+    'createdAt': createdAt.toIso8601String(),
+  };
 
   factory ReportMetadata.fromJson(Map<String, dynamic> json) => ReportMetadata(
-        title: json['title'] as String? ?? 'BuildCalc Floor Plan & Estimate',
-        projectName: json['projectName'] as String? ?? '',
-        clientName: json['clientName'] as String? ?? '',
-        clientPhone: json['clientPhone'] as String? ?? '',
-        clientEmail: json['clientEmail'] as String? ?? '',
-        companyName: json['companyName'] as String? ?? '',
-        companyAddress: json['companyAddress'] as String? ?? '',
-        companyPhone: json['companyPhone'] as String? ?? '',
-        companyEmail: json['companyEmail'] as String? ?? '',
-        preparedBy: json['preparedBy'] as String? ?? '',
-        projectLocation: json['projectLocation'] as String? ?? '',
-        notes: json['notes'] as String? ?? '',
-        includeRatesAndCosts: json['includeRatesAndCosts'] as bool? ?? true,
-        createdAt: json['createdAt'] != null
-            ? DateTime.tryParse(json['createdAt'] as String) ?? DateTime.now()
-            : DateTime.now(),
-      );
+    title: json['title'] as String? ?? 'BuildCalc Floor Plan & Estimate',
+    projectName: json['projectName'] as String? ?? '',
+    clientName: json['clientName'] as String? ?? '',
+    clientPhone: json['clientPhone'] as String? ?? '',
+    clientEmail: json['clientEmail'] as String? ?? '',
+    companyName: json['companyName'] as String? ?? '',
+    companyAddress: json['companyAddress'] as String? ?? '',
+    companyPhone: json['companyPhone'] as String? ?? '',
+    companyEmail: json['companyEmail'] as String? ?? '',
+    preparedBy: json['preparedBy'] as String? ?? '',
+    projectLocation: json['projectLocation'] as String? ?? '',
+    notes: json['notes'] as String? ?? '',
+    includeRatesAndCosts: json['includeRatesAndCosts'] as bool? ?? true,
+    createdAt: json['createdAt'] != null
+        ? DateTime.tryParse(json['createdAt'] as String) ?? DateTime.now()
+        : DateTime.now(),
+  );
 
   /// Saves the company / professional details to preferences for reuse in future exports.
   static Future<void> saveDefaultCompanyDetails({

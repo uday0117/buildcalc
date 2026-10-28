@@ -55,10 +55,7 @@ class _SteelCalculatorState extends State<SteelCalculator> {
         'diameter': _diameterController.text,
         'quantity': _quantityController.text,
       },
-      results: {
-        'weight_per_bar': _weightPerBar,
-        'total_weight': _totalWeight,
-      },
+      results: {'weight_per_bar': _weightPerBar, 'total_weight': _totalWeight},
       timestamp: DateTime.now(),
     );
   }
@@ -151,7 +148,8 @@ class _SteelCalculatorState extends State<SteelCalculator> {
               controller: _diameterController,
               suffix: 'mm',
               prefixIcon: Icons.panorama_fish_eye_rounded,
-              helperText: 'Common rebar: 8mm, 10mm, 12mm, 16mm, 20mm, 25mm, 32mm',
+              helperText:
+                  'Common rebar: 8mm, 10mm, 12mm, 16mm, 20mm, 25mm, 32mm',
             ),
             const SizedBox(height: 14),
 
@@ -186,7 +184,8 @@ class _SteelCalculatorState extends State<SteelCalculator> {
                 title: 'Results',
                 icon: Icons.fence_rounded,
                 onSave: _bookmark,
-                note: 'Standard formula: Weight = D² × L / 162 (D in mm, L in meters)',
+                note:
+                    'Standard formula: Weight = D² × L / 162 (D in mm, L in meters)',
                 rows: [
                   ResultRowItem(
                     label: 'Total Weight',

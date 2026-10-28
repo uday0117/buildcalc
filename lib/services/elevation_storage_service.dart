@@ -36,7 +36,9 @@ class ElevationStorageService {
     try {
       final List<dynamic> raw = json.decode(jsonStr);
       return raw
-          .map((item) => ElevationConfig.fromJson(Map<String, dynamic>.from(item)))
+          .map(
+            (item) => ElevationConfig.fromJson(Map<String, dynamic>.from(item)),
+          )
           .toList();
     } catch (_) {
       return [];
@@ -44,7 +46,9 @@ class ElevationStorageService {
   }
 
   /// Get saved elevations linked to a specific FloorPlan
-  static Future<List<ElevationConfig>> getElevationsForPlan(String planId) async {
+  static Future<List<ElevationConfig>> getElevationsForPlan(
+    String planId,
+  ) async {
     final all = await getAllElevations();
     if (planId.isEmpty) return all;
     return all.where((e) => e.planId == planId).toList();
@@ -95,4 +99,3 @@ class ElevationStorageService {
     }
   }
 }
-

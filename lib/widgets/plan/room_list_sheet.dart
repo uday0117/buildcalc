@@ -56,7 +56,10 @@ class RoomListSheet extends StatelessWidget {
                   children: [
                     const Text(
                       'Rooms & Spaces',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       '${plan.rooms.length} room(s) in floor plan',
@@ -87,7 +90,9 @@ class RoomListSheet extends StatelessWidget {
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFFFF8C00),
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
               ],
@@ -105,9 +110,13 @@ class RoomListSheet extends StatelessWidget {
                     ),
                   )
                 : ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     itemCount: plan.rooms.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 8),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       final room = plan.rooms[index];
                       final isSelected = room.id == controller.selectedRoomId;
@@ -117,25 +126,40 @@ class RoomListSheet extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                           side: BorderSide(
-                            color: isSelected ? const Color(0xFFFF8C00) : (isDark ? Colors.white12 : Colors.grey.shade200),
+                            color: isSelected
+                                ? const Color(0xFFFF8C00)
+                                : (isDark
+                                      ? Colors.white12
+                                      : Colors.grey.shade200),
                             width: isSelected ? 2.0 : 1.0,
                           ),
                         ),
                         color: isSelected
                             ? const Color(0xFFFF8C00).withValues(alpha: 0.08)
-                            : (isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC)),
+                            : (isDark
+                                  ? const Color(0xFF0F172A)
+                                  : const Color(0xFFF8FAFC)),
                         child: ExpansionTile(
                           leading: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Color(room.colorValue).withValues(alpha: 0.5),
+                              color: Color(
+                                room.colorValue,
+                              ).withValues(alpha: 0.5),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(room.type.icon, size: 18, color: const Color(0xFF1E3A5F)),
+                            child: Icon(
+                              room.type.icon,
+                              size: 18,
+                              color: const Color(0xFF1E3A5F),
+                            ),
                           ),
                           title: Text(
                             room.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
                           ),
                           subtitle: Text(
                             '${unit.formatDimensions(room.width, room.length)} • ${unit.formatArea(room.areaSqFt)}',
@@ -162,7 +186,11 @@ class RoomListSheet extends StatelessWidget {
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete_outline_rounded, size: 20, color: Colors.red),
+                                icon: const Icon(
+                                  Icons.delete_outline_rounded,
+                                  size: 20,
+                                  color: Colors.red,
+                                ),
                                 onPressed: () => controller.deleteRoom(room.id),
                               ),
                             ],
@@ -174,46 +202,80 @@ class RoomListSheet extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         'Openings (${room.openings.length}):',
-                                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                       TextButton.icon(
                                         onPressed: () async {
-                                          final newOp = await showDialog<PlanOpening>(
-                                            context: context,
-                                            builder: (ctx) => OpeningEditDialog(room: room, unit: unit),
-                                          );
+                                          final newOp =
+                                              await showDialog<PlanOpening>(
+                                                context: context,
+                                                builder: (ctx) =>
+                                                    OpeningEditDialog(
+                                                      room: room,
+                                                      unit: unit,
+                                                    ),
+                                              );
                                           if (newOp != null) {
-                                            controller.addOpening(room.id, newOp);
+                                            controller.addOpening(
+                                              room.id,
+                                              newOp,
+                                            );
                                           }
                                         },
                                         icon: const Icon(Icons.add, size: 16),
-                                        label: const Text('Add Door/Window', style: TextStyle(fontSize: 12)),
+                                        label: const Text(
+                                          'Add Door/Window',
+                                          style: TextStyle(fontSize: 12),
+                                        ),
                                       ),
                                     ],
                                   ),
                                   if (room.openings.isEmpty)
-                                    const Text('No doors or windows yet.', style: TextStyle(fontSize: 11, color: Colors.grey))
+                                    const Text(
+                                      'No doors or windows yet.',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey,
+                                      ),
+                                    )
                                   else
                                     ...room.openings.map((op) {
                                       return Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 2.0,
+                                        ),
                                         child: Row(
                                           children: [
-                                            Icon(op.type.icon, size: 16, color: const Color(0xFFFF8C00)),
+                                            Icon(
+                                              op.type.icon,
+                                              size: 16,
+                                              color: const Color(0xFFFF8C00),
+                                            ),
                                             const SizedBox(width: 8),
                                             Expanded(
                                               child: Text(
                                                 '${op.type.label} (${op.wallSide.name}) • ${unit.formatLength(op.widthFeet)}',
-                                                style: const TextStyle(fontSize: 12),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                ),
                                               ),
                                             ),
                                             IconButton(
-                                              icon: const Icon(Icons.delete_outline, size: 16, color: Colors.red),
-                                              onPressed: () => controller.deleteOpening(op.id),
+                                              icon: const Icon(
+                                                Icons.delete_outline,
+                                                size: 16,
+                                                color: Colors.red,
+                                              ),
+                                              onPressed: () => controller
+                                                  .deleteOpening(op.id),
                                             ),
                                           ],
                                         ),

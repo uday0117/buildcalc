@@ -10,7 +10,11 @@ class Scene3DPainter extends CustomPainter {
   final bool showLighting;
 
   // Normalized directional sunlight vector (from top-front-right)
-  static final Point3D _sunDirection = const Point3D(0.45, -0.55, 0.70).normalized;
+  static final Point3D _sunDirection = const Point3D(
+    0.45,
+    -0.55,
+    0.70,
+  ).normalized;
 
   Scene3DPainter({
     required this.mesh,
@@ -25,7 +29,10 @@ class Scene3DPainter extends CustomPainter {
 
     final width = size.width;
     final height = size.height;
-    final screenCenter = Offset(width / 2 + camera.pan.dx, height / 2 + camera.pan.dy);
+    final screenCenter = Offset(
+      width / 2 + camera.pan.dx,
+      height / 2 + camera.pan.dy,
+    );
 
     // 1. Calculate Camera Frame
     final target = mesh.center;
@@ -81,7 +88,8 @@ class Scene3DPainter extends CustomPainter {
         final toVertex = v - eye;
         final vDepth = toVertex.dot(fwd);
 
-        if (camera.projectionMode == ProjectionMode.perspective && vDepth <= 0.5) {
+        if (camera.projectionMode == ProjectionMode.perspective &&
+            vDepth <= 0.5) {
           allValid = false;
           break;
         }
@@ -160,7 +168,8 @@ class Scene3DPainter extends CustomPainter {
         final toPos = ann.position - eye;
         final depth = toPos.dot(fwd);
 
-        if (camera.projectionMode == ProjectionMode.perspective && depth <= 1.0) {
+        if (camera.projectionMode == ProjectionMode.perspective &&
+            depth <= 1.0) {
           continue;
         }
 
@@ -288,4 +297,3 @@ class _RenderPolygon {
     required this.category,
   });
 }
-

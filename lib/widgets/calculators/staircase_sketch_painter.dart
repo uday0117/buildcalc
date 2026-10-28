@@ -89,7 +89,10 @@ class _StaircasePainter extends CustomPainter {
     final drawWidth = size.width - padLeft - padRight;
     final drawHeight = size.height - padTop - padBottom;
 
-    final stepCount = math.min(result.totalTreads, 8); // draw 4 to 8 representative steps
+    final stepCount = math.min(
+      result.totalTreads,
+      8,
+    ); // draw 4 to 8 representative steps
     final stepW = (drawWidth * 0.65) / stepCount;
     final stepH = drawHeight / (stepCount + 1);
 
@@ -241,4 +244,3 @@ class _StaircasePainter extends CustomPainter {
         oldDelegate.isDark != isDark;
   }
 }
-

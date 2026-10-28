@@ -20,7 +20,8 @@ class PlanMaterialEstimateScreen extends StatefulWidget {
   });
 
   @override
-  State<PlanMaterialEstimateScreen> createState() => _PlanMaterialEstimateScreenState();
+  State<PlanMaterialEstimateScreen> createState() =>
+      _PlanMaterialEstimateScreenState();
 }
 
 class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
@@ -88,37 +89,62 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
     buffer.writeln('📋 BuildCalc - Automatic Material & Cost Estimate');
     buffer.writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     buffer.writeln('Plan: ${widget.plan.name} (${widget.plan.layoutType})');
-    buffer.writeln('Date: ${DateFormat('yyyy-MM-dd HH:mm').format(_report.generatedAt)}');
-    buffer.writeln('Carpet Area: ${_displayUnit.formatArea(_report.totalCarpetAreaSqFt)}');
-    buffer.writeln('Total Built-up Area: ${_displayUnit.formatArea(_report.totalBuiltUpAreaSqFt)}');
-    buffer.writeln('Physical Walls Length: ${numFormat.format(_report.totalPhysicalWallLengthFeet)} ft (${numFormat.format(_report.exteriorWallLengthFeet)} ft Ext + ${numFormat.format(_report.interiorSharedWallLengthFeet)} ft Shared Int)');
-    buffer.writeln('Net Masonry Volume: ${numFormat.format(_report.netMasonryVolumeCuFt)} cu ft (Gross: ${numFormat.format(_report.grossMasonryVolumeCuFt)} - Openings: ${numFormat.format(_report.openingsDeductionVolumeCuFt)})');
-    buffer.writeln('Openings Deducted: ${_report.totalOpeningsCount} openings (${numFormat.format(_report.totalOpeningsAreaSqFt)} sq ft)');
+    buffer.writeln(
+      'Date: ${DateFormat('yyyy-MM-dd HH:mm').format(_report.generatedAt)}',
+    );
+    buffer.writeln(
+      'Carpet Area: ${_displayUnit.formatArea(_report.totalCarpetAreaSqFt)}',
+    );
+    buffer.writeln(
+      'Total Built-up Area: ${_displayUnit.formatArea(_report.totalBuiltUpAreaSqFt)}',
+    );
+    buffer.writeln(
+      'Physical Walls Length: ${numFormat.format(_report.totalPhysicalWallLengthFeet)} ft (${numFormat.format(_report.exteriorWallLengthFeet)} ft Ext + ${numFormat.format(_report.interiorSharedWallLengthFeet)} ft Shared Int)',
+    );
+    buffer.writeln(
+      'Net Masonry Volume: ${numFormat.format(_report.netMasonryVolumeCuFt)} cu ft (Gross: ${numFormat.format(_report.grossMasonryVolumeCuFt)} - Openings: ${numFormat.format(_report.openingsDeductionVolumeCuFt)})',
+    );
+    buffer.writeln(
+      'Openings Deducted: ${_report.totalOpeningsCount} openings (${numFormat.format(_report.totalOpeningsAreaSqFt)} sq ft)',
+    );
     buffer.writeln('');
-    buffer.writeln('💰 TOTAL ESTIMATED MATERIAL COST: $currency ${formatter.format(_report.totalEstimatedCost)}');
+    buffer.writeln(
+      '💰 TOTAL ESTIMATED MATERIAL COST: $currency ${formatter.format(_report.totalEstimatedCost)}',
+    );
     buffer.writeln('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     buffer.writeln('');
 
     buffer.writeln('📦 ITEMIZED MATERIAL QUANTITIES:');
     for (final item in _report.lineItems) {
       buffer.writeln('• ${item.name}');
-      buffer.writeln('  Qty: ${numFormat.format(item.totalQuantity)} ${item.unit} (Net: ${numFormat.format(item.netQuantity)} + ${item.wastagePercent}% wastage)');
-      buffer.writeln('  Rate: $currency ${formatter.format(item.unitRate)} | Cost: $currency ${formatter.format(item.totalCost)}');
+      buffer.writeln(
+        '  Qty: ${numFormat.format(item.totalQuantity)} ${item.unit} (Net: ${numFormat.format(item.netQuantity)} + ${item.wastagePercent}% wastage)',
+      );
+      buffer.writeln(
+        '  Rate: $currency ${formatter.format(item.unitRate)} | Cost: $currency ${formatter.format(item.totalCost)}',
+      );
       buffer.writeln('  Breakdown: ${item.formulaBreakdown}');
       buffer.writeln('');
     }
 
     buffer.writeln('🏢 ROOM-WISE SUMMARY:');
     for (final r in _report.roomBreakdowns) {
-      buffer.writeln('• ${r.roomName} (${r.roomType.displayName}): ${_displayUnit.formatDimensions(r.widthFeet, r.lengthFeet)} = ${_displayUnit.formatArea(r.carpetAreaSqFt)}');
-      buffer.writeln('  Interior Wall Surface: ${numFormat.format(r.netWallSurfaceSqFt)} sq ft (Gross ${numFormat.format(r.grossWallSurfaceSqFt)} - ${r.openingsCount} Openings)');
+      buffer.writeln(
+        '• ${r.roomName} (${r.roomType.displayName}): ${_displayUnit.formatDimensions(r.widthFeet, r.lengthFeet)} = ${_displayUnit.formatArea(r.carpetAreaSqFt)}',
+      );
+      buffer.writeln(
+        '  Interior Wall Surface: ${numFormat.format(r.netWallSurfaceSqFt)} sq ft (Gross ${numFormat.format(r.grossWallSurfaceSqFt)} - ${r.openingsCount} Openings)',
+      );
     }
 
     buffer.writeln('');
     buffer.writeln('⚖️ DISCLAIMER:');
     buffer.writeln(PlanMaterialEstimateReport.disclaimerText);
 
-    Share.share(buffer.toString(), subject: '${widget.plan.name} - Material Estimation');
+    Share.share(
+      buffer.toString(),
+      subject: '${widget.plan.name} - Material Estimation',
+    );
   }
 
   @override
@@ -175,7 +201,11 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                 child: Row(
                   children: [
                     if (_displayUnit == u)
-                      const Icon(Icons.check, size: 16, color: Color(0xFFFF8C00))
+                      const Icon(
+                        Icons.check,
+                        size: 16,
+                        color: Color(0xFFFF8C00),
+                      )
                     else
                       const SizedBox(width: 16),
                     const SizedBox(width: 8),
@@ -193,10 +223,22 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
           unselectedLabelColor: isDark ? Colors.white60 : Colors.grey.shade700,
           indicatorColor: const Color(0xFFFF8C00),
           tabs: const [
-            Tab(icon: Icon(Icons.dashboard_rounded, size: 18), text: 'Summary & Cost'),
-            Tab(icon: Icon(Icons.inventory_2_rounded, size: 18), text: 'Itemized Breakdown'),
-            Tab(icon: Icon(Icons.meeting_room_rounded, size: 18), text: 'Room Breakdown'),
-            Tab(icon: Icon(Icons.view_week_rounded, size: 18), text: 'Physical Walls'),
+            Tab(
+              icon: Icon(Icons.dashboard_rounded, size: 18),
+              text: 'Summary & Cost',
+            ),
+            Tab(
+              icon: Icon(Icons.inventory_2_rounded, size: 18),
+              text: 'Itemized Breakdown',
+            ),
+            Tab(
+              icon: Icon(Icons.meeting_room_rounded, size: 18),
+              text: 'Room Breakdown',
+            ),
+            Tab(
+              icon: Icon(Icons.view_week_rounded, size: 18),
+              text: 'Physical Walls',
+            ),
           ],
         ),
       ),
@@ -225,7 +267,11 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
     );
   }
 
-  Widget _buildHeroCostCard(bool isDark, String currency, NumberFormat costFormatter) {
+  Widget _buildHeroCostCard(
+    bool isDark,
+    String currency,
+    NumberFormat costFormatter,
+  ) {
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       padding: const EdgeInsets.all(16),
@@ -254,7 +300,11 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
             children: [
               const Row(
                 children: [
-                  Icon(Icons.monetization_on_rounded, color: Color(0xFFFF8C00), size: 20),
+                  Icon(
+                    Icons.monetization_on_rounded,
+                    color: Color(0xFFFF8C00),
+                    size: 20,
+                  ),
                   SizedBox(width: 8),
                   Text(
                     'ESTIMATED MATERIAL COST',
@@ -271,7 +321,10 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                 onTap: _openAssumptionsSheet,
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
@@ -279,11 +332,19 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.edit_rounded, color: Color(0xFFFF8C00), size: 14),
+                      Icon(
+                        Icons.edit_rounded,
+                        color: Color(0xFFFF8C00),
+                        size: 14,
+                      ),
                       SizedBox(width: 4),
                       Text(
                         'Edit Assumptions',
-                        style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ],
                   ),
@@ -313,7 +374,10 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                     : 0.0;
                 return Container(
                   margin: const EdgeInsets.only(right: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -325,7 +389,10 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                       const SizedBox(width: 4),
                       Text(
                         '${cat.title.split(' ').first}: ${percent.toStringAsFixed(0)}%',
-                        style: const TextStyle(color: Colors.white, fontSize: 10),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                        ),
                       ),
                     ],
                   ),
@@ -338,8 +405,14 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildMiniMetric('Carpet Area', _displayUnit.formatArea(_report.totalCarpetAreaSqFt)),
-              _buildMiniMetric('Built-up', _displayUnit.formatArea(_report.totalBuiltUpAreaSqFt)),
+              _buildMiniMetric(
+                'Carpet Area',
+                _displayUnit.formatArea(_report.totalCarpetAreaSqFt),
+              ),
+              _buildMiniMetric(
+                'Built-up',
+                _displayUnit.formatArea(_report.totalBuiltUpAreaSqFt),
+              ),
               _buildMiniMetric(
                 'Walls Length',
                 '${_report.totalPhysicalWallLengthFeet.toStringAsFixed(1)} ft',
@@ -406,7 +479,11 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
     );
   }
 
-  Widget _buildSummaryTab(bool isDark, String currency, NumberFormat costFormatter) {
+  Widget _buildSummaryTab(
+    bool isDark,
+    String currency,
+    NumberFormat costFormatter,
+  ) {
     final numFormat = NumberFormat('#,##0.0');
 
     return ListView(
@@ -441,7 +518,10 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
               ),
               title: Text(
                 cat.title,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               subtitle: Text(
                 '${items.length} item(s) • ${costPercent.toStringAsFixed(1)}% of total',
@@ -460,7 +540,10 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
               ),
               children: items.map((item) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     border: Border(
                       top: BorderSide(
@@ -486,7 +569,9 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                               '${numFormat.format(item.totalQuantity)} ${item.unit} (Net: ${numFormat.format(item.netQuantity)} + ${item.wastagePercent}% wastage)',
                               style: TextStyle(
                                 fontSize: 11,
-                                color: isDark ? Colors.white60 : Colors.grey.shade600,
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey.shade600,
                               ),
                             ),
                           ],
@@ -506,7 +591,9 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                             '@ $currency ${costFormatter.format(item.unitRate)} / unit',
                             style: TextStyle(
                               fontSize: 10,
-                              color: isDark ? Colors.white60 : Colors.grey.shade600,
+                              color: isDark
+                                  ? Colors.white60
+                                  : Colors.grey.shade600,
                             ),
                           ),
                         ],
@@ -522,7 +609,11 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
     );
   }
 
-  Widget _buildItemizedTab(bool isDark, String currency, NumberFormat costFormatter) {
+  Widget _buildItemizedTab(
+    bool isDark,
+    String currency,
+    NumberFormat costFormatter,
+  ) {
     final numFormat = NumberFormat('#,##0.0');
 
     if (_report.lineItems.isEmpty) {
@@ -554,7 +645,10 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: item.category.color.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(6),
@@ -562,7 +656,11 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(item.category.icon, size: 12, color: item.category.color),
+                          Icon(
+                            item.category.icon,
+                            size: 12,
+                            color: item.category.color,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             item.category.title.split(' ').first,
@@ -588,7 +686,10 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                 const SizedBox(height: 8),
                 Text(
                   item.name,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 // Quantities Strip
@@ -596,7 +697,8 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                   children: [
                     _buildPill(
                       label: 'Net Quantity',
-                      value: '${numFormat.format(item.netQuantity)} ${item.unit}',
+                      value:
+                          '${numFormat.format(item.netQuantity)} ${item.unit}',
                       isDark: isDark,
                     ),
                     const SizedBox(width: 8),
@@ -609,7 +711,8 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                     const SizedBox(width: 8),
                     _buildPill(
                       label: 'Total Required',
-                      value: '${numFormat.format(item.totalQuantity)} ${item.unit}',
+                      value:
+                          '${numFormat.format(item.totalQuantity)} ${item.unit}',
                       isDark: isDark,
                       bold: true,
                     ),
@@ -632,14 +735,22 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.functions_rounded, size: 14, color: isDark ? Colors.white70 : Colors.grey.shade700),
+                          Icon(
+                            Icons.functions_rounded,
+                            size: 14,
+                            color: isDark
+                                ? Colors.white70
+                                : Colors.grey.shade700,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'Calculation Breakdown & Formula:',
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white70 : Colors.grey.shade700,
+                              color: isDark
+                                  ? Colors.white70
+                                  : Colors.grey.shade700,
                             ),
                           ),
                         ],
@@ -705,23 +816,37 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                   children: [
                     Row(
                       children: [
-                        Icon(r.roomType.icon, color: const Color(0xFFFF8C00), size: 20),
+                        Icon(
+                          r.roomType.icon,
+                          color: const Color(0xFFFF8C00),
+                          size: 20,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           r.roomName,
-                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFF1E3A5F).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         r.roomType.displayName,
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF1E3A5F)),
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1E3A5F),
+                        ),
                       ),
                     ),
                   ],
@@ -738,8 +863,16 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildMetricBox('Carpet Floor Area', _displayUnit.formatArea(r.carpetAreaSqFt), isDark),
-                    _buildMetricBox('Gross Wall Surface', '${numFormat.format(r.grossWallSurfaceSqFt)} sq ft', isDark),
+                    _buildMetricBox(
+                      'Carpet Floor Area',
+                      _displayUnit.formatArea(r.carpetAreaSqFt),
+                      isDark,
+                    ),
+                    _buildMetricBox(
+                      'Gross Wall Surface',
+                      '${numFormat.format(r.grossWallSurfaceSqFt)} sq ft',
+                      isDark,
+                    ),
                     _buildMetricBox(
                       'Openings Subtracted',
                       '-${numFormat.format(r.openingsAreaSqFt)} sq ft (${r.openingsCount})',
@@ -757,18 +890,29 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                 if (r.wallTileAreaSqFt > 0) ...[
                   const SizedBox(height: 10),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFF0D9488).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.grid_view_rounded, size: 14, color: Color(0xFF0D9488)),
+                        const Icon(
+                          Icons.grid_view_rounded,
+                          size: 14,
+                          color: Color(0xFF0D9488),
+                        ),
                         const SizedBox(width: 6),
                         Text(
                           'Wall Tile Dado Area: ${numFormat.format(r.wallTileAreaSqFt)} sq ft',
-                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF0D9488)),
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0D9488),
+                          ),
                         ),
                       ],
                     ),
@@ -797,16 +941,26 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
           decoration: BoxDecoration(
             color: const Color(0xFF059669).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: const Color(0xFF059669).withValues(alpha: 0.2)),
+            border: Border.all(
+              color: const Color(0xFF059669).withValues(alpha: 0.2),
+            ),
           ),
           child: Row(
             children: [
-              const Icon(Icons.verified_rounded, color: Color(0xFF059669), size: 20),
+              const Icon(
+                Icons.verified_rounded,
+                color: Color(0xFF059669),
+                size: 20,
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   'Physical walls deduplicated: ${_report.physicalWalls.length} non-overlapping wall segments. Shared partition walls are counted only once to avoid double-counting masonry!',
-                  style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w500, color: Color(0xFF065F46)),
+                  style: const TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF065F46),
+                  ),
                 ),
               ),
             ],
@@ -832,7 +986,10 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
                         decoration: BoxDecoration(
                           color: wall.isExterior
                               ? const Color(0xFF1E3A5F).withValues(alpha: 0.12)
@@ -840,17 +997,24 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          wall.isExterior ? 'Exterior Perimeter Wall' : 'Interior Shared Wall',
+                          wall.isExterior
+                              ? 'Exterior Perimeter Wall'
+                              : 'Interior Shared Wall',
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
-                            color: wall.isExterior ? const Color(0xFF1E3A5F) : const Color(0xFFFF8C00),
+                            color: wall.isExterior
+                                ? const Color(0xFF1E3A5F)
+                                : const Color(0xFFFF8C00),
                           ),
                         ),
                       ),
                       Text(
                         'Net Vol: ${numFormat.format(wall.netVolumeCuFt)} cu ft',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -920,7 +1084,13 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
     );
   }
 
-  Widget _buildMetricBox(String label, String value, bool isDark, {bool bold = false, Color? color}) {
+  Widget _buildMetricBox(
+    String label,
+    String value,
+    bool isDark, {
+    bool bold = false,
+    Color? color,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -944,4 +1114,3 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
     );
   }
 }
-

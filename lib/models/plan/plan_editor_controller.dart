@@ -61,7 +61,8 @@ class PlanEditorController extends ChangeNotifier {
     if (_selectedRoomId != null && _plan.findRoom(_selectedRoomId!) == null) {
       _selectedRoomId = null;
     }
-    if (_selectedOpeningId != null && _plan.findOpening(_selectedOpeningId!) == null) {
+    if (_selectedOpeningId != null &&
+        _plan.findOpening(_selectedOpeningId!) == null) {
       _selectedOpeningId = null;
     }
     notifyListeners();
@@ -74,7 +75,8 @@ class PlanEditorController extends ChangeNotifier {
     if (_selectedRoomId != null && _plan.findRoom(_selectedRoomId!) == null) {
       _selectedRoomId = null;
     }
-    if (_selectedOpeningId != null && _plan.findOpening(_selectedOpeningId!) == null) {
+    if (_selectedOpeningId != null &&
+        _plan.findOpening(_selectedOpeningId!) == null) {
       _selectedOpeningId = null;
     }
     notifyListeners();
@@ -206,12 +208,19 @@ class PlanEditorController extends ChangeNotifier {
       _plan.plotLengthFeet,
     );
 
-    final updatedRooms = _plan.rooms.map((r) => r.id == roomId ? clamped : r).toList();
+    final updatedRooms = _plan.rooms
+        .map((r) => r.id == roomId ? clamped : r)
+        .toList();
     _plan = _plan.copyWith(rooms: updatedRooms, updatedAt: DateTime.now());
     notifyListeners();
   }
 
-  void resizeRoom(String roomId, ResizeHandle handle, double dxFeet, double dyFeet) {
+  void resizeRoom(
+    String roomId,
+    ResizeHandle handle,
+    double dxFeet,
+    double dyFeet,
+  ) {
     final room = _plan.findRoom(roomId);
     if (room == null || handle == ResizeHandle.none) return;
 
@@ -243,7 +252,9 @@ class PlanEditorController extends ChangeNotifier {
       _plan.plotLengthFeet,
     );
 
-    final updatedRooms = _plan.rooms.map((r) => r.id == roomId ? clamped : r).toList();
+    final updatedRooms = _plan.rooms
+        .map((r) => r.id == roomId ? clamped : r)
+        .toList();
     _plan = _plan.copyWith(rooms: updatedRooms, updatedAt: DateTime.now());
     notifyListeners();
   }
@@ -269,7 +280,9 @@ class PlanEditorController extends ChangeNotifier {
     final updatedOpenings = List<PlanOpening>.from(room.openings)..add(clamped);
     final updatedRoom = room.copyWith(openings: updatedOpenings);
 
-    final updatedRooms = _plan.rooms.map((r) => r.id == roomId ? updatedRoom : r).toList();
+    final updatedRooms = _plan.rooms
+        .map((r) => r.id == roomId ? updatedRoom : r)
+        .toList();
     _plan = _plan.copyWith(rooms: updatedRooms, updatedAt: DateTime.now());
     _selectedOpeningId = clamped.id;
     _selectedRoomId = roomId;
@@ -287,7 +300,9 @@ class PlanEditorController extends ChangeNotifier {
     }).toList();
     final updatedRoom = room.copyWith(openings: updatedOpenings);
 
-    final updatedRooms = _plan.rooms.map((r) => r.id == room.id ? updatedRoom : r).toList();
+    final updatedRooms = _plan.rooms
+        .map((r) => r.id == room.id ? updatedRoom : r)
+        .toList();
     _plan = _plan.copyWith(rooms: updatedRooms, updatedAt: DateTime.now());
     notifyListeners();
   }
@@ -327,4 +342,3 @@ class PlanEditorController extends ChangeNotifier {
     notifyListeners();
   }
 }
-

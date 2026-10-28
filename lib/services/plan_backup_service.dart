@@ -20,12 +20,12 @@ class CloudBackupStatus {
   });
 
   factory CloudBackupStatus.offlineDefault() => const CloudBackupStatus(
-        isConfigured: false,
-        isApproved: false,
-        statusDescription:
-            'Offline Local Storage Active (100% private & accessible offline). '
-            'Cloud backup requires approved cloud service architecture and sign-in configuration.',
-      );
+    isConfigured: false,
+    isApproved: false,
+    statusDescription:
+        'Offline Local Storage Active (100% private & accessible offline). '
+        'Cloud backup requires approved cloud service architecture and sign-in configuration.',
+  );
 }
 
 /// Backup and restore service ensuring local saved plans remain fully accessible offline.
@@ -80,7 +80,8 @@ class PlanBackupService {
       fileName: 'buildcalc_plans_backup_$timestamp.json',
       mimeType: 'application/json',
       subject: 'BuildCalc Saved Floor Plans Backup',
-      text: 'Backup file containing saved BuildCalc floor plans. Can be restored offline on any device.',
+      text:
+          'Backup file containing saved BuildCalc floor plans. Can be restored offline on any device.',
     );
   }
 
@@ -97,12 +98,16 @@ class PlanBackupService {
 
     final dynamic decoded = json.decode(jsonString);
     if (decoded is! Map<String, dynamic>) {
-      throw const FormatException('Invalid backup file format: Root must be a JSON object.');
+      throw const FormatException(
+        'Invalid backup file format: Root must be a JSON object.',
+      );
     }
 
     final rawPlans = decoded['plans'];
     if (rawPlans is! List<dynamic>) {
-      throw const FormatException('Invalid backup file format: Missing "plans" list.');
+      throw const FormatException(
+        'Invalid backup file format: Missing "plans" list.',
+      );
     }
 
     final List<FloorPlan> parsedPlans = [];

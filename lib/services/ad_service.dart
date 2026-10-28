@@ -1,10 +1,43 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdService {
-  static const String bannerAdUnitId = 'ca-app-pub-1451522103593938/3840200242';
-  static const String interstitialAdUnitId =
+  static const String prodBannerAdUnitId =
+      'ca-app-pub-1451522103593938/3840200242';
+  static const String prodInterstitialAdUnitId =
       'ca-app-pub-1451522103593938/4850651700';
+
+  // Official Google AdMob test ad unit IDs
+  static const String testAndroidBannerId =
+      'ca-app-pub-3940256099942544/6300978111';
+  static const String testIOSBannerId =
+      'ca-app-pub-3940256099942544/2934735716';
+  static const String testAndroidInterstitialId =
+      'ca-app-pub-3940256099942544/1033173712';
+  static const String testIOSInterstitialId =
+      'ca-app-pub-3940256099942544/4411468910';
+
+  static String get bannerAdUnitId {
+    if (kDebugMode) {
+      if (!kIsWeb && Platform.isIOS) {
+        return testIOSBannerId;
+      }
+      return testAndroidBannerId;
+    }
+    return prodBannerAdUnitId;
+  }
+
+  static String get interstitialAdUnitId {
+    if (kDebugMode) {
+      if (!kIsWeb && Platform.isIOS) {
+        return testIOSInterstitialId;
+      }
+      return testAndroidInterstitialId;
+    }
+    return prodInterstitialAdUnitId;
+  }
 
   static InterstitialAd? _interstitialAd;
   static DateTime? _lastInterstitialShownAt;
@@ -14,16 +47,22 @@ class AdService {
     preloadInterstitial();
   }
 
-  static BannerAd createBannerAd() {
+  static BannerAd createBannerAd({
+    VoidCallback? onLoaded,
+    void Function(LoadAdError error)? onFailed,
+  }) {
     return BannerAd(
       adUnitId: bannerAdUnitId,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
-        onAdLoaded: (_) {},
+        onAdLoaded: (_) {
+          onLoaded?.call();
+        },
         onAdFailedToLoad: (ad, error) {
           debugPrint('Banner ad failed to load: $error');
           ad.dispose();
+          onFailed?.call(error);
         },
       ),
     );

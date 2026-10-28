@@ -42,7 +42,9 @@ class _OpeningEditDialogState extends State<OpeningEditDialog> {
     final dispOffset = widget.unit.fromFeet(initialOffsetFeet);
 
     _widthController = TextEditingController(text: dispW.toStringAsFixed(1));
-    _offsetController = TextEditingController(text: dispOffset.toStringAsFixed(1));
+    _offsetController = TextEditingController(
+      text: dispOffset.toStringAsFixed(1),
+    );
   }
 
   @override
@@ -74,7 +76,9 @@ class _OpeningEditDialogState extends State<OpeningEditDialog> {
     final offsetFeet = widget.unit.toFeet(rawOffset);
 
     final opening = PlanOpening(
-      id: widget.initialOpening?.id ?? 'op_${DateTime.now().millisecondsSinceEpoch}',
+      id:
+          widget.initialOpening?.id ??
+          'op_${DateTime.now().millisecondsSinceEpoch}',
       roomId: widget.room.id,
       wallSide: _selectedSide,
       type: _selectedType,
@@ -111,7 +115,9 @@ class _OpeningEditDialogState extends State<OpeningEditDialog> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFF8C00).withValues(alpha: 0.15),
+                          color: const Color(
+                            0xFFFF8C00,
+                          ).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
@@ -130,14 +136,18 @@ class _OpeningEditDialogState extends State<OpeningEditDialog> {
                               style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
-                                color: isDark ? Colors.white : const Color(0xFF1E3A5F),
+                                color: isDark
+                                    ? Colors.white
+                                    : const Color(0xFF1E3A5F),
                               ),
                             ),
                             Text(
                               'On "${widget.room.name}"',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: isDark ? Colors.white60 : Colors.grey.shade600,
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey.shade600,
                               ),
                             ),
                           ],
@@ -167,8 +177,12 @@ class _OpeningEditDialogState extends State<OpeningEditDialog> {
                             selectedColor: const Color(0xFFFF8C00),
                             labelStyle: TextStyle(
                               fontSize: 12,
-                              fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                              color: isSel ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                              fontWeight: isSel
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              color: isSel
+                                  ? Colors.white
+                                  : (isDark ? Colors.white70 : Colors.black87),
                             ),
                             onSelected: (_) => _onTypeChanged(type),
                           ),
@@ -194,7 +208,9 @@ class _OpeningEditDialogState extends State<OpeningEditDialog> {
                         selectedColor: const Color(0xFF1E3A5F),
                         labelStyle: TextStyle(
                           fontSize: 11,
-                          color: isSel ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                          color: isSel
+                              ? Colors.white
+                              : (isDark ? Colors.white70 : Colors.black87),
                         ),
                         onSelected: (_) => setState(() => _selectedSide = side),
                       );
@@ -217,11 +233,18 @@ class _OpeningEditDialogState extends State<OpeningEditDialog> {
                       Expanded(
                         child: TextFormField(
                           controller: _widthController,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
                           decoration: InputDecoration(
                             labelText: 'Width (${widget.unit.symbol})',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
                           ),
                           validator: (val) {
                             final num = double.tryParse(val ?? '');
@@ -238,18 +261,29 @@ class _OpeningEditDialogState extends State<OpeningEditDialog> {
                       Expanded(
                         child: TextFormField(
                           controller: _offsetController,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
                           decoration: InputDecoration(
-                            labelText: 'Position Offset (${widget.unit.symbol})',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                            labelText:
+                                'Position Offset (${widget.unit.symbol})',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
                           ),
                           validator: (val) {
                             final num = double.tryParse(val ?? '');
                             if (num == null || num < 0) return 'Invalid offset';
                             final offsetFt = widget.unit.toFeet(num);
-                            final wFt = widget.unit.toFeet(double.tryParse(_widthController.text) ?? 0);
-                            if (offsetFt + wFt > _currentWallLengthFeet + 0.05) {
+                            final wFt = widget.unit.toFeet(
+                              double.tryParse(_widthController.text) ?? 0,
+                            );
+                            if (offsetFt + wFt >
+                                _currentWallLengthFeet + 0.05) {
                               return 'Past wall end';
                             }
                             return null;
@@ -264,7 +298,10 @@ class _OpeningEditDialogState extends State<OpeningEditDialog> {
                   if (_selectedType.isDoor)
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Swing Inward into room', style: TextStyle(fontSize: 13)),
+                      title: const Text(
+                        'Swing Inward into room',
+                        style: TextStyle(fontSize: 13),
+                      ),
                       value: _swingInward,
                       activeThumbColor: const Color(0xFFFF8C00),
                       onChanged: (val) => setState(() => _swingInward = val),
@@ -285,7 +322,9 @@ class _OpeningEditDialogState extends State<OpeningEditDialog> {
                         style: FilledButton.styleFrom(
                           backgroundColor: const Color(0xFFFF8C00),
                           foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         child: Text(isEditing ? 'Save Changes' : 'Add Opening'),
                       ),

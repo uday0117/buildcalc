@@ -66,10 +66,7 @@ class _PaintCalculatorState extends State<PaintCalculator> {
         'door_window_area': _doorWindowController.text,
         'coats': _coats,
       },
-      results: {
-        'paint_liters': _paintLiters,
-        'wall_area': _wallArea,
-      },
+      results: {'paint_liters': _paintLiters, 'wall_area': _wallArea},
       timestamp: DateTime.now(),
     );
   }
@@ -190,7 +187,10 @@ class _PaintCalculatorState extends State<PaintCalculator> {
                 ),
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: cardBg,
                     borderRadius: BorderRadius.circular(14),
@@ -216,9 +216,14 @@ class _PaintCalculatorState extends State<PaintCalculator> {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFF8C00).withValues(alpha: 0.15),
+                          color: const Color(
+                            0xFFFF8C00,
+                          ).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -259,7 +264,8 @@ class _PaintCalculatorState extends State<PaintCalculator> {
                 title: 'Results',
                 icon: Icons.format_paint_rounded,
                 onSave: _bookmark,
-                note: 'Includes 10% extra allowance. Assumes 10 m²/L standard coverage',
+                note:
+                    'Includes 10% extra allowance. Assumes 10 m²/L standard coverage',
                 rows: [
                   ResultRowItem(
                     label: 'Paint Required',

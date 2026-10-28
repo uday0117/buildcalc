@@ -16,23 +16,28 @@ class ElevationInteractiveViewport extends StatefulWidget {
   });
 
   @override
-  State<ElevationInteractiveViewport> createState() => _ElevationInteractiveViewportState();
+  State<ElevationInteractiveViewport> createState() =>
+      _ElevationInteractiveViewportState();
 }
 
-class _ElevationInteractiveViewportState extends State<ElevationInteractiveViewport> {
-  final TransformationController _transformationController = TransformationController();
+class _ElevationInteractiveViewportState
+    extends State<ElevationInteractiveViewport> {
+  final TransformationController _transformationController =
+      TransformationController();
 
   void _zoomIn() {
     final matrix = _transformationController.value;
     if (matrix.getMaxScaleOnAxis() < 4.0) {
-      _transformationController.value = matrix.clone()..scaleByDouble(1.25, 1.25, 1.0, 1.0);
+      _transformationController.value = matrix.clone()
+        ..scaleByDouble(1.25, 1.25, 1.0, 1.0);
     }
   }
 
   void _zoomOut() {
     final matrix = _transformationController.value;
     if (matrix.getMaxScaleOnAxis() > 0.4) {
-      _transformationController.value = matrix.clone()..scaleByDouble(0.8, 0.8, 1.0, 1.0);
+      _transformationController.value = matrix.clone()
+        ..scaleByDouble(0.8, 0.8, 1.0, 1.0);
     }
   }
 
@@ -82,7 +87,9 @@ class _ElevationInteractiveViewportState extends State<ElevationInteractiveViewp
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E293B).withValues(alpha: 0.92) : Colors.white.withValues(alpha: 0.95),
+                  color: isDark
+                      ? const Color(0xFF1E293B).withValues(alpha: 0.92)
+                      : Colors.white.withValues(alpha: 0.95),
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
@@ -181,7 +188,11 @@ class _ElevationInteractiveViewportState extends State<ElevationInteractiveViewp
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  color: isSelected ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? Colors.white70 : Colors.black87),
+                  color: isSelected
+                      ? Colors.white
+                      : (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white70
+                            : Colors.black87),
                 ),
               ),
             ],
@@ -214,4 +225,3 @@ class _ElevationInteractiveViewportState extends State<ElevationInteractiveViewp
     );
   }
 }
-

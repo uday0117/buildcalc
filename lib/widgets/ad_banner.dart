@@ -11,28 +11,60 @@ class AppBannerAd extends StatefulWidget {
 }
 
 class _AppBannerAdState extends State<AppBannerAd> {
-  late final BannerAd _bannerAd;
+  BannerAd? _bannerAd;
+  bool _isLoaded = false;
+  bool _hasFailed = false;
 
   @override
   void initState() {
     super.initState();
-    _bannerAd = AdService.createBannerAd();
-    _bannerAd.load();
+    _loadAd();
+  }
+
+  void _loadAd() {
+    _bannerAd = AdService.createBannerAd(
+      onLoaded: () {
+        if (mounted) {
+          setState(() {
+            _isLoaded = true;
+          });
+        }
+      },
+      onFailed: (error) {
+        if (mounted) {
+          setState(() {
+            _hasFailed = true;
+            _bannerAd = null;
+          });
+        }
+      },
+    );
+    _bannerAd?.load();
   }
 
   @override
   void dispose() {
-    _bannerAd.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_hasFailed || !_isLoaded || _bannerAd == null) {
+      return const SizedBox.shrink();
+    }
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      color: Colors.white,
+      color: isDark ? const Color(0xFF1E293B) : Colors.white,
       width: double.infinity,
       child: Center(
-        child: SizedBox(width: 320, height: 50, child: AdWidget(ad: _bannerAd)),
+        child: SizedBox(
+          width: 320,
+          height: 50,
+          child: AdWidget(ad: _bannerAd!),
+        ),
       ),
     );
   }

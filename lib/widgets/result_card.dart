@@ -63,11 +63,7 @@ class ResultCard extends StatelessWidget {
                     color: const Color(0xFFFF8C00).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
-                    icon,
-                    color: const Color(0xFFFF8C00),
-                    size: 22,
-                  ),
+                  child: Icon(icon, color: const Color(0xFFFF8C00), size: 22),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -196,4 +192,3 @@ class ResultCard extends StatelessWidget {
     );
   }
 }
-

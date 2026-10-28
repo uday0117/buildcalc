@@ -20,7 +20,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.uksolutions.buildcalc"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -48,7 +48,9 @@ android {
             if (keystorePropertiesFile.exists()) {
                 keyAlias = keystoreProperties["keyAlias"] as String
                 keyPassword = keystoreProperties["keyPassword"] as String
-                storeFile = file(keystoreProperties["storeFile"] as String)
+                val keystorePath = keystoreProperties["storeFile"] as String
+                val rootFile = rootProject.file(keystorePath)
+                storeFile = if (rootFile.exists()) rootFile else file(keystorePath)
                 storePassword = keystoreProperties["storePassword"] as String
             }
         }

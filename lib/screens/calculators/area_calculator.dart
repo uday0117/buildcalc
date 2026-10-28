@@ -235,19 +235,25 @@ class _AreaCalculatorState extends State<AreaCalculator> {
                         size: 18,
                         color: isSelected
                             ? Colors.white
-                            : (isDark ? Colors.white70 : const Color(0xFF1E3A5F)),
+                            : (isDark
+                                  ? Colors.white70
+                                  : const Color(0xFF1E3A5F)),
                       ),
                       label: Text(shape),
                       labelStyle: TextStyle(
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.w500,
                         color: isSelected
                             ? Colors.white
-                            : (isDark ? Colors.white70 : const Color(0xFF1E3A5F)),
+                            : (isDark
+                                  ? Colors.white70
+                                  : const Color(0xFF1E3A5F)),
                       ),
                       selectedColor: const Color(0xFFFF8C00),
-                      backgroundColor:
-                          isDark ? const Color(0xFF1E293B) : Colors.white,
+                      backgroundColor: isDark
+                          ? const Color(0xFF1E293B)
+                          : Colors.white,
                       onSelected: (selected) {
                         if (selected) {
                           setState(() {
@@ -274,7 +280,8 @@ class _AreaCalculatorState extends State<AreaCalculator> {
             const SizedBox(height: 14),
 
             // Dimension 2 (if needed)
-            if (_selectedShape == 'Rectangle' || _selectedShape == 'Triangle') ...[
+            if (_selectedShape == 'Rectangle' ||
+                _selectedShape == 'Triangle') ...[
               InputField(
                 label: _getDimension2Label(),
                 hint: 'Enter ${_getDimension2Label().toLowerCase()}',

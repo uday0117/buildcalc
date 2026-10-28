@@ -116,7 +116,9 @@ class StorageService {
   }
 
   // Get recent calculations with limit
-  static Future<List<Calculation>> getRecentCalculations({int limit = 5}) async {
+  static Future<List<Calculation>> getRecentCalculations({
+    int limit = 5,
+  }) async {
     final history = await getHistory();
     if (history.length <= limit) return history;
     return history.sublist(0, limit);

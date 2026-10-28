@@ -29,13 +29,15 @@ class PlanEditorScreen extends StatefulWidget {
 
 class _PlanEditorScreenState extends State<PlanEditorScreen> {
   late PlanEditorController _controller;
-  final TransformationController _transformationController = TransformationController();
+  final TransformationController _transformationController =
+      TransformationController();
   bool _isSaving = false;
 
   @override
   void initState() {
     super.initState();
-    final plan = widget.initialPlan ??
+    final plan =
+        widget.initialPlan ??
         PlanTemplates.createPlan(
           name: '2 BHK House Plan',
           layoutType: PlanTemplates.layout2BHK,
@@ -64,7 +66,8 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
     final currentMatrix = _transformationController.value;
     final currentScale = currentMatrix.getMaxScaleOnAxis();
     if (currentScale < 3.0) {
-      _transformationController.value = currentMatrix.clone()..scaleByDouble(1.25, 1.25, 1.0, 1.0);
+      _transformationController.value = currentMatrix.clone()
+        ..scaleByDouble(1.25, 1.25, 1.0, 1.0);
     }
   }
 
@@ -72,7 +75,8 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
     final currentMatrix = _transformationController.value;
     final currentScale = currentMatrix.getMaxScaleOnAxis();
     if (currentScale > 0.3) {
-      _transformationController.value = currentMatrix.clone()..scaleByDouble(0.8, 0.8, 1.0, 1.0);
+      _transformationController.value = currentMatrix.clone()
+        ..scaleByDouble(0.8, 0.8, 1.0, 1.0);
     }
   }
 
@@ -88,7 +92,9 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Floor plan "${_controller.plan.name}" saved successfully!'),
+        content: Text(
+          'Floor plan "${_controller.plan.name}" saved successfully!',
+        ),
         backgroundColor: const Color(0xFF1E3A5F),
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
@@ -207,7 +213,8 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
 
     final opening = await showDialog<PlanOpening>(
       context: context,
-      builder: (ctx) => OpeningEditDialog(room: room, unit: _controller.activeUnit),
+      builder: (ctx) =>
+          OpeningEditDialog(room: room, unit: _controller.activeUnit),
     );
     if (opening != null) {
       _controller.addOpening(room.id, opening);
@@ -236,12 +243,18 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
                   child: Text(
                     plan.name,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFF8C00).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(6),
@@ -263,13 +276,19 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
         actions: [
           // Materials Estimate
           IconButton(
-            icon: const Icon(Icons.calculate_outlined, color: Color(0xFF059669)),
+            icon: const Icon(
+              Icons.calculate_outlined,
+              color: Color(0xFF059669),
+            ),
             tooltip: 'Material & Cost Estimate',
             onPressed: _openMaterialEstimate,
           ),
           // 3D View
           IconButton(
-            icon: const Icon(Icons.view_in_ar_rounded, color: Color(0xFFFF8C00)),
+            icon: const Icon(
+              Icons.view_in_ar_rounded,
+              color: Color(0xFFFF8C00),
+            ),
             tooltip: '3D House View',
             onPressed: _open3DView,
           ),
@@ -345,7 +364,11 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
                 value: 'materials',
                 child: Row(
                   children: [
-                    Icon(Icons.calculate_outlined, size: 20, color: Color(0xFF059669)),
+                    Icon(
+                      Icons.calculate_outlined,
+                      size: 20,
+                      color: Color(0xFF059669),
+                    ),
                     SizedBox(width: 10),
                     Text('Automatic Material Estimate'),
                   ],
@@ -355,7 +378,11 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
                 value: '3d_view',
                 child: Row(
                   children: [
-                    Icon(Icons.view_in_ar_rounded, size: 20, color: Color(0xFFFF8C00)),
+                    Icon(
+                      Icons.view_in_ar_rounded,
+                      size: 20,
+                      color: Color(0xFFFF8C00),
+                    ),
                     SizedBox(width: 10),
                     Text('3D House View'),
                   ],
@@ -365,7 +392,11 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
                 value: 'elevation',
                 child: Row(
                   children: [
-                    Icon(Icons.villa_outlined, size: 20, color: Color(0xFF0284C7)),
+                    Icon(
+                      Icons.villa_outlined,
+                      size: 20,
+                      color: Color(0xFF0284C7),
+                    ),
                     SizedBox(width: 10),
                     Text('Front Elevation Generator'),
                   ],
@@ -375,7 +406,11 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
                 value: 'templates',
                 child: Row(
                   children: [
-                    Icon(Icons.auto_awesome_mosaic_rounded, size: 20, color: Color(0xFFFF8C00)),
+                    Icon(
+                      Icons.auto_awesome_mosaic_rounded,
+                      size: 20,
+                      color: Color(0xFFFF8C00),
+                    ),
                     SizedBox(width: 10),
                     Text('Browse Ready-Made Templates'),
                   ],
@@ -385,7 +420,11 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
                 value: 'save',
                 child: Row(
                   children: [
-                    Icon(Icons.save_rounded, size: 20, color: Color(0xFFFF8C00)),
+                    Icon(
+                      Icons.save_rounded,
+                      size: 20,
+                      color: Color(0xFFFF8C00),
+                    ),
                     SizedBox(width: 10),
                     Text('Save Plan Locally'),
                   ],
@@ -395,7 +434,11 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
                 value: 'saved_plans',
                 child: Row(
                   children: [
-                    Icon(Icons.folder_open_rounded, size: 20, color: Color(0xFF1E3A5F)),
+                    Icon(
+                      Icons.folder_open_rounded,
+                      size: 20,
+                      color: Color(0xFF1E3A5F),
+                    ),
                     SizedBox(width: 10),
                     Text('Open Saved Plans'),
                   ],
@@ -425,7 +468,13 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
               const PopupMenuDivider(),
               PopupMenuItem(
                 enabled: false,
-                child: Text('UNITS (${unit.symbol.toUpperCase()})', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                child: Text(
+                  'UNITS (${unit.symbol.toUpperCase()})',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               CheckedPopupMenuItem(
                 value: 'unit_ft',
@@ -514,7 +563,10 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
                           ? const SizedBox(
                               width: 18,
                               height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
                             )
                           : const Icon(Icons.save_rounded),
                     ),
@@ -578,8 +630,8 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
         child: selectedOpening != null
             ? _buildOpeningToolbar(context, selectedOpening, unit)
             : selectedRoom != null
-                ? _buildRoomToolbar(context, selectedRoom, unit)
-                : _buildGeneralToolbar(context),
+            ? _buildRoomToolbar(context, selectedRoom, unit)
+            : _buildGeneralToolbar(context),
       ),
     );
   }
@@ -628,7 +680,10 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
             children: [
               Text(
                 room.name,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
               Text(
                 '${unit.formatDimensions(room.width, room.length)} • ${unit.formatArea(room.areaSqFt)}',
@@ -650,7 +705,11 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
         ),
         const SizedBox(width: 6),
         IconButton.filledTonal(
-          icon: const Icon(Icons.delete_outline_rounded, size: 18, color: Colors.red),
+          icon: const Icon(
+            Icons.delete_outline_rounded,
+            size: 18,
+            color: Colors.red,
+          ),
           tooltip: 'Delete Room',
           onPressed: () => _controller.deleteRoom(room.id),
         ),
@@ -664,7 +723,11 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
     );
   }
 
-  Widget _buildOpeningToolbar(BuildContext context, PlanOpening op, PlanUnit unit) {
+  Widget _buildOpeningToolbar(
+    BuildContext context,
+    PlanOpening op,
+    PlanUnit unit,
+  ) {
     return Row(
       key: ValueKey('op_toolbar_${op.id}'),
       children: [
@@ -677,7 +740,10 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
             children: [
               Text(
                 '${op.type.label} (${op.wallSide.name})',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
               Text(
                 'Width: ${unit.formatLength(op.widthFeet)} • Offset: ${unit.formatLength(op.offsetFeet)}',
@@ -691,12 +757,18 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
             icon: const Icon(Icons.flip_rounded, size: 18),
             tooltip: 'Flip Inward / Outward',
             onPressed: () {
-              _controller.updateOpening(op.copyWith(swingInward: !op.swingInward));
+              _controller.updateOpening(
+                op.copyWith(swingInward: !op.swingInward),
+              );
             },
           ),
         const SizedBox(width: 6),
         IconButton.filledTonal(
-          icon: const Icon(Icons.delete_outline_rounded, size: 18, color: Colors.red),
+          icon: const Icon(
+            Icons.delete_outline_rounded,
+            size: 18,
+            color: Colors.red,
+          ),
           tooltip: 'Delete Opening',
           onPressed: () => _controller.deleteOpening(op.id),
         ),

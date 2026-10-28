@@ -60,7 +60,11 @@ class _PlanInteractiveCanvasState extends State<PlanInteractiveCanvas> {
 
     // 1. Check if user tapped a resize handle on the selected room
     if (selectedRoom != null) {
-      final handle = PlanGeometry.hitTestHandle(feetPos, selectedRoom, radiusFeet: 1.5);
+      final handle = PlanGeometry.hitTestHandle(
+        feetPos,
+        selectedRoom,
+        radiusFeet: 1.5,
+      );
       if (handle != ResizeHandle.none) {
         setState(() {
           _isResizingHandle = true;
@@ -73,7 +77,11 @@ class _PlanInteractiveCanvasState extends State<PlanInteractiveCanvas> {
     }
 
     // 2. Check if user tapped an opening (door / window)
-    final tappedOpening = PlanGeometry.hitTestOpening(feetPos, plan.rooms, hitRadiusFeet: 1.2);
+    final tappedOpening = PlanGeometry.hitTestOpening(
+      feetPos,
+      plan.rooms,
+      hitRadiusFeet: 1.2,
+    );
     if (tappedOpening != null) {
       widget.controller.selectOpening(tappedOpening.id);
       return;
@@ -97,7 +105,9 @@ class _PlanInteractiveCanvasState extends State<PlanInteractiveCanvas> {
   void _onPointerMove(PointerMoveEvent event) {
     final feetPos = _localToFeet(event.localPosition);
 
-    if (_isResizingHandle && _lastDragFeet != null && widget.controller.selectedRoomId != null) {
+    if (_isResizingHandle &&
+        _lastDragFeet != null &&
+        widget.controller.selectedRoomId != null) {
       final dx = feetPos.dx - _lastDragFeet!.dx;
       final dy = feetPos.dy - _lastDragFeet!.dy;
 
@@ -113,7 +123,9 @@ class _PlanInteractiveCanvasState extends State<PlanInteractiveCanvas> {
       return;
     }
 
-    if (_isDraggingRoom && _lastDragFeet != null && widget.controller.selectedRoomId != null) {
+    if (_isDraggingRoom &&
+        _lastDragFeet != null &&
+        widget.controller.selectedRoomId != null) {
       final dx = feetPos.dx - _lastDragFeet!.dx;
       final dy = feetPos.dy - _lastDragFeet!.dy;
 

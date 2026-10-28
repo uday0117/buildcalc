@@ -229,8 +229,9 @@ class _HomeContentState extends State<HomeContent> {
                           ),
                         ),
                         Text(
-                          DateFormat('MMM dd, yyyy • hh:mm a')
-                              .format(calc.timestamp),
+                          DateFormat(
+                            'MMM dd, yyyy • hh:mm a',
+                          ).format(calc.timestamp),
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.white70,
@@ -251,29 +252,31 @@ class _HomeContentState extends State<HomeContent> {
                 ),
               ),
               const SizedBox(height: 8),
-              ...calc.inputs.entries.map((e) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          e.key.replaceAll('_', ' ').toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 13,
-                          ),
+              ...calc.inputs.entries.map(
+                (e) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        e.key.replaceAll('_', ' ').toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
                         ),
-                        Text(
-                          e.value.toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                          ),
+                      ),
+                      Text(
+                        e.value.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
                         ),
-                      ],
-                    ),
-                  )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               const Divider(color: Colors.white24, height: 24),
               const Text(
                 'Results',
@@ -284,31 +287,33 @@ class _HomeContentState extends State<HomeContent> {
                 ),
               ),
               const SizedBox(height: 8),
-              ...calc.results.entries.map((e) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          e.key.replaceAll('_', ' ').toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 13,
-                          ),
+              ...calc.results.entries.map(
+                (e) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        e.key.replaceAll('_', ' ').toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
                         ),
-                        Text(
-                          e.value is double
-                              ? (e.value as double).toStringAsFixed(2)
-                              : e.value.toString(),
-                          style: const TextStyle(
-                            color: Color(0xFFFF8C00),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
+                      ),
+                      Text(
+                        e.value is double
+                            ? (e.value as double).toStringAsFixed(2)
+                            : e.value.toString(),
+                        style: const TextStyle(
+                          color: Color(0xFFFF8C00),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
                         ),
-                      ],
-                    ),
-                  )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               Row(
                 children: [
@@ -333,9 +338,7 @@ class _HomeContentState extends State<HomeContent> {
                           Navigator.pop(context);
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: matchingItem.builder,
-                            ),
+                            MaterialPageRoute(builder: matchingItem.builder),
                           ).then((_) => _loadData());
                         },
                         style: FilledButton.styleFrom(
@@ -386,15 +389,23 @@ class _HomeContentState extends State<HomeContent> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: isDark
-                              ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
-                              : [const Color(0xFF1E3A5F), const Color(0xFF2C5F8D)],
+                              ? [
+                                  const Color(0xFF1E293B),
+                                  const Color(0xFF0F172A),
+                                ]
+                              : [
+                                  const Color(0xFF1E3A5F),
+                                  const Color(0xFF2C5F8D),
+                                ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(22),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+                            color: Colors.black.withValues(
+                              alpha: isDark ? 0.3 : 0.08,
+                            ),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -405,7 +416,9 @@ class _HomeContentState extends State<HomeContent> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFF8C00).withValues(alpha: 0.2),
+                              color: const Color(
+                                0xFFFF8C00,
+                              ).withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(14),
                             ),
                             child: const Icon(
@@ -454,7 +467,9 @@ class _HomeContentState extends State<HomeContent> {
                                 const SizedBox(height: 2),
                                 Text(
                                   AppLocalizations.translate(
-                                      context, 'tagline'),
+                                    context,
+                                    'tagline',
+                                  ),
                                   style: TextStyle(
                                     color: Colors.white.withValues(alpha: 0.85),
                                     fontSize: 12,
@@ -479,7 +494,8 @@ class _HomeContentState extends State<HomeContent> {
                         fontSize: 15,
                       ),
                       decoration: InputDecoration(
-                        hintText: 'Search calculators (cement, tiles, paint...)...',
+                        hintText:
+                            'Search calculators (cement, tiles, paint...)...',
                         hintStyle: TextStyle(
                           color: isDark ? Colors.white38 : Colors.grey.shade400,
                           fontSize: 14,
@@ -509,13 +525,17 @@ class _HomeContentState extends State<HomeContent> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
                           borderSide: BorderSide(
-                            color: isDark ? Colors.white12 : Colors.grey.shade200,
+                            color: isDark
+                                ? Colors.white12
+                                : Colors.grey.shade200,
                           ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
                           borderSide: BorderSide(
-                            color: isDark ? Colors.white12 : Colors.grey.shade200,
+                            color: isDark
+                                ? Colors.white12
+                                : Colors.grey.shade200,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
@@ -566,11 +586,13 @@ class _HomeContentState extends State<HomeContent> {
                                       ),
                                       decoration: BoxDecoration(
                                         color: isSelected
-                                            ? Colors.white.withValues(alpha: 0.25)
-                                            : const Color(0xFFFF8C00)
-                                                .withValues(alpha: 0.15),
-                                        borderRadius:
-                                            BorderRadius.circular(10),
+                                            ? Colors.white.withValues(
+                                                alpha: 0.25,
+                                              )
+                                            : const Color(
+                                                0xFFFF8C00,
+                                              ).withValues(alpha: 0.15),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Text(
                                         '${_favoriteIds.length}',
@@ -594,8 +616,8 @@ class _HomeContentState extends State<HomeContent> {
                                 color: isSelected
                                     ? Colors.white
                                     : (isDark
-                                        ? Colors.white70
-                                        : const Color(0xFF1E3A5F)),
+                                          ? Colors.white70
+                                          : const Color(0xFF1E3A5F)),
                               ),
                               backgroundColor: isDark
                                   ? const Color(0xFF1E293B)
@@ -608,8 +630,8 @@ class _HomeContentState extends State<HomeContent> {
                                   color: isSelected
                                       ? Colors.transparent
                                       : (isDark
-                                          ? Colors.white12
-                                          : Colors.grey.shade300),
+                                            ? Colors.white12
+                                            : Colors.grey.shade300),
                                 ),
                               ),
                               onSelected: (_) {
@@ -657,8 +679,10 @@ class _HomeContentState extends State<HomeContent> {
                           ),
                           TextButton(
                             onPressed: () {
-                              setState(() => _selectedCategory =
-                                  CalculatorCategory.favorites);
+                              setState(
+                                () => _selectedCategory =
+                                    CalculatorCategory.favorites,
+                              );
                             },
                             child: const Text(
                               'View all',
@@ -676,7 +700,8 @@ class _HomeContentState extends State<HomeContent> {
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: favoriteCalculators.length,
-                          separatorBuilder: (context, index) => const SizedBox(width: 10),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(width: 10),
                           itemBuilder: (context, index) {
                             final item = favoriteCalculators[index];
                             return Material(
@@ -706,10 +731,12 @@ class _HomeContentState extends State<HomeContent> {
                                       Container(
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: item.iconColor
-                                              .withValues(alpha: 0.14),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                                          color: item.iconColor.withValues(
+                                            alpha: 0.14,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
                                         ),
                                         child: Icon(
                                           item.icon,
@@ -778,8 +805,8 @@ class _HomeContentState extends State<HomeContent> {
                           ),
                           TextButton(
                             onPressed: () {
-                              final parent =
-                                  context.findAncestorStateOfType<_HomeScreenState>();
+                              final parent = context
+                                  .findAncestorStateOfType<_HomeScreenState>();
                               parent?.setState(() => parent._currentIndex = 1);
                             },
                             child: const Text(
@@ -807,14 +834,15 @@ class _HomeContentState extends State<HomeContent> {
                             leading: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: (item?.iconColor ?? const Color(0xFFFF8C00))
-                                    .withValues(alpha: 0.12),
+                                color:
+                                    (item?.iconColor ?? const Color(0xFFFF8C00))
+                                        .withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Icon(
                                 item?.icon ?? Icons.calculate_rounded,
-                                color: item?.iconColor ??
-                                    const Color(0xFFFF8C00),
+                                color:
+                                    item?.iconColor ?? const Color(0xFFFF8C00),
                                 size: 22,
                               ),
                             ),
@@ -826,15 +854,16 @@ class _HomeContentState extends State<HomeContent> {
                               ),
                             ),
                             subtitle: Text(
-                              DateFormat('MMM dd • hh:mm a')
-                                  .format(calc.timestamp),
+                              DateFormat(
+                                'MMM dd • hh:mm a',
+                              ).format(calc.timestamp),
                               style: const TextStyle(fontSize: 11),
                             ),
                             trailing: firstResult != null
                                 ? Text(
                                     firstResult.value is double
                                         ? (firstResult.value as double)
-                                            .toStringAsFixed(1)
+                                              .toStringAsFixed(1)
                                         : firstResult.value.toString(),
                                     style: const TextStyle(
                                       color: Color(0xFFFF8C00),
@@ -859,9 +888,7 @@ class _HomeContentState extends State<HomeContent> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
                   child: Material(
-                    color: isDark
-                        ? const Color(0xFF1E293B)
-                        : Colors.white,
+                    color: isDark ? const Color(0xFF1E293B) : Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     child: InkWell(
                       onTap: () => Navigator.push(
@@ -876,8 +903,9 @@ class _HomeContentState extends State<HomeContent> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: const Color(0xFFFF8C00)
-                                .withValues(alpha: isDark ? 0.35 : 0.25),
+                            color: const Color(
+                              0xFFFF8C00,
+                            ).withValues(alpha: isDark ? 0.35 : 0.25),
                           ),
                           gradient: LinearGradient(
                             colors: isDark
@@ -885,10 +913,7 @@ class _HomeContentState extends State<HomeContent> {
                                     const Color(0xFF1E293B),
                                     const Color(0xFF0F172A),
                                   ]
-                                : [
-                                    Colors.white,
-                                    const Color(0xFFFFF8F0),
-                                  ],
+                                : [Colors.white, const Color(0xFFFFF8F0)],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
@@ -898,8 +923,9 @@ class _HomeContentState extends State<HomeContent> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFF8C00)
-                                    .withValues(alpha: 0.15),
+                                color: const Color(
+                                  0xFFFF8C00,
+                                ).withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(14),
                               ),
                               child: const Icon(
@@ -930,8 +956,9 @@ class _HomeContentState extends State<HomeContent> {
                                         ),
                                         decoration: BoxDecoration(
                                           color: const Color(0xFFFF8C00),
-                                          borderRadius:
-                                              BorderRadius.circular(6),
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
                                         ),
                                         child: const Text(
                                           'NEW',
@@ -973,8 +1000,9 @@ class _HomeContentState extends State<HomeContent> {
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                        backgroundColor: const Color(0xFFFF8C00)
-                                            .withValues(alpha: 0.1),
+                                        backgroundColor: const Color(
+                                          0xFFFF8C00,
+                                        ).withValues(alpha: 0.1),
                                         side: BorderSide.none,
                                         visualDensity: VisualDensity.compact,
                                         padding: EdgeInsets.zero,
@@ -1033,8 +1061,9 @@ class _HomeContentState extends State<HomeContent> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(18),
                                 border: Border.all(
-                                  color: const Color(0xFFFF9800)
-                                      .withValues(alpha: 0.25),
+                                  color: const Color(
+                                    0xFFFF9800,
+                                  ).withValues(alpha: 0.25),
                                 ),
                               ),
                               child: Column(
@@ -1043,8 +1072,9 @@ class _HomeContentState extends State<HomeContent> {
                                   Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFFF9800)
-                                          .withValues(alpha: 0.14),
+                                      color: const Color(
+                                        0xFFFF9800,
+                                      ).withValues(alpha: 0.14),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: const Icon(
@@ -1099,8 +1129,9 @@ class _HomeContentState extends State<HomeContent> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(18),
                                 border: Border.all(
-                                  color: const Color(0xFF1E3A5F)
-                                      .withValues(alpha: isDark ? 0.4 : 0.2),
+                                  color: const Color(
+                                    0xFF1E3A5F,
+                                  ).withValues(alpha: isDark ? 0.4 : 0.2),
                                 ),
                               ),
                               child: Column(
@@ -1109,8 +1140,9 @@ class _HomeContentState extends State<HomeContent> {
                                   Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFF1E3A5F)
-                                          .withValues(alpha: 0.15),
+                                      color: const Color(
+                                        0xFF1E3A5F,
+                                      ).withValues(alpha: 0.15),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: const Icon(
@@ -1204,8 +1236,8 @@ class _HomeContentState extends State<HomeContent> {
                     final crossAxisCount = width > 900
                         ? 4
                         : width > 600
-                            ? 3
-                            : 2;
+                        ? 3
+                        : 2;
 
                     return SliverGrid(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -1214,26 +1246,23 @@ class _HomeContentState extends State<HomeContent> {
                         crossAxisSpacing: 12,
                         childAspectRatio: 1.15,
                       ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final item = filtered[index];
-                          final isFav = _favoriteIds.contains(item.id);
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final item = filtered[index];
+                        final isFav = _favoriteIds.contains(item.id);
 
-                          return CalculatorCard(
-                            icon: item.icon,
-                            title: item.title,
-                            iconColor: item.iconColor,
-                            category: item.category,
-                            isFavorite: isFav,
-                            onFavoriteToggle: () => _toggleFavorite(item.id),
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: item.builder),
-                            ).then((_) => _loadData()),
-                          );
-                        },
-                        childCount: filtered.length,
-                      ),
+                        return CalculatorCard(
+                          icon: item.icon,
+                          title: item.title,
+                          iconColor: item.iconColor,
+                          category: item.category,
+                          isFavorite: isFav,
+                          onFavoriteToggle: () => _toggleFavorite(item.id),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: item.builder),
+                          ).then((_) => _loadData()),
+                        );
+                      }, childCount: filtered.length),
                     );
                   },
                 ),

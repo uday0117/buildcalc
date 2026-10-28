@@ -333,8 +333,12 @@ class ElevationConfig {
 
   /// Total structural building height from Ground Level (GL) to highest ridge/parapet
   double get totalHeightFeet {
-    final roofAdditionalHeight = roofStyle == RoofStyle.pitchedTile ? 6.0 : parapetHeightFeet;
-    return plinthHeightFeet + (floorCount * floorHeightFeet) + roofAdditionalHeight;
+    final roofAdditionalHeight = roofStyle == RoofStyle.pitchedTile
+        ? 6.0
+        : parapetHeightFeet;
+    return plinthHeightFeet +
+        (floorCount * floorHeightFeet) +
+        roofAdditionalHeight;
   }
 
   /// Formatted floor label (e.g. Ground Floor, G+1, G+2)
@@ -356,21 +360,39 @@ class ElevationConfig {
   /// AI Prompt synthesizer for architectural diffusion / visual generation
   String generateAIPrompt() {
     final buffer = StringBuffer();
-    buffer.write('Architectural exterior front elevation photography of a ${style.label.toLowerCase()} house, ');
+    buffer.write(
+      'Architectural exterior front elevation photography of a ${style.label.toLowerCase()} house, ',
+    );
     buffer.write('${floorCountLabel.toLowerCase()}, ');
     buffer.write('${facadeWidthFeet.toStringAsFixed(0)} feet wide facade. ');
-    buffer.write('Exterior finish: ${finishPreset.label.toLowerCase()} with accent details. ');
-    buffer.write('Windows: ${windowStyle.label.toLowerCase()} with dark slim frames. ');
+    buffer.write(
+      'Exterior finish: ${finishPreset.label.toLowerCase()} with accent details. ',
+    );
+    buffer.write(
+      'Windows: ${windowStyle.label.toLowerCase()} with dark slim frames. ',
+    );
     if (floorCount > 1) {
       buffer.write('Balcony: ${balconyOption.label.toLowerCase()}. ');
     }
     buffer.write('Roof: ${roofStyle.label.toLowerCase()}. ');
-    if (hasCarPorch) buffer.write('Includes modern covered car porch on ground level. ');
-    if (hasEntrancePortico) buffer.write('Features grand entrance door with portico canopy. ');
-    buffer.write('Colors: main facade #${primaryColor.toARGB32().toRadixString(16).substring(2).toUpperCase()}, ');
-    buffer.write('accent details #${accentColor.toARGB32().toRadixString(16).substring(2).toUpperCase()}. ');
-    buffer.write('Lighting: warm architectural evening accent sconces, soft ambient daylighting, landscaped front courtyard. ');
-    buffer.write('Straight-on orthographic eye-level facade angle, hyperrealistic 8k architectural rendering.');
+    if (hasCarPorch) {
+      buffer.write('Includes modern covered car porch on ground level. ');
+    }
+    if (hasEntrancePortico) {
+      buffer.write('Features grand entrance door with portico canopy. ');
+    }
+    buffer.write(
+      'Colors: main facade #${primaryColor.toARGB32().toRadixString(16).substring(2).toUpperCase()}, ',
+    );
+    buffer.write(
+      'accent details #${accentColor.toARGB32().toRadixString(16).substring(2).toUpperCase()}. ',
+    );
+    buffer.write(
+      'Lighting: warm architectural evening accent sconces, soft ambient daylighting, landscaped front courtyard. ',
+    );
+    buffer.write(
+      'Straight-on orthographic eye-level facade angle, hyperrealistic 8k architectural rendering.',
+    );
     return buffer.toString();
   }
 
@@ -429,79 +451,97 @@ class ElevationConfig {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'planId': planId,
-        'planName': planName,
-        'name': name,
-        'style': style.name,
-        'floorCount': floorCount,
-        'facadeWidthFeet': facadeWidthFeet,
-        'floorHeightFeet': floorHeightFeet,
-        'plinthHeightFeet': plinthHeightFeet,
-        'parapetHeightFeet': parapetHeightFeet,
-        'primaryColor': primaryColor.toARGB32(),
-        'accentColor': accentColor.toARGB32(),
-        'trimColor': trimColor.toARGB32(),
-        'glassColor': glassColor.toARGB32(),
-        'windowStyle': windowStyle.name,
-        'balconyOption': balconyOption.name,
-        'finishPreset': finishPreset.name,
-        'roofStyle': roofStyle.name,
-        'hasCarPorch': hasCarPorch,
-        'hasEntrancePortico': hasEntrancePortico,
-        'notes': notes,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'isFavorite': isFavorite,
-      };
+    'id': id,
+    'planId': planId,
+    'planName': planName,
+    'name': name,
+    'style': style.name,
+    'floorCount': floorCount,
+    'facadeWidthFeet': facadeWidthFeet,
+    'floorHeightFeet': floorHeightFeet,
+    'plinthHeightFeet': plinthHeightFeet,
+    'parapetHeightFeet': parapetHeightFeet,
+    'primaryColor': primaryColor.toARGB32(),
+    'accentColor': accentColor.toARGB32(),
+    'trimColor': trimColor.toARGB32(),
+    'glassColor': glassColor.toARGB32(),
+    'windowStyle': windowStyle.name,
+    'balconyOption': balconyOption.name,
+    'finishPreset': finishPreset.name,
+    'roofStyle': roofStyle.name,
+    'hasCarPorch': hasCarPorch,
+    'hasEntrancePortico': hasEntrancePortico,
+    'notes': notes,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'isFavorite': isFavorite,
+  };
 
-  factory ElevationConfig.fromJson(Map<String, dynamic> json) => ElevationConfig(
-        id: json['id'] as String,
-        planId: json['planId'] as String? ?? '',
-        planName: json['planName'] as String? ?? 'Untitled Plan',
-        name: json['name'] as String? ?? 'Front Elevation',
-        style: ElevationStyle.values.firstWhere(
-          (e) => e.name == json['style'],
-          orElse: () => ElevationStyle.modern,
-        ),
-        floorCount: (json['floorCount'] as num?)?.toInt() ?? 2,
-        facadeWidthFeet: (json['facadeWidthFeet'] as num?)?.toDouble() ?? 30.0,
-        floorHeightFeet: (json['floorHeightFeet'] as num?)?.toDouble() ?? 10.0,
-        plinthHeightFeet: (json['plinthHeightFeet'] as num?)?.toDouble() ?? 2.5,
-        parapetHeightFeet: (json['parapetHeightFeet'] as num?)?.toDouble() ?? 3.5,
-        primaryColor: Color(json['primaryColor'] as int? ?? const Color(0xFFF8FAFC).toARGB32()),
-        accentColor: Color(json['accentColor'] as int? ?? const Color(0xFF854D0E).toARGB32()),
-        trimColor: Color(json['trimColor'] as int? ?? const Color(0xFF334155).toARGB32()),
-        glassColor: Color(json['glassColor'] as int? ?? const Color(0xFF93C5FD).toARGB32()),
-        windowStyle: WindowStyle.values.firstWhere(
-          (e) => e.name == json['windowStyle'],
-          orElse: () => WindowStyle.modernPicture,
-        ),
-        balconyOption: BalconyOption.values.firstWhere(
-          (e) => e.name == json['balconyOption'],
-          orElse: () => BalconyOption.glassRailing,
-        ),
-        finishPreset: FinishPreset.values.firstWhere(
-          (e) => e.name == json['finishPreset'],
-          orElse: () => FinishPreset.smoothPlaster,
-        ),
-        roofStyle: RoofStyle.values.firstWhere(
-          (e) => e.name == json['roofStyle'],
-          orElse: () => RoofStyle.flatParapet,
-        ),
-        hasCarPorch: json['hasCarPorch'] as bool? ?? true,
-        hasEntrancePortico: json['hasEntrancePortico'] as bool? ?? true,
-        notes: json['notes'] as String? ?? '',
-        createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ?? DateTime.now(),
-        updatedAt: DateTime.tryParse(json['updatedAt'] as String? ?? '') ?? DateTime.now(),
-        isFavorite: json['isFavorite'] as bool? ?? false,
-      );
+  factory ElevationConfig.fromJson(
+    Map<String, dynamic> json,
+  ) => ElevationConfig(
+    id: json['id'] as String,
+    planId: json['planId'] as String? ?? '',
+    planName: json['planName'] as String? ?? 'Untitled Plan',
+    name: json['name'] as String? ?? 'Front Elevation',
+    style: ElevationStyle.values.firstWhere(
+      (e) => e.name == json['style'],
+      orElse: () => ElevationStyle.modern,
+    ),
+    floorCount: (json['floorCount'] as num?)?.toInt() ?? 2,
+    facadeWidthFeet: (json['facadeWidthFeet'] as num?)?.toDouble() ?? 30.0,
+    floorHeightFeet: (json['floorHeightFeet'] as num?)?.toDouble() ?? 10.0,
+    plinthHeightFeet: (json['plinthHeightFeet'] as num?)?.toDouble() ?? 2.5,
+    parapetHeightFeet: (json['parapetHeightFeet'] as num?)?.toDouble() ?? 3.5,
+    primaryColor: Color(
+      json['primaryColor'] as int? ?? const Color(0xFFF8FAFC).toARGB32(),
+    ),
+    accentColor: Color(
+      json['accentColor'] as int? ?? const Color(0xFF854D0E).toARGB32(),
+    ),
+    trimColor: Color(
+      json['trimColor'] as int? ?? const Color(0xFF334155).toARGB32(),
+    ),
+    glassColor: Color(
+      json['glassColor'] as int? ?? const Color(0xFF93C5FD).toARGB32(),
+    ),
+    windowStyle: WindowStyle.values.firstWhere(
+      (e) => e.name == json['windowStyle'],
+      orElse: () => WindowStyle.modernPicture,
+    ),
+    balconyOption: BalconyOption.values.firstWhere(
+      (e) => e.name == json['balconyOption'],
+      orElse: () => BalconyOption.glassRailing,
+    ),
+    finishPreset: FinishPreset.values.firstWhere(
+      (e) => e.name == json['finishPreset'],
+      orElse: () => FinishPreset.smoothPlaster,
+    ),
+    roofStyle: RoofStyle.values.firstWhere(
+      (e) => e.name == json['roofStyle'],
+      orElse: () => RoofStyle.flatParapet,
+    ),
+    hasCarPorch: json['hasCarPorch'] as bool? ?? true,
+    hasEntrancePortico: json['hasEntrancePortico'] as bool? ?? true,
+    notes: json['notes'] as String? ?? '',
+    createdAt:
+        DateTime.tryParse(json['createdAt'] as String? ?? '') ?? DateTime.now(),
+    updatedAt:
+        DateTime.tryParse(json['updatedAt'] as String? ?? '') ?? DateTime.now(),
+    isFavorite: json['isFavorite'] as bool? ?? false,
+  );
 }
 
 /// Elevation display view mode
 enum ElevationViewMode {
-  illustrative('Illustrative Design Concept', 'Rendered with architectural colors, finishes, depth, and landscaping.'),
-  dimensioned('Dimensioned Construction Draft', 'Orthographic CAD elevation with datum levels, heights, and structural lines.');
+  illustrative(
+    'Illustrative Design Concept',
+    'Rendered with architectural colors, finishes, depth, and landscaping.',
+  ),
+  dimensioned(
+    'Dimensioned Construction Draft',
+    'Orthographic CAD elevation with datum levels, heights, and structural lines.',
+  );
 
   final String label;
   final String description;

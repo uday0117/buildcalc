@@ -5,12 +5,24 @@ import 'plan_models.dart';
 
 /// Categories of construction materials
 enum MaterialCategory {
-  masonry('Masonry (Bricks & Blocks)', Icons.view_module_rounded, Color(0xFFC05C46)),
-  mortar('Mortar & Cementitious Mixes', Icons.format_paint_rounded, Color(0xFF64748B)),
+  masonry(
+    'Masonry (Bricks & Blocks)',
+    Icons.view_module_rounded,
+    Color(0xFFC05C46),
+  ),
+  mortar(
+    'Mortar & Cementitious Mixes',
+    Icons.format_paint_rounded,
+    Color(0xFF64748B),
+  ),
   plaster('Wall & Ceiling Plaster', Icons.brush_rounded, Color(0xFF78716C)),
   paint('Paints & Primers', Icons.palette_rounded, Color(0xFF0284C7)),
   tile('Flooring & Wall Tiles', Icons.grid_view_rounded, Color(0xFF0D9488)),
-  concrete('Explicit Concrete Elements', Icons.foundation_rounded, Color(0xFF4F46E5));
+  concrete(
+    'Explicit Concrete Elements',
+    Icons.foundation_rounded,
+    Color(0xFF4F46E5),
+  );
 
   final String title;
   final IconData icon;
@@ -106,7 +118,12 @@ enum ConcreteGradeMix {
   final double sandParts;
   final double aggregateParts;
 
-  const ConcreteGradeMix(this.label, this.cementParts, this.sandParts, this.aggregateParts);
+  const ConcreteGradeMix(
+    this.label,
+    this.cementParts,
+    this.sandParts,
+    this.aggregateParts,
+  );
 
   double get totalParts => cementParts + sandParts + aggregateParts;
   double get cementFraction => cementParts / totalParts;
@@ -142,7 +159,8 @@ class MaterialEstimationAssumptions {
   // --- Paint Assumptions ---
   final int interiorPaintCoats;
   final int exteriorPaintCoats;
-  final double interiorPaintCoverageSqFtPerLiter; // e.g. 110 sq ft/L for 2 coats
+  final double
+  interiorPaintCoverageSqFtPerLiter; // e.g. 110 sq ft/L for 2 coats
   final double exteriorPaintCoverageSqFtPerLiter; // e.g. 90 sq ft/L for 2 coats
   final double primerCoverageSqFtPerLiter; // e.g. 140 sq ft/L
   final bool includePrimer;
@@ -244,22 +262,19 @@ class MaterialEstimationAssumptions {
   });
 
   /// Active brick length in inches
-  double get effectiveBrickLengthInches =>
-      masonryType == MasonryUnitType.custom
-          ? customBrickLengthInches
-          : masonryType.lengthInches;
+  double get effectiveBrickLengthInches => masonryType == MasonryUnitType.custom
+      ? customBrickLengthInches
+      : masonryType.lengthInches;
 
   /// Active brick width in inches
-  double get effectiveBrickWidthInches =>
-      masonryType == MasonryUnitType.custom
-          ? customBrickWidthInches
-          : masonryType.widthInches;
+  double get effectiveBrickWidthInches => masonryType == MasonryUnitType.custom
+      ? customBrickWidthInches
+      : masonryType.widthInches;
 
   /// Active brick height in inches
-  double get effectiveBrickHeightInches =>
-      masonryType == MasonryUnitType.custom
-          ? customBrickHeightInches
-          : masonryType.heightInches;
+  double get effectiveBrickHeightInches => masonryType == MasonryUnitType.custom
+      ? customBrickHeightInches
+      : masonryType.heightInches;
 
   /// Volume of 1 brick in cubic feet (without mortar)
   double get brickVolumeCuFt =>
@@ -338,57 +353,83 @@ class MaterialEstimationAssumptions {
   }) {
     return MaterialEstimationAssumptions(
       wallHeightFeet: wallHeightFeet ?? this.wallHeightFeet,
-      exteriorWallThicknessFeet: exteriorWallThicknessFeet ?? this.exteriorWallThicknessFeet,
-      interiorWallThicknessFeet: interiorWallThicknessFeet ?? this.interiorWallThicknessFeet,
+      exteriorWallThicknessFeet:
+          exteriorWallThicknessFeet ?? this.exteriorWallThicknessFeet,
+      interiorWallThicknessFeet:
+          interiorWallThicknessFeet ?? this.interiorWallThicknessFeet,
       masonryType: masonryType ?? this.masonryType,
-      customBrickLengthInches: customBrickLengthInches ?? this.customBrickLengthInches,
-      customBrickWidthInches: customBrickWidthInches ?? this.customBrickWidthInches,
-      customBrickHeightInches: customBrickHeightInches ?? this.customBrickHeightInches,
-      mortarJointThicknessInches: mortarJointThicknessInches ?? this.mortarJointThicknessInches,
+      customBrickLengthInches:
+          customBrickLengthInches ?? this.customBrickLengthInches,
+      customBrickWidthInches:
+          customBrickWidthInches ?? this.customBrickWidthInches,
+      customBrickHeightInches:
+          customBrickHeightInches ?? this.customBrickHeightInches,
+      mortarJointThicknessInches:
+          mortarJointThicknessInches ?? this.mortarJointThicknessInches,
       mortarMix: mortarMix ?? this.mortarMix,
       brickWastagePercent: brickWastagePercent ?? this.brickWastagePercent,
       mortarDryFactor: mortarDryFactor ?? this.mortarDryFactor,
-      interiorPlasterThicknessInches: interiorPlasterThicknessInches ?? this.interiorPlasterThicknessInches,
-      exteriorPlasterThicknessInches: exteriorPlasterThicknessInches ?? this.exteriorPlasterThicknessInches,
+      interiorPlasterThicknessInches:
+          interiorPlasterThicknessInches ?? this.interiorPlasterThicknessInches,
+      exteriorPlasterThicknessInches:
+          exteriorPlasterThicknessInches ?? this.exteriorPlasterThicknessInches,
       plasterMix: plasterMix ?? this.plasterMix,
-      includeCeilingPlaster: includeCeilingPlaster ?? this.includeCeilingPlaster,
-      plasterWastagePercent: plasterWastagePercent ?? this.plasterWastagePercent,
+      includeCeilingPlaster:
+          includeCeilingPlaster ?? this.includeCeilingPlaster,
+      plasterWastagePercent:
+          plasterWastagePercent ?? this.plasterWastagePercent,
       plasterDryFactor: plasterDryFactor ?? this.plasterDryFactor,
       interiorPaintCoats: interiorPaintCoats ?? this.interiorPaintCoats,
       exteriorPaintCoats: exteriorPaintCoats ?? this.exteriorPaintCoats,
-      interiorPaintCoverageSqFtPerLiter: interiorPaintCoverageSqFtPerLiter ?? this.interiorPaintCoverageSqFtPerLiter,
-      exteriorPaintCoverageSqFtPerLiter: exteriorPaintCoverageSqFtPerLiter ?? this.exteriorPaintCoverageSqFtPerLiter,
-      primerCoverageSqFtPerLiter: primerCoverageSqFtPerLiter ?? this.primerCoverageSqFtPerLiter,
+      interiorPaintCoverageSqFtPerLiter:
+          interiorPaintCoverageSqFtPerLiter ??
+          this.interiorPaintCoverageSqFtPerLiter,
+      exteriorPaintCoverageSqFtPerLiter:
+          exteriorPaintCoverageSqFtPerLiter ??
+          this.exteriorPaintCoverageSqFtPerLiter,
+      primerCoverageSqFtPerLiter:
+          primerCoverageSqFtPerLiter ?? this.primerCoverageSqFtPerLiter,
       includePrimer: includePrimer ?? this.includePrimer,
       includeCeilingPaint: includeCeilingPaint ?? this.includeCeilingPaint,
       paintWastagePercent: paintWastagePercent ?? this.paintWastagePercent,
-      floorTileLengthInches: floorTileLengthInches ?? this.floorTileLengthInches,
+      floorTileLengthInches:
+          floorTileLengthInches ?? this.floorTileLengthInches,
       floorTileWidthInches: floorTileWidthInches ?? this.floorTileWidthInches,
       tilesPerBox: tilesPerBox ?? this.tilesPerBox,
       tileWastagePercent: tileWastagePercent ?? this.tileWastagePercent,
-      includeBathroomWallTiles: includeBathroomWallTiles ?? this.includeBathroomWallTiles,
-      bathroomDadoHeightFeet: bathroomDadoHeightFeet ?? this.bathroomDadoHeightFeet,
-      includeKitchenBacksplash: includeKitchenBacksplash ?? this.includeKitchenBacksplash,
-      kitchenBacksplashAreaSqFt: kitchenBacksplashAreaSqFt ?? this.kitchenBacksplashAreaSqFt,
+      includeBathroomWallTiles:
+          includeBathroomWallTiles ?? this.includeBathroomWallTiles,
+      bathroomDadoHeightFeet:
+          bathroomDadoHeightFeet ?? this.bathroomDadoHeightFeet,
+      includeKitchenBacksplash:
+          includeKitchenBacksplash ?? this.includeKitchenBacksplash,
+      kitchenBacksplashAreaSqFt:
+          kitchenBacksplashAreaSqFt ?? this.kitchenBacksplashAreaSqFt,
       includeRoofSlab: includeRoofSlab ?? this.includeRoofSlab,
-      roofSlabThicknessInches: roofSlabThicknessInches ?? this.roofSlabThicknessInches,
+      roofSlabThicknessInches:
+          roofSlabThicknessInches ?? this.roofSlabThicknessInches,
       roofSlabOverhangFeet: roofSlabOverhangFeet ?? this.roofSlabOverhangFeet,
       includeLintelBeams: includeLintelBeams ?? this.includeLintelBeams,
       lintelDepthInches: lintelDepthInches ?? this.lintelDepthInches,
       lintelBearingFeet: lintelBearingFeet ?? this.lintelBearingFeet,
       includePlinthBeam: includePlinthBeam ?? this.includePlinthBeam,
-      plinthBeamWidthInches: plinthBeamWidthInches ?? this.plinthBeamWidthInches,
-      plinthBeamDepthInches: plinthBeamDepthInches ?? this.plinthBeamDepthInches,
+      plinthBeamWidthInches:
+          plinthBeamWidthInches ?? this.plinthBeamWidthInches,
+      plinthBeamDepthInches:
+          plinthBeamDepthInches ?? this.plinthBeamDepthInches,
       concreteGrade: concreteGrade ?? this.concreteGrade,
       concreteDryFactor: concreteDryFactor ?? this.concreteDryFactor,
-      concreteWastagePercent: concreteWastagePercent ?? this.concreteWastagePercent,
+      concreteWastagePercent:
+          concreteWastagePercent ?? this.concreteWastagePercent,
       currencySymbol: currencySymbol ?? this.currencySymbol,
       brickRatePerUnit: brickRatePerUnit ?? this.brickRatePerUnit,
       cementRatePerBag: cementRatePerBag ?? this.cementRatePerBag,
       sandRatePerCuFt: sandRatePerCuFt ?? this.sandRatePerCuFt,
       aggregateRatePerCuFt: aggregateRatePerCuFt ?? this.aggregateRatePerCuFt,
-      interiorPaintRatePerLiter: interiorPaintRatePerLiter ?? this.interiorPaintRatePerLiter,
-      exteriorPaintRatePerLiter: exteriorPaintRatePerLiter ?? this.exteriorPaintRatePerLiter,
+      interiorPaintRatePerLiter:
+          interiorPaintRatePerLiter ?? this.interiorPaintRatePerLiter,
+      exteriorPaintRatePerLiter:
+          exteriorPaintRatePerLiter ?? this.exteriorPaintRatePerLiter,
       primerRatePerLiter: primerRatePerLiter ?? this.primerRatePerLiter,
       floorTileRatePerSqFt: floorTileRatePerSqFt ?? this.floorTileRatePerSqFt,
       wallTileRatePerSqFt: wallTileRatePerSqFt ?? this.wallTileRatePerSqFt,
@@ -396,172 +437,165 @@ class MaterialEstimationAssumptions {
   }
 
   Map<String, dynamic> toJson() => {
-        'wallHeightFeet': wallHeightFeet,
-        'exteriorWallThicknessFeet': exteriorWallThicknessFeet,
-        'interiorWallThicknessFeet': interiorWallThicknessFeet,
-        'masonryType': masonryType.name,
-        'customBrickLengthInches': customBrickLengthInches,
-        'customBrickWidthInches': customBrickWidthInches,
-        'customBrickHeightInches': customBrickHeightInches,
-        'mortarJointThicknessInches': mortarJointThicknessInches,
-        'mortarMix': mortarMix.name,
-        'brickWastagePercent': brickWastagePercent,
-        'mortarDryFactor': mortarDryFactor,
-        'interiorPlasterThicknessInches': interiorPlasterThicknessInches,
-        'exteriorPlasterThicknessInches': exteriorPlasterThicknessInches,
-        'plasterMix': plasterMix.name,
-        'includeCeilingPlaster': includeCeilingPlaster,
-        'plasterWastagePercent': plasterWastagePercent,
-        'plasterDryFactor': plasterDryFactor,
-        'interiorPaintCoats': interiorPaintCoats,
-        'exteriorPaintCoats': exteriorPaintCoats,
-        'interiorPaintCoverageSqFtPerLiter': interiorPaintCoverageSqFtPerLiter,
-        'exteriorPaintCoverageSqFtPerLiter': exteriorPaintCoverageSqFtPerLiter,
-        'primerCoverageSqFtPerLiter': primerCoverageSqFtPerLiter,
-        'includePrimer': includePrimer,
-        'includeCeilingPaint': includeCeilingPaint,
-        'paintWastagePercent': paintWastagePercent,
-        'floorTileLengthInches': floorTileLengthInches,
-        'floorTileWidthInches': floorTileWidthInches,
-        'tilesPerBox': tilesPerBox,
-        'tileWastagePercent': tileWastagePercent,
-        'includeBathroomWallTiles': includeBathroomWallTiles,
-        'bathroomDadoHeightFeet': bathroomDadoHeightFeet,
-        'includeKitchenBacksplash': includeKitchenBacksplash,
-        'kitchenBacksplashAreaSqFt': kitchenBacksplashAreaSqFt,
-        'includeRoofSlab': includeRoofSlab,
-        'roofSlabThicknessInches': roofSlabThicknessInches,
-        'roofSlabOverhangFeet': roofSlabOverhangFeet,
-        'includeLintelBeams': includeLintelBeams,
-        'lintelDepthInches': lintelDepthInches,
-        'lintelBearingFeet': lintelBearingFeet,
-        'includePlinthBeam': includePlinthBeam,
-        'plinthBeamWidthInches': plinthBeamWidthInches,
-        'plinthBeamDepthInches': plinthBeamDepthInches,
-        'concreteGrade': concreteGrade.name,
-        'concreteDryFactor': concreteDryFactor,
-        'concreteWastagePercent': concreteWastagePercent,
-        'currencySymbol': currencySymbol,
-        'brickRatePerUnit': brickRatePerUnit,
-        'cementRatePerBag': cementRatePerBag,
-        'sandRatePerCuFt': sandRatePerCuFt,
-        'aggregateRatePerCuFt': aggregateRatePerCuFt,
-        'interiorPaintRatePerLiter': interiorPaintRatePerLiter,
-        'exteriorPaintRatePerLiter': exteriorPaintRatePerLiter,
-        'primerRatePerLiter': primerRatePerLiter,
-        'floorTileRatePerSqFt': floorTileRatePerSqFt,
-        'wallTileRatePerSqFt': wallTileRatePerSqFt,
-      };
+    'wallHeightFeet': wallHeightFeet,
+    'exteriorWallThicknessFeet': exteriorWallThicknessFeet,
+    'interiorWallThicknessFeet': interiorWallThicknessFeet,
+    'masonryType': masonryType.name,
+    'customBrickLengthInches': customBrickLengthInches,
+    'customBrickWidthInches': customBrickWidthInches,
+    'customBrickHeightInches': customBrickHeightInches,
+    'mortarJointThicknessInches': mortarJointThicknessInches,
+    'mortarMix': mortarMix.name,
+    'brickWastagePercent': brickWastagePercent,
+    'mortarDryFactor': mortarDryFactor,
+    'interiorPlasterThicknessInches': interiorPlasterThicknessInches,
+    'exteriorPlasterThicknessInches': exteriorPlasterThicknessInches,
+    'plasterMix': plasterMix.name,
+    'includeCeilingPlaster': includeCeilingPlaster,
+    'plasterWastagePercent': plasterWastagePercent,
+    'plasterDryFactor': plasterDryFactor,
+    'interiorPaintCoats': interiorPaintCoats,
+    'exteriorPaintCoats': exteriorPaintCoats,
+    'interiorPaintCoverageSqFtPerLiter': interiorPaintCoverageSqFtPerLiter,
+    'exteriorPaintCoverageSqFtPerLiter': exteriorPaintCoverageSqFtPerLiter,
+    'primerCoverageSqFtPerLiter': primerCoverageSqFtPerLiter,
+    'includePrimer': includePrimer,
+    'includeCeilingPaint': includeCeilingPaint,
+    'paintWastagePercent': paintWastagePercent,
+    'floorTileLengthInches': floorTileLengthInches,
+    'floorTileWidthInches': floorTileWidthInches,
+    'tilesPerBox': tilesPerBox,
+    'tileWastagePercent': tileWastagePercent,
+    'includeBathroomWallTiles': includeBathroomWallTiles,
+    'bathroomDadoHeightFeet': bathroomDadoHeightFeet,
+    'includeKitchenBacksplash': includeKitchenBacksplash,
+    'kitchenBacksplashAreaSqFt': kitchenBacksplashAreaSqFt,
+    'includeRoofSlab': includeRoofSlab,
+    'roofSlabThicknessInches': roofSlabThicknessInches,
+    'roofSlabOverhangFeet': roofSlabOverhangFeet,
+    'includeLintelBeams': includeLintelBeams,
+    'lintelDepthInches': lintelDepthInches,
+    'lintelBearingFeet': lintelBearingFeet,
+    'includePlinthBeam': includePlinthBeam,
+    'plinthBeamWidthInches': plinthBeamWidthInches,
+    'plinthBeamDepthInches': plinthBeamDepthInches,
+    'concreteGrade': concreteGrade.name,
+    'concreteDryFactor': concreteDryFactor,
+    'concreteWastagePercent': concreteWastagePercent,
+    'currencySymbol': currencySymbol,
+    'brickRatePerUnit': brickRatePerUnit,
+    'cementRatePerBag': cementRatePerBag,
+    'sandRatePerCuFt': sandRatePerCuFt,
+    'aggregateRatePerCuFt': aggregateRatePerCuFt,
+    'interiorPaintRatePerLiter': interiorPaintRatePerLiter,
+    'exteriorPaintRatePerLiter': exteriorPaintRatePerLiter,
+    'primerRatePerLiter': primerRatePerLiter,
+    'floorTileRatePerSqFt': floorTileRatePerSqFt,
+    'wallTileRatePerSqFt': wallTileRatePerSqFt,
+  };
 
-  factory MaterialEstimationAssumptions.fromJson(Map<String, dynamic> json) =>
-      MaterialEstimationAssumptions(
-        wallHeightFeet: (json['wallHeightFeet'] as num?)?.toDouble() ?? 10.0,
-        exteriorWallThicknessFeet:
-            (json['exteriorWallThicknessFeet'] as num?)?.toDouble() ?? 0.75,
-        interiorWallThicknessFeet:
-            (json['interiorWallThicknessFeet'] as num?)?.toDouble() ?? 0.375,
-        masonryType: MasonryUnitType.values.firstWhere(
-          (e) => e.name == json['masonryType'],
-          orElse: () => MasonryUnitType.standardRedBrick,
-        ),
-        customBrickLengthInches:
-            (json['customBrickLengthInches'] as num?)?.toDouble() ?? 9.0,
-        customBrickWidthInches:
-            (json['customBrickWidthInches'] as num?)?.toDouble() ?? 4.25,
-        customBrickHeightInches:
-            (json['customBrickHeightInches'] as num?)?.toDouble() ?? 2.75,
-        mortarJointThicknessInches:
-            (json['mortarJointThicknessInches'] as num?)?.toDouble() ?? 0.394,
-        mortarMix: MortarMixRatio.values.firstWhere(
-          (e) => e.name == json['mortarMix'],
-          orElse: () => MortarMixRatio.ratio1_5,
-        ),
-        brickWastagePercent:
-            (json['brickWastagePercent'] as num?)?.toDouble() ?? 7.0,
-        mortarDryFactor: (json['mortarDryFactor'] as num?)?.toDouble() ?? 1.33,
-        interiorPlasterThicknessInches:
-            (json['interiorPlasterThicknessInches'] as num?)?.toDouble() ?? 0.5,
-        exteriorPlasterThicknessInches:
-            (json['exteriorPlasterThicknessInches'] as num?)?.toDouble() ?? 0.75,
-        plasterMix: MortarMixRatio.values.firstWhere(
-          (e) => e.name == json['plasterMix'],
-          orElse: () => MortarMixRatio.ratio1_5,
-        ),
-        includeCeilingPlaster: json['includeCeilingPlaster'] as bool? ?? true,
-        plasterWastagePercent:
-            (json['plasterWastagePercent'] as num?)?.toDouble() ?? 8.0,
-        plasterDryFactor:
-            (json['plasterDryFactor'] as num?)?.toDouble() ?? 1.35,
-        interiorPaintCoats: (json['interiorPaintCoats'] as num?)?.toInt() ?? 2,
-        exteriorPaintCoats: (json['exteriorPaintCoats'] as num?)?.toInt() ?? 2,
-        interiorPaintCoverageSqFtPerLiter:
-            (json['interiorPaintCoverageSqFtPerLiter'] as num?)?.toDouble() ?? 110.0,
-        exteriorPaintCoverageSqFtPerLiter:
-            (json['exteriorPaintCoverageSqFtPerLiter'] as num?)?.toDouble() ?? 90.0,
-        primerCoverageSqFtPerLiter:
-            (json['primerCoverageSqFtPerLiter'] as num?)?.toDouble() ?? 140.0,
-        includePrimer: json['includePrimer'] as bool? ?? true,
-        includeCeilingPaint: json['includeCeilingPaint'] as bool? ?? true,
-        paintWastagePercent:
-            (json['paintWastagePercent'] as num?)?.toDouble() ?? 5.0,
-        floorTileLengthInches:
-            (json['floorTileLengthInches'] as num?)?.toDouble() ?? 24.0,
-        floorTileWidthInches:
-            (json['floorTileWidthInches'] as num?)?.toDouble() ?? 24.0,
-        tilesPerBox: (json['tilesPerBox'] as num?)?.toInt() ?? 4,
-        tileWastagePercent:
-            (json['tileWastagePercent'] as num?)?.toDouble() ?? 10.0,
-        includeBathroomWallTiles:
-            json['includeBathroomWallTiles'] as bool? ?? true,
-        bathroomDadoHeightFeet:
-            (json['bathroomDadoHeightFeet'] as num?)?.toDouble() ?? 7.0,
-        includeKitchenBacksplash:
-            json['includeKitchenBacksplash'] as bool? ?? true,
-        kitchenBacksplashAreaSqFt:
-            (json['kitchenBacksplashAreaSqFt'] as num?)?.toDouble() ?? 30.0,
-        includeRoofSlab: json['includeRoofSlab'] as bool? ?? true,
-        roofSlabThicknessInches:
-            (json['roofSlabThicknessInches'] as num?)?.toDouble() ?? 5.0,
-        roofSlabOverhangFeet:
-            (json['roofSlabOverhangFeet'] as num?)?.toDouble() ?? 1.0,
-        includeLintelBeams: json['includeLintelBeams'] as bool? ?? true,
-        lintelDepthInches:
-            (json['lintelDepthInches'] as num?)?.toDouble() ?? 6.0,
-        lintelBearingFeet:
-            (json['lintelBearingFeet'] as num?)?.toDouble() ?? 0.5,
-        includePlinthBeam: json['includePlinthBeam'] as bool? ?? false,
-        plinthBeamWidthInches:
-            (json['plinthBeamWidthInches'] as num?)?.toDouble() ?? 9.0,
-        plinthBeamDepthInches:
-            (json['plinthBeamDepthInches'] as num?)?.toDouble() ?? 12.0,
-        concreteGrade: ConcreteGradeMix.values.firstWhere(
-          (e) => e.name == json['concreteGrade'],
-          orElse: () => ConcreteGradeMix.m20,
-        ),
-        concreteDryFactor:
-            (json['concreteDryFactor'] as num?)?.toDouble() ?? 1.54,
-        concreteWastagePercent:
-            (json['concreteWastagePercent'] as num?)?.toDouble() ?? 5.0,
-        currencySymbol: json['currencySymbol'] as String? ?? '₹',
-        brickRatePerUnit:
-            (json['brickRatePerUnit'] as num?)?.toDouble() ?? 9.5,
-        cementRatePerBag:
-            (json['cementRatePerBag'] as num?)?.toDouble() ?? 380.0,
-        sandRatePerCuFt:
-            (json['sandRatePerCuFt'] as num?)?.toDouble() ?? 45.0,
-        aggregateRatePerCuFt:
-            (json['aggregateRatePerCuFt'] as num?)?.toDouble() ?? 38.0,
-        interiorPaintRatePerLiter:
-            (json['interiorPaintRatePerLiter'] as num?)?.toDouble() ?? 320.0,
-        exteriorPaintRatePerLiter:
-            (json['exteriorPaintRatePerLiter'] as num?)?.toDouble() ?? 410.0,
-        primerRatePerLiter:
-            (json['primerRatePerLiter'] as num?)?.toDouble() ?? 180.0,
-        floorTileRatePerSqFt:
-            (json['floorTileRatePerSqFt'] as num?)?.toDouble() ?? 65.0,
-        wallTileRatePerSqFt:
-            (json['wallTileRatePerSqFt'] as num?)?.toDouble() ?? 55.0,
-      );
+  factory MaterialEstimationAssumptions.fromJson(
+    Map<String, dynamic> json,
+  ) => MaterialEstimationAssumptions(
+    wallHeightFeet: (json['wallHeightFeet'] as num?)?.toDouble() ?? 10.0,
+    exteriorWallThicknessFeet:
+        (json['exteriorWallThicknessFeet'] as num?)?.toDouble() ?? 0.75,
+    interiorWallThicknessFeet:
+        (json['interiorWallThicknessFeet'] as num?)?.toDouble() ?? 0.375,
+    masonryType: MasonryUnitType.values.firstWhere(
+      (e) => e.name == json['masonryType'],
+      orElse: () => MasonryUnitType.standardRedBrick,
+    ),
+    customBrickLengthInches:
+        (json['customBrickLengthInches'] as num?)?.toDouble() ?? 9.0,
+    customBrickWidthInches:
+        (json['customBrickWidthInches'] as num?)?.toDouble() ?? 4.25,
+    customBrickHeightInches:
+        (json['customBrickHeightInches'] as num?)?.toDouble() ?? 2.75,
+    mortarJointThicknessInches:
+        (json['mortarJointThicknessInches'] as num?)?.toDouble() ?? 0.394,
+    mortarMix: MortarMixRatio.values.firstWhere(
+      (e) => e.name == json['mortarMix'],
+      orElse: () => MortarMixRatio.ratio1_5,
+    ),
+    brickWastagePercent:
+        (json['brickWastagePercent'] as num?)?.toDouble() ?? 7.0,
+    mortarDryFactor: (json['mortarDryFactor'] as num?)?.toDouble() ?? 1.33,
+    interiorPlasterThicknessInches:
+        (json['interiorPlasterThicknessInches'] as num?)?.toDouble() ?? 0.5,
+    exteriorPlasterThicknessInches:
+        (json['exteriorPlasterThicknessInches'] as num?)?.toDouble() ?? 0.75,
+    plasterMix: MortarMixRatio.values.firstWhere(
+      (e) => e.name == json['plasterMix'],
+      orElse: () => MortarMixRatio.ratio1_5,
+    ),
+    includeCeilingPlaster: json['includeCeilingPlaster'] as bool? ?? true,
+    plasterWastagePercent:
+        (json['plasterWastagePercent'] as num?)?.toDouble() ?? 8.0,
+    plasterDryFactor: (json['plasterDryFactor'] as num?)?.toDouble() ?? 1.35,
+    interiorPaintCoats: (json['interiorPaintCoats'] as num?)?.toInt() ?? 2,
+    exteriorPaintCoats: (json['exteriorPaintCoats'] as num?)?.toInt() ?? 2,
+    interiorPaintCoverageSqFtPerLiter:
+        (json['interiorPaintCoverageSqFtPerLiter'] as num?)?.toDouble() ??
+        110.0,
+    exteriorPaintCoverageSqFtPerLiter:
+        (json['exteriorPaintCoverageSqFtPerLiter'] as num?)?.toDouble() ?? 90.0,
+    primerCoverageSqFtPerLiter:
+        (json['primerCoverageSqFtPerLiter'] as num?)?.toDouble() ?? 140.0,
+    includePrimer: json['includePrimer'] as bool? ?? true,
+    includeCeilingPaint: json['includeCeilingPaint'] as bool? ?? true,
+    paintWastagePercent:
+        (json['paintWastagePercent'] as num?)?.toDouble() ?? 5.0,
+    floorTileLengthInches:
+        (json['floorTileLengthInches'] as num?)?.toDouble() ?? 24.0,
+    floorTileWidthInches:
+        (json['floorTileWidthInches'] as num?)?.toDouble() ?? 24.0,
+    tilesPerBox: (json['tilesPerBox'] as num?)?.toInt() ?? 4,
+    tileWastagePercent:
+        (json['tileWastagePercent'] as num?)?.toDouble() ?? 10.0,
+    includeBathroomWallTiles: json['includeBathroomWallTiles'] as bool? ?? true,
+    bathroomDadoHeightFeet:
+        (json['bathroomDadoHeightFeet'] as num?)?.toDouble() ?? 7.0,
+    includeKitchenBacksplash: json['includeKitchenBacksplash'] as bool? ?? true,
+    kitchenBacksplashAreaSqFt:
+        (json['kitchenBacksplashAreaSqFt'] as num?)?.toDouble() ?? 30.0,
+    includeRoofSlab: json['includeRoofSlab'] as bool? ?? true,
+    roofSlabThicknessInches:
+        (json['roofSlabThicknessInches'] as num?)?.toDouble() ?? 5.0,
+    roofSlabOverhangFeet:
+        (json['roofSlabOverhangFeet'] as num?)?.toDouble() ?? 1.0,
+    includeLintelBeams: json['includeLintelBeams'] as bool? ?? true,
+    lintelDepthInches: (json['lintelDepthInches'] as num?)?.toDouble() ?? 6.0,
+    lintelBearingFeet: (json['lintelBearingFeet'] as num?)?.toDouble() ?? 0.5,
+    includePlinthBeam: json['includePlinthBeam'] as bool? ?? false,
+    plinthBeamWidthInches:
+        (json['plinthBeamWidthInches'] as num?)?.toDouble() ?? 9.0,
+    plinthBeamDepthInches:
+        (json['plinthBeamDepthInches'] as num?)?.toDouble() ?? 12.0,
+    concreteGrade: ConcreteGradeMix.values.firstWhere(
+      (e) => e.name == json['concreteGrade'],
+      orElse: () => ConcreteGradeMix.m20,
+    ),
+    concreteDryFactor: (json['concreteDryFactor'] as num?)?.toDouble() ?? 1.54,
+    concreteWastagePercent:
+        (json['concreteWastagePercent'] as num?)?.toDouble() ?? 5.0,
+    currencySymbol: json['currencySymbol'] as String? ?? '₹',
+    brickRatePerUnit: (json['brickRatePerUnit'] as num?)?.toDouble() ?? 9.5,
+    cementRatePerBag: (json['cementRatePerBag'] as num?)?.toDouble() ?? 380.0,
+    sandRatePerCuFt: (json['sandRatePerCuFt'] as num?)?.toDouble() ?? 45.0,
+    aggregateRatePerCuFt:
+        (json['aggregateRatePerCuFt'] as num?)?.toDouble() ?? 38.0,
+    interiorPaintRatePerLiter:
+        (json['interiorPaintRatePerLiter'] as num?)?.toDouble() ?? 320.0,
+    exteriorPaintRatePerLiter:
+        (json['exteriorPaintRatePerLiter'] as num?)?.toDouble() ?? 410.0,
+    primerRatePerLiter:
+        (json['primerRatePerLiter'] as num?)?.toDouble() ?? 180.0,
+    floorTileRatePerSqFt:
+        (json['floorTileRatePerSqFt'] as num?)?.toDouble() ?? 65.0,
+    wallTileRatePerSqFt:
+        (json['wallTileRatePerSqFt'] as num?)?.toDouble() ?? 55.0,
+  );
 }
 
 /// A single calculated material line item with formula breakdown and cost
@@ -591,17 +625,17 @@ class MaterialLineItem {
   });
 
   Map<String, dynamic> toJson() => {
-        'category': category.name,
-        'name': name,
-        'netQuantity': netQuantity,
-        'wastagePercent': wastagePercent,
-        'totalQuantity': totalQuantity,
-        'unit': unit,
-        'unitRate': unitRate,
-        'totalCost': totalCost,
-        'formulaBreakdown': formulaBreakdown,
-        'assumptionsSummary': assumptionsSummary,
-      };
+    'category': category.name,
+    'name': name,
+    'netQuantity': netQuantity,
+    'wastagePercent': wastagePercent,
+    'totalQuantity': totalQuantity,
+    'unit': unit,
+    'unitRate': unitRate,
+    'totalCost': totalCost,
+    'formulaBreakdown': formulaBreakdown,
+    'assumptionsSummary': assumptionsSummary,
+  };
 
   factory MaterialLineItem.fromJson(Map<String, dynamic> json) =>
       MaterialLineItem(
@@ -656,21 +690,21 @@ class RoomQuantityBreakdown {
   });
 
   Map<String, dynamic> toJson() => {
-        'roomId': roomId,
-        'roomName': roomName,
-        'roomType': roomType.name,
-        'widthFeet': widthFeet,
-        'lengthFeet': lengthFeet,
-        'carpetAreaSqFt': carpetAreaSqFt,
-        'perimeterFeet': perimeterFeet,
-        'openingsCount': openingsCount,
-        'openingsAreaSqFt': openingsAreaSqFt,
-        'grossWallSurfaceSqFt': grossWallSurfaceSqFt,
-        'netWallSurfaceSqFt': netWallSurfaceSqFt,
-        'ceilingAreaSqFt': ceilingAreaSqFt,
-        'floorTileAreaSqFt': floorTileAreaSqFt,
-        'wallTileAreaSqFt': wallTileAreaSqFt,
-      };
+    'roomId': roomId,
+    'roomName': roomName,
+    'roomType': roomType.name,
+    'widthFeet': widthFeet,
+    'lengthFeet': lengthFeet,
+    'carpetAreaSqFt': carpetAreaSqFt,
+    'perimeterFeet': perimeterFeet,
+    'openingsCount': openingsCount,
+    'openingsAreaSqFt': openingsAreaSqFt,
+    'grossWallSurfaceSqFt': grossWallSurfaceSqFt,
+    'netWallSurfaceSqFt': netWallSurfaceSqFt,
+    'ceilingAreaSqFt': ceilingAreaSqFt,
+    'floorTileAreaSqFt': floorTileAreaSqFt,
+    'wallTileAreaSqFt': wallTileAreaSqFt,
+  };
 
   factory RoomQuantityBreakdown.fromJson(Map<String, dynamic> json) =>
       RoomQuantityBreakdown(
@@ -735,7 +769,8 @@ class PhysicalWallSegment {
   double get openingsVolumeCuFt => openingsAreaSqFt * thicknessFeet;
 
   double get netAreaSqFt => math.max(0.0, grossAreaSqFt - openingsAreaSqFt);
-  double get netVolumeCuFt => math.max(0.0, grossVolumeCuFt - openingsVolumeCuFt);
+  double get netVolumeCuFt =>
+      math.max(0.0, grossVolumeCuFt - openingsVolumeCuFt);
 
   static double _getOpeningHeightFeet(OpeningType type) {
     switch (type) {

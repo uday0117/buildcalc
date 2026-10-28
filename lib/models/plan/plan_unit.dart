@@ -118,7 +118,11 @@ enum PlanUnit {
   }
 
   /// Format dimension pair, e.g. "12'0" x 14'0"" or "12.0 x 14.0 ft"
-  String formatDimensions(double widthFeet, double lengthFeet, {int decimals = 1}) {
+  String formatDimensions(
+    double widthFeet,
+    double lengthFeet, {
+    int decimals = 1,
+  }) {
     if (this == PlanUnit.feet) {
       // Architectural feet & inches notation
       final wFt = widthFeet.floor();
@@ -138,4 +142,3 @@ enum PlanUnit {
     return '${val.toStringAsFixed(decimals)} $areaSymbol';
   }
 }
-

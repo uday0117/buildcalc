@@ -13,7 +13,10 @@ class TemplatePreviewSheet extends StatelessWidget {
 
   const TemplatePreviewSheet({super.key, required this.template});
 
-  static Future<void> show(BuildContext context, ReadyMadePlanTemplate template) {
+  static Future<void> show(
+    BuildContext context,
+    ReadyMadePlanTemplate template,
+  ) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -66,7 +69,9 @@ class TemplatePreviewSheet extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final theme = Theme.of(context);
     final freshPlan = template.createFreshPlan();
-    final estimateReport = PlanMaterialEstimator.estimateMaterials(plan: freshPlan);
+    final estimateReport = PlanMaterialEstimator.estimateMaterials(
+      plan: freshPlan,
+    );
 
     double totalCementBags = 0.0;
     double totalSandCuFt = 0.0;
@@ -122,9 +127,14 @@ class TemplatePreviewSheet extends StatelessWidget {
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFFF8C00).withValues(alpha: 0.2),
+                                  color: const Color(
+                                    0xFFFF8C00,
+                                  ).withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
@@ -138,9 +148,14 @@ class TemplatePreviewSheet extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFF0284C7).withValues(alpha: 0.15),
+                                  color: const Color(
+                                    0xFF0284C7,
+                                  ).withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
@@ -154,15 +169,22 @@ class TemplatePreviewSheet extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: (isDark ? Colors.white12 : Colors.grey[200]),
+                                  color: (isDark
+                                      ? Colors.white12
+                                      : Colors.grey[200]),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
                                   '🧭 ${template.orientation}',
                                   style: TextStyle(
-                                    color: isDark ? Colors.white70 : Colors.grey[800],
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.grey[800],
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -225,8 +247,10 @@ class TemplatePreviewSheet extends StatelessWidget {
                         _buildSpecCard(
                           isDark: isDark,
                           label: 'Built-Up Area',
-                          value: '${template.totalBuiltUpAreaSqFt.toStringAsFixed(0)} sq ft',
-                          subtitle: '${template.groundCoveragePercent.toStringAsFixed(1)}% Coverage',
+                          value:
+                              '${template.totalBuiltUpAreaSqFt.toStringAsFixed(0)} sq ft',
+                          subtitle:
+                              '${template.groundCoveragePercent.toStringAsFixed(1)}% Coverage',
                           icon: Icons.home_work_outlined,
                           color: const Color(0xFFFF8C00),
                         ),
@@ -267,7 +291,9 @@ class TemplatePreviewSheet extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+                        color: isDark
+                            ? const Color(0xFF0F172A)
+                            : const Color(0xFFF1F5F9),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
                           color: isDark ? Colors.white12 : Colors.grey[300]!,
@@ -297,17 +323,32 @@ class TemplatePreviewSheet extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _buildAssumpRow('Front Setback', '${template.frontSetbackFeet.toStringAsFixed(1)} ft'),
-                              _buildAssumpRow('Rear Setback', '${template.rearSetbackFeet.toStringAsFixed(1)} ft'),
-                              _buildAssumpRow('Side Setbacks', '${template.sideSetbackFeet.toStringAsFixed(1)} ft each'),
+                              _buildAssumpRow(
+                                'Front Setback',
+                                '${template.frontSetbackFeet.toStringAsFixed(1)} ft',
+                              ),
+                              _buildAssumpRow(
+                                'Rear Setback',
+                                '${template.rearSetbackFeet.toStringAsFixed(1)} ft',
+                              ),
+                              _buildAssumpRow(
+                                'Side Setbacks',
+                                '${template.sideSetbackFeet.toStringAsFixed(1)} ft each',
+                              ),
                             ],
                           ),
                           const SizedBox(height: 8),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _buildAssumpRow('Usable Plot W × L', '${template.usablePlotWidthFeet.toStringAsFixed(1)} × ${template.usablePlotLengthFeet.toStringAsFixed(1)} ft'),
-                              _buildAssumpRow('Main Orientation', template.orientation),
+                              _buildAssumpRow(
+                                'Usable Plot W × L',
+                                '${template.usablePlotWidthFeet.toStringAsFixed(1)} × ${template.usablePlotLengthFeet.toStringAsFixed(1)} ft',
+                              ),
+                              _buildAssumpRow(
+                                'Main Orientation',
+                                template.orientation,
+                              ),
                             ],
                           ),
                         ],
@@ -347,27 +388,40 @@ class TemplatePreviewSheet extends StatelessWidget {
                             leading: Container(
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                color: Color(room.colorValue).withValues(alpha: 0.5),
+                                color: Color(
+                                  room.colorValue,
+                                ).withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Icon(room.type.icon, size: 18, color: const Color(0xFF1E3A5F)),
+                              child: Icon(
+                                room.type.icon,
+                                size: 18,
+                                color: const Color(0xFF1E3A5F),
+                              ),
                             ),
                             title: Text(
                               room.name,
-                              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
                             ),
                             subtitle: Text(
                               '${freshPlan.unit.formatDimensions(room.width, room.length)}  •  ${freshPlan.unit.formatArea(room.areaSqFt)}',
                               style: TextStyle(
                                 fontSize: 11,
-                                color: isDark ? Colors.white60 : Colors.grey[600],
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey[600],
                               ),
                             ),
                             trailing: Text(
                               '${room.openings.length} opening(s)',
                               style: TextStyle(
                                 fontSize: 11,
-                                color: isDark ? Colors.white60 : Colors.grey[600],
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey[600],
                               ),
                             ),
                           );
@@ -388,7 +442,9 @@ class TemplatePreviewSheet extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF059669).withValues(alpha: isDark ? 0.15 : 0.08),
+                        color: const Color(
+                          0xFF059669,
+                        ).withValues(alpha: isDark ? 0.15 : 0.08),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
                           color: const Color(0xFF059669).withValues(alpha: 0.3),
@@ -399,10 +455,22 @@ class TemplatePreviewSheet extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _buildEstimateChip('Cement', '${totalCementBags.toInt()} bags'),
-                              _buildEstimateChip('Sand', '${totalSandCuFt.toInt()} cu ft'),
-                              _buildEstimateChip('Bricks / AAC', '${totalBricks.toInt()} pcs'),
-                              _buildEstimateChip('Tiles', '${totalTileSqFt.toInt()} sq ft'),
+                              _buildEstimateChip(
+                                'Cement',
+                                '${totalCementBags.toInt()} bags',
+                              ),
+                              _buildEstimateChip(
+                                'Sand',
+                                '${totalSandCuFt.toInt()} cu ft',
+                              ),
+                              _buildEstimateChip(
+                                'Bricks / AAC',
+                                '${totalBricks.toInt()} pcs',
+                              ),
+                              _buildEstimateChip(
+                                'Tiles',
+                                '${totalTileSqFt.toInt()} sq ft',
+                              ),
                             ],
                           ),
                           const SizedBox(height: 8),
@@ -422,7 +490,9 @@ class TemplatePreviewSheet extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFDC2626).withValues(alpha: isDark ? 0.15 : 0.08),
+                        color: const Color(
+                          0xFFDC2626,
+                        ).withValues(alpha: isDark ? 0.15 : 0.08),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
                           color: const Color(0xFFDC2626).withValues(alpha: 0.3),
@@ -455,7 +525,9 @@ class TemplatePreviewSheet extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 11,
                                     height: 1.35,
-                                    color: isDark ? Colors.white70 : Colors.grey[800],
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.grey[800],
                                   ),
                                 ),
                               ],
@@ -570,10 +642,7 @@ class TemplatePreviewSheet extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 10, color: Colors.grey),
-        ),
+        Text(title, style: const TextStyle(fontSize: 10, color: Colors.grey)),
         const SizedBox(height: 2),
         Text(
           val,
@@ -596,10 +665,7 @@ class TemplatePreviewSheet extends StatelessWidget {
         ),
         Text(
           material,
-          style: const TextStyle(
-            fontSize: 10,
-            color: Colors.grey,
-          ),
+          style: const TextStyle(fontSize: 10, color: Colors.grey),
         ),
       ],
     );

@@ -50,15 +50,25 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
     super.initState();
     final r = widget.initialRoom;
     _selectedType = r?.type ?? RoomType.bedroom;
-    _selectedColor = r != null ? Color(r.colorValue) : _selectedType.defaultColor;
+    _selectedColor = r != null
+        ? Color(r.colorValue)
+        : _selectedType.defaultColor;
 
-    _nameController = TextEditingController(text: r?.name ?? _selectedType.displayName);
+    _nameController = TextEditingController(
+      text: r?.name ?? _selectedType.displayName,
+    );
 
-    final initialW = r != null ? widget.unit.fromFeet(r.width) : widget.unit.fromFeet(12.0);
-    final initialL = r != null ? widget.unit.fromFeet(r.length) : widget.unit.fromFeet(13.0);
+    final initialW = r != null
+        ? widget.unit.fromFeet(r.width)
+        : widget.unit.fromFeet(12.0);
+    final initialL = r != null
+        ? widget.unit.fromFeet(r.length)
+        : widget.unit.fromFeet(13.0);
 
     _widthController = TextEditingController(text: initialW.toStringAsFixed(1));
-    _lengthController = TextEditingController(text: initialL.toStringAsFixed(1));
+    _lengthController = TextEditingController(
+      text: initialL.toStringAsFixed(1),
+    );
   }
 
   @override
@@ -89,7 +99,9 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
     final lengthFeet = widget.unit.toFeet(rawL);
 
     final room = PlanRoom(
-      id: widget.initialRoom?.id ?? 'r_${DateTime.now().millisecondsSinceEpoch}',
+      id:
+          widget.initialRoom?.id ??
+          'r_${DateTime.now().millisecondsSinceEpoch}',
       name: _nameController.text.trim(),
       type: _selectedType,
       x: widget.initialRoom?.x ?? 4.0,
@@ -127,7 +139,9 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFF8C00).withValues(alpha: 0.15),
+                          color: const Color(
+                            0xFFFF8C00,
+                          ).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
@@ -143,7 +157,9 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : const Color(0xFF1E3A5F),
+                            color: isDark
+                                ? Colors.white
+                                : const Color(0xFF1E3A5F),
                           ),
                         ),
                       ),
@@ -171,8 +187,12 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
                             selectedColor: const Color(0xFFFF8C00),
                             labelStyle: TextStyle(
                               fontSize: 12,
-                              fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                              color: isSel ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                              fontWeight: isSel
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              color: isSel
+                                  ? Colors.white
+                                  : (isDark ? Colors.white70 : Colors.black87),
                             ),
                             onSelected: (_) => _onTypeChanged(type),
                           ),
@@ -187,8 +207,13 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
                     controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'Room Name',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
                     ),
                     validator: (val) {
                       if (val == null || val.trim().isEmpty) {
@@ -205,11 +230,18 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
                       Expanded(
                         child: TextFormField(
                           controller: _widthController,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
                           decoration: InputDecoration(
                             labelText: 'Width (${widget.unit.symbol})',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
                           ),
                           validator: (val) {
                             final num = double.tryParse(val ?? '');
@@ -227,11 +259,18 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
                       Expanded(
                         child: TextFormField(
                           controller: _lengthController,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
                           decoration: InputDecoration(
                             labelText: 'Length (${widget.unit.symbol})',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
                           ),
                           validator: (val) {
                             final num = double.tryParse(val ?? '');
@@ -259,7 +298,8 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
                     spacing: 8,
                     runSpacing: 8,
                     children: _availableColors.map((color) {
-                      final isSel = color.toARGB32() == _selectedColor.toARGB32();
+                      final isSel =
+                          color.toARGB32() == _selectedColor.toARGB32();
                       return InkWell(
                         onTap: () => setState(() => _selectedColor = color),
                         borderRadius: BorderRadius.circular(20),
@@ -270,12 +310,18 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
                             color: color,
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: isSel ? const Color(0xFFFF8C00) : Colors.black26,
+                              color: isSel
+                                  ? const Color(0xFFFF8C00)
+                                  : Colors.black26,
                               width: isSel ? 2.5 : 1.0,
                             ),
                           ),
                           child: isSel
-                              ? const Icon(Icons.check, size: 16, color: Color(0xFFFF8C00))
+                              ? const Icon(
+                                  Icons.check,
+                                  size: 16,
+                                  color: Color(0xFFFF8C00),
+                                )
                               : null,
                         ),
                       );
@@ -297,7 +343,9 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
                         style: FilledButton.styleFrom(
                           backgroundColor: const Color(0xFFFF8C00),
                           foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         child: Text(isEditing ? 'Save Changes' : 'Add Room'),
                       ),
@@ -312,4 +360,3 @@ class _RoomEditDialogState extends State<RoomEditDialog> {
     );
   }
 }
-

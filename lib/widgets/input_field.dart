@@ -51,7 +51,9 @@ class InputField extends StatelessWidget {
         const SizedBox(height: 8),
         TextField(
           controller: controller,
-          keyboardType: keyboardType ?? const TextInputType.numberWithOptions(decimal: true),
+          keyboardType:
+              keyboardType ??
+              const TextInputType.numberWithOptions(decimal: true),
           onChanged: onChanged,
           readOnly: readOnly,
           onTap: onTap,
@@ -74,13 +76,18 @@ class InputField extends StatelessWidget {
             prefixIcon: prefixIcon != null
                 ? Icon(
                     prefixIcon,
-                    color: isDark ? const Color(0xFFFFA726) : const Color(0xFF1E3A5F),
+                    color: isDark
+                        ? const Color(0xFFFFA726)
+                        : const Color(0xFF1E3A5F),
                     size: 20,
                   )
                 : null,
             suffix: suffix != null
                 ? Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.08)
@@ -90,7 +97,9 @@ class InputField extends StatelessWidget {
                     child: Text(
                       suffix!,
                       style: TextStyle(
-                        color: isDark ? const Color(0xFFFFA726) : const Color(0xFF1E3A5F),
+                        color: isDark
+                            ? const Color(0xFFFFA726)
+                            : const Color(0xFF1E3A5F),
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       ),

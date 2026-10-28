@@ -16,7 +16,8 @@ class ElevationConfigSheet extends StatefulWidget {
   State<ElevationConfigSheet> createState() => _ElevationConfigSheetState();
 }
 
-class _ElevationConfigSheetState extends State<ElevationConfigSheet> with SingleTickerProviderStateMixin {
+class _ElevationConfigSheetState extends State<ElevationConfigSheet>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late ElevationConfig _current;
 
@@ -72,7 +73,11 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               child: Row(
                 children: [
-                  const Icon(Icons.tune_rounded, color: Color(0xFFFF8C00), size: 20),
+                  const Icon(
+                    Icons.tune_rounded,
+                    color: Color(0xFFFF8C00),
+                    size: 20,
+                  ),
                   const SizedBox(width: 8),
                   const Text(
                     'Customize Facade Concept',
@@ -96,7 +101,10 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
               unselectedLabelColor: Colors.grey,
               indicatorColor: const Color(0xFFFF8C00),
               indicatorSize: TabBarIndicatorSize.label,
-              labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              labelStyle: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
               tabs: const [
                 Tab(text: 'Style'),
                 Tab(text: 'Floors & Roof'),
@@ -131,7 +139,9 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFFFF8C00),
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   icon: const Icon(Icons.check_rounded, size: 18),
                   label: const Text('Apply Changes'),
@@ -161,7 +171,9 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
             child: Material(
               color: isSelected
                   ? const Color(0xFFFF8C00).withValues(alpha: 0.12)
-                  : (isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC)),
+                  : (isDark
+                        ? const Color(0xFF0F172A)
+                        : const Color(0xFFF8FAFC)),
               borderRadius: BorderRadius.circular(14),
               child: InkWell(
                 onTap: () {
@@ -169,10 +181,10 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                   final palette = style == ElevationStyle.traditional
                       ? ElevationColorPalette.warmTerracotta
                       : style == ElevationStyle.minimalist
-                          ? ElevationColorPalette.minimalistMonochrome
-                          : style == ElevationStyle.contemporary
-                              ? ElevationColorPalette.contemporarySlate
-                              : ElevationColorPalette.modernIvoryWood;
+                      ? ElevationColorPalette.minimalistMonochrome
+                      : style == ElevationStyle.contemporary
+                      ? ElevationColorPalette.contemporarySlate
+                      : ElevationColorPalette.modernIvoryWood;
 
                   _update(
                     _current.copyWith(
@@ -181,8 +193,12 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                       accentColor: palette.accent,
                       trimColor: palette.trim,
                       glassColor: palette.glass,
-                      roofStyle: style == ElevationStyle.traditional ? RoofStyle.pitchedTile : RoofStyle.flatParapet,
-                      finishPreset: style == ElevationStyle.traditional ? FinishPreset.exposedBrick : FinishPreset.smoothPlaster,
+                      roofStyle: style == ElevationStyle.traditional
+                          ? RoofStyle.pitchedTile
+                          : RoofStyle.flatParapet,
+                      finishPreset: style == ElevationStyle.traditional
+                          ? FinishPreset.exposedBrick
+                          : FinishPreset.smoothPlaster,
                     ),
                   );
                 },
@@ -192,7 +208,9 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
-                      color: isSelected ? const Color(0xFFFF8C00) : (isDark ? Colors.white12 : Colors.grey.shade200),
+                      color: isSelected
+                          ? const Color(0xFFFF8C00)
+                          : (isDark ? Colors.white12 : Colors.grey.shade200),
                       width: isSelected ? 1.8 : 1.0,
                     ),
                   ),
@@ -201,12 +219,16 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFFFF8C00) : Colors.grey.withValues(alpha: 0.2),
+                          color: isSelected
+                              ? const Color(0xFFFF8C00)
+                              : Colors.grey.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
                           style.icon,
-                          color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                          color: isSelected
+                              ? Colors.white
+                              : (isDark ? Colors.white70 : Colors.black87),
                           size: 20,
                         ),
                       ),
@@ -220,7 +242,9 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
-                                color: isSelected ? const Color(0xFFFF8C00) : null,
+                                color: isSelected
+                                    ? const Color(0xFFFF8C00)
+                                    : null,
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -228,14 +252,20 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                               style.description,
                               style: TextStyle(
                                 fontSize: 11,
-                                color: isDark ? Colors.white60 : Colors.grey.shade600,
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey.shade600,
                               ),
                             ),
                           ],
                         ),
                       ),
                       if (isSelected)
-                        const Icon(Icons.check_circle_rounded, color: Color(0xFFFF8C00), size: 20),
+                        const Icon(
+                          Icons.check_circle_rounded,
+                          color: Color(0xFFFF8C00),
+                          size: 20,
+                        ),
                     ],
                   ),
                 ),
@@ -260,7 +290,13 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
         Row(
           children: [1, 2, 3, 4].map((count) {
             final isSelected = _current.floorCount == count;
-            final label = count == 1 ? 'G (1)' : count == 2 ? 'G+1 (2)' : count == 3 ? 'G+2 (3)' : 'G+3 (4)';
+            final label = count == 1
+                ? 'G (1)'
+                : count == 2
+                ? 'G+1 (2)'
+                : count == 3
+                ? 'G+2 (3)'
+                : 'G+3 (4)';
             return Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 3),
@@ -292,7 +328,11 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
           children: RoofStyle.values.map((r) {
             final isSelected = _current.roofStyle == r;
             return ChoiceChip(
-              avatar: Icon(r.icon, size: 16, color: isSelected ? Colors.white : null),
+              avatar: Icon(
+                r.icon,
+                size: 16,
+                color: isSelected ? Colors.white : null,
+              ),
               label: Text(r.label, style: const TextStyle(fontSize: 11)),
               selected: isSelected,
               selectedColor: const Color(0xFFFF8C00),
@@ -310,19 +350,32 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
         ),
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
-          title: const Text('Covered Car Porch', style: TextStyle(fontSize: 13)),
-          subtitle: const Text('Include structural porch columns on ground level', style: TextStyle(fontSize: 11)),
+          title: const Text(
+            'Covered Car Porch',
+            style: TextStyle(fontSize: 13),
+          ),
+          subtitle: const Text(
+            'Include structural porch columns on ground level',
+            style: TextStyle(fontSize: 11),
+          ),
           value: _current.hasCarPorch,
           activeThumbColor: const Color(0xFFFF8C00),
           onChanged: (val) => _update(_current.copyWith(hasCarPorch: val)),
         ),
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
-          title: const Text('Entrance Portico Canopy', style: TextStyle(fontSize: 13)),
-          subtitle: const Text('Featured architectural canopy above entrance door', style: TextStyle(fontSize: 11)),
+          title: const Text(
+            'Entrance Portico Canopy',
+            style: TextStyle(fontSize: 13),
+          ),
+          subtitle: const Text(
+            'Featured architectural canopy above entrance door',
+            style: TextStyle(fontSize: 11),
+          ),
           value: _current.hasEntrancePortico,
           activeThumbColor: const Color(0xFFFF8C00),
-          onChanged: (val) => _update(_current.copyWith(hasEntrancePortico: val)),
+          onChanged: (val) =>
+              _update(_current.copyWith(hasEntrancePortico: val)),
         ),
       ],
     );
@@ -345,7 +398,9 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
             child: Material(
               color: isSelected
                   ? const Color(0xFFFF8C00).withValues(alpha: 0.12)
-                  : (isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC)),
+                  : (isDark
+                        ? const Color(0xFF0F172A)
+                        : const Color(0xFFF8FAFC)),
               borderRadius: BorderRadius.circular(14),
               child: InkWell(
                 onTap: () => _update(_current.copyWith(finishPreset: finish)),
@@ -355,7 +410,9 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
-                      color: isSelected ? const Color(0xFFFF8C00) : (isDark ? Colors.white12 : Colors.grey.shade200),
+                      color: isSelected
+                          ? const Color(0xFFFF8C00)
+                          : (isDark ? Colors.white12 : Colors.grey.shade200),
                       width: isSelected ? 1.8 : 1.0,
                     ),
                   ),
@@ -386,7 +443,9 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
-                                color: isSelected ? const Color(0xFFFF8C00) : null,
+                                color: isSelected
+                                    ? const Color(0xFFFF8C00)
+                                    : null,
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -394,14 +453,20 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                               finish.description,
                               style: TextStyle(
                                 fontSize: 11,
-                                color: isDark ? Colors.white60 : Colors.grey.shade600,
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey.shade600,
                               ),
                             ),
                           ],
                         ),
                       ),
                       if (isSelected)
-                        const Icon(Icons.check_circle_rounded, color: Color(0xFFFF8C00), size: 20),
+                        const Icon(
+                          Icons.check_circle_rounded,
+                          color: Color(0xFFFF8C00),
+                          size: 20,
+                        ),
                     ],
                   ),
                 ),
@@ -429,7 +494,11 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
           children: WindowStyle.values.map((w) {
             final isSelected = _current.windowStyle == w;
             return ChoiceChip(
-              avatar: Icon(w.icon, size: 16, color: isSelected ? Colors.white : null),
+              avatar: Icon(
+                w.icon,
+                size: 16,
+                color: isSelected ? Colors.white : null,
+              ),
               label: Text(w.label, style: const TextStyle(fontSize: 11)),
               selected: isSelected,
               selectedColor: const Color(0xFFFF8C00),
@@ -452,7 +521,11 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
           children: BalconyOption.values.map((b) {
             final isSelected = _current.balconyOption == b;
             return ChoiceChip(
-              avatar: Icon(b.icon, size: 16, color: isSelected ? Colors.white : null),
+              avatar: Icon(
+                b.icon,
+                size: 16,
+                color: isSelected ? Colors.white : null,
+              ),
               label: Text(b.label, style: const TextStyle(fontSize: 11)),
               selected: isSelected,
               selectedColor: const Color(0xFFFF8C00),
@@ -478,13 +551,17 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
         ),
         const SizedBox(height: 10),
         ...ElevationColorPalette.presets.map((palette) {
-          final isSelected = _current.primaryColor == palette.primary && _current.accentColor == palette.accent;
+          final isSelected =
+              _current.primaryColor == palette.primary &&
+              _current.accentColor == palette.accent;
           return Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Material(
               color: isSelected
                   ? const Color(0xFFFF8C00).withValues(alpha: 0.12)
-                  : (isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC)),
+                  : (isDark
+                        ? const Color(0xFF0F172A)
+                        : const Color(0xFFF8FAFC)),
               borderRadius: BorderRadius.circular(12),
               child: InkWell(
                 onTap: () {
@@ -499,11 +576,16 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                 },
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isSelected ? const Color(0xFFFF8C00) : (isDark ? Colors.white12 : Colors.grey.shade200),
+                      color: isSelected
+                          ? const Color(0xFFFF8C00)
+                          : (isDark ? Colors.white12 : Colors.grey.shade200),
                     ),
                   ),
                   child: Row(
@@ -523,13 +605,19 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
                           palette.name,
                           style: TextStyle(
                             fontSize: 12,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                             color: isSelected ? const Color(0xFFFF8C00) : null,
                           ),
                         ),
                       ),
                       if (isSelected)
-                        const Icon(Icons.check_circle_rounded, color: Color(0xFFFF8C00), size: 18),
+                        const Icon(
+                          Icons.check_circle_rounded,
+                          color: Color(0xFFFF8C00),
+                          size: 18,
+                        ),
                     ],
                   ),
                 ),
@@ -550,10 +638,7 @@ class _ElevationConfigSheetState extends State<ElevationConfigSheet> with Single
         shape: BoxShape.circle,
         border: Border.all(color: Colors.white, width: 1.5),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 2,
-          ),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 2),
         ],
       ),
     );

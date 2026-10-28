@@ -107,8 +107,8 @@ enum RoomType {
 enum PlanWallSide {
   north, // Top
   south, // Bottom
-  east,  // Right
-  west;  // Left
+  east, // Right
+  west; // Left
 
   String get label {
     switch (this) {
@@ -136,7 +136,8 @@ enum PlanWallSide {
     }
   }
 
-  bool get isHorizontal => this == PlanWallSide.north || this == PlanWallSide.south;
+  bool get isHorizontal =>
+      this == PlanWallSide.north || this == PlanWallSide.south;
   bool get isVertical => this == PlanWallSide.east || this == PlanWallSide.west;
 }
 
@@ -182,7 +183,8 @@ enum OpeningType {
       this == OpeningType.doubleDoor ||
       this == OpeningType.slidingDoor;
 
-  bool get isWindow => this == OpeningType.window || this == OpeningType.ventilation;
+  bool get isWindow =>
+      this == OpeningType.window || this == OpeningType.ventilation;
 
   IconData get icon {
     switch (this) {
@@ -244,32 +246,32 @@ class PlanOpening {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'roomId': roomId,
-        'wallSide': wallSide.name,
-        'type': type.name,
-        'offsetFeet': offsetFeet,
-        'widthFeet': widthFeet,
-        'swingInward': swingInward,
-        'flipSwing': flipSwing,
-      };
+    'id': id,
+    'roomId': roomId,
+    'wallSide': wallSide.name,
+    'type': type.name,
+    'offsetFeet': offsetFeet,
+    'widthFeet': widthFeet,
+    'swingInward': swingInward,
+    'flipSwing': flipSwing,
+  };
 
   factory PlanOpening.fromJson(Map<String, dynamic> json) => PlanOpening(
-        id: json['id'] as String,
-        roomId: json['roomId'] as String,
-        wallSide: PlanWallSide.values.firstWhere(
-          (e) => e.name == json['wallSide'],
-          orElse: () => PlanWallSide.north,
-        ),
-        type: OpeningType.values.firstWhere(
-          (e) => e.name == json['type'],
-          orElse: () => OpeningType.door,
-        ),
-        offsetFeet: (json['offsetFeet'] as num).toDouble(),
-        widthFeet: (json['widthFeet'] as num).toDouble(),
-        swingInward: json['swingInward'] as bool? ?? true,
-        flipSwing: json['flipSwing'] as bool? ?? false,
-      );
+    id: json['id'] as String,
+    roomId: json['roomId'] as String,
+    wallSide: PlanWallSide.values.firstWhere(
+      (e) => e.name == json['wallSide'],
+      orElse: () => PlanWallSide.north,
+    ),
+    type: OpeningType.values.firstWhere(
+      (e) => e.name == json['type'],
+      orElse: () => OpeningType.door,
+    ),
+    offsetFeet: (json['offsetFeet'] as num).toDouble(),
+    widthFeet: (json['widthFeet'] as num).toDouble(),
+    swingInward: json['swingInward'] as bool? ?? true,
+    flipSwing: json['flipSwing'] as bool? ?? false,
+  );
 }
 
 class PlanRoom {
@@ -330,35 +332,37 @@ class PlanRoom {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'type': type.name,
-        'x': x,
-        'y': y,
-        'width': width,
-        'length': length,
-        'colorValue': colorValue,
-        'openings': openings.map((o) => o.toJson()).toList(),
-      };
+    'id': id,
+    'name': name,
+    'type': type.name,
+    'x': x,
+    'y': y,
+    'width': width,
+    'length': length,
+    'colorValue': colorValue,
+    'openings': openings.map((o) => o.toJson()).toList(),
+  };
 
   factory PlanRoom.fromJson(Map<String, dynamic> json) => PlanRoom(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        type: RoomType.values.firstWhere(
-          (e) => e.name == json['type'],
-          orElse: () => RoomType.custom,
-        ),
-        x: (json['x'] as num).toDouble(),
-        y: (json['y'] as num).toDouble(),
-        width: (json['width'] as num).toDouble(),
-        length: (json['length'] as num).toDouble(),
-        colorValue: (json['colorValue'] as num?)?.toInt() ??
-            const Color(0xFFFAFAFA).toARGB32(),
-        openings: (json['openings'] as List<dynamic>?)
-                ?.map((o) => PlanOpening.fromJson(Map<String, dynamic>.from(o)))
-                .toList() ??
-            const [],
-      );
+    id: json['id'] as String,
+    name: json['name'] as String,
+    type: RoomType.values.firstWhere(
+      (e) => e.name == json['type'],
+      orElse: () => RoomType.custom,
+    ),
+    x: (json['x'] as num).toDouble(),
+    y: (json['y'] as num).toDouble(),
+    width: (json['width'] as num).toDouble(),
+    length: (json['length'] as num).toDouble(),
+    colorValue:
+        (json['colorValue'] as num?)?.toInt() ??
+        const Color(0xFFFAFAFA).toARGB32(),
+    openings:
+        (json['openings'] as List<dynamic>?)
+            ?.map((o) => PlanOpening.fromJson(Map<String, dynamic>.from(o)))
+            .toList() ??
+        const [],
+  );
 }
 
 class PlanWall {
@@ -387,24 +391,24 @@ class PlanWall {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'startX': startX,
-        'startY': startY,
-        'endX': endX,
-        'endY': endY,
-        'thicknessFeet': thicknessFeet,
-        'isExterior': isExterior,
-      };
+    'id': id,
+    'startX': startX,
+    'startY': startY,
+    'endX': endX,
+    'endY': endY,
+    'thicknessFeet': thicknessFeet,
+    'isExterior': isExterior,
+  };
 
   factory PlanWall.fromJson(Map<String, dynamic> json) => PlanWall(
-        id: json['id'] as String,
-        startX: (json['startX'] as num).toDouble(),
-        startY: (json['startY'] as num).toDouble(),
-        endX: (json['endX'] as num).toDouble(),
-        endY: (json['endY'] as num).toDouble(),
-        thicknessFeet: (json['thicknessFeet'] as num?)?.toDouble() ?? 0.75,
-        isExterior: json['isExterior'] as bool? ?? true,
-      );
+    id: json['id'] as String,
+    startX: (json['startX'] as num).toDouble(),
+    startY: (json['startY'] as num).toDouble(),
+    endX: (json['endX'] as num).toDouble(),
+    endY: (json['endY'] as num).toDouble(),
+    thicknessFeet: (json['thicknessFeet'] as num?)?.toDouble() ?? 0.75,
+    isExterior: json['isExterior'] as bool? ?? true,
+  );
 }
 
 class FloorPlan {
@@ -502,38 +506,39 @@ class FloorPlan {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'plotWidthFeet': plotWidthFeet,
-        'plotLengthFeet': plotLengthFeet,
-        'unit': unit.name,
-        'layoutType': layoutType,
-        'rooms': rooms.map((r) => r.toJson()).toList(),
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'gridSnap': gridSnap,
-        'snapStepFeet': snapStepFeet,
-      };
+    'id': id,
+    'name': name,
+    'plotWidthFeet': plotWidthFeet,
+    'plotLengthFeet': plotLengthFeet,
+    'unit': unit.name,
+    'layoutType': layoutType,
+    'rooms': rooms.map((r) => r.toJson()).toList(),
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'gridSnap': gridSnap,
+    'snapStepFeet': snapStepFeet,
+  };
 
   factory FloorPlan.fromJson(Map<String, dynamic> json) => FloorPlan(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        plotWidthFeet: (json['plotWidthFeet'] as num).toDouble(),
-        plotLengthFeet: (json['plotLengthFeet'] as num).toDouble(),
-        unit: PlanUnit.values.firstWhere(
-          (e) => e.name == json['unit'],
-          orElse: () => PlanUnit.feet,
-        ),
-        layoutType: json['layoutType'] as String? ?? 'Custom',
-        rooms: (json['rooms'] as List<dynamic>?)
-                ?.map((r) => PlanRoom.fromJson(Map<String, dynamic>.from(r)))
-                .toList() ??
-            const [],
-        createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ??
-            DateTime.now(),
-        updatedAt: DateTime.tryParse(json['updatedAt'] as String? ?? '') ??
-            DateTime.now(),
-        gridSnap: json['gridSnap'] as bool? ?? true,
-        snapStepFeet: (json['snapStepFeet'] as num?)?.toDouble() ?? 0.5,
-      );
+    id: json['id'] as String,
+    name: json['name'] as String,
+    plotWidthFeet: (json['plotWidthFeet'] as num).toDouble(),
+    plotLengthFeet: (json['plotLengthFeet'] as num).toDouble(),
+    unit: PlanUnit.values.firstWhere(
+      (e) => e.name == json['unit'],
+      orElse: () => PlanUnit.feet,
+    ),
+    layoutType: json['layoutType'] as String? ?? 'Custom',
+    rooms:
+        (json['rooms'] as List<dynamic>?)
+            ?.map((r) => PlanRoom.fromJson(Map<String, dynamic>.from(r)))
+            .toList() ??
+        const [],
+    createdAt:
+        DateTime.tryParse(json['createdAt'] as String? ?? '') ?? DateTime.now(),
+    updatedAt:
+        DateTime.tryParse(json['updatedAt'] as String? ?? '') ?? DateTime.now(),
+    gridSnap: json['gridSnap'] as bool? ?? true,
+    snapStepFeet: (json['snapStepFeet'] as num?)?.toDouble() ?? 0.5,
+  );
 }

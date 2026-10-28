@@ -23,7 +23,8 @@ class PlanTemplates {
   ];
 
   /// Curated ready-made templates
-  static List<ReadyMadePlanTemplate> get readyMadeTemplates => ReadyMadePlanCatalog.templates;
+  static List<ReadyMadePlanTemplate> get readyMadeTemplates =>
+      ReadyMadePlanCatalog.templates;
 
   /// Get recommended default plot size (in feet) for template
   static Size getDefaultPlotSize(String layoutType) {
@@ -76,7 +77,11 @@ class PlanTemplates {
     }
 
     // Adapt / center rooms neatly into the target plot dimensions
-    final fittedRooms = _fitRoomsToPlot(rawRooms, plotWidthFeet, plotLengthFeet);
+    final fittedRooms = _fitRoomsToPlot(
+      rawRooms,
+      plotWidthFeet,
+      plotLengthFeet,
+    );
 
     return FloorPlan(
       id: planId,
@@ -954,7 +959,9 @@ class PlanTemplates {
         final wallLen = op.wallSide.isHorizontal ? newW : newL;
         final maxOpW = math.max<double>(1.5, wallLen - 0.4);
         final opW = math.min<double>(op.widthFeet * scale, maxOpW);
-        final opOffset = (op.offsetFeet * scale).clamp(0.0, math.max<double>(0.0, wallLen - opW)).toDouble();
+        final opOffset = (op.offsetFeet * scale)
+            .clamp(0.0, math.max<double>(0.0, wallLen - opW))
+            .toDouble();
         return op.copyWith(offsetFeet: opOffset, widthFeet: opW);
       }).toList();
 

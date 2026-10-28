@@ -44,7 +44,11 @@ class PlanGeometry {
   }
 
   /// Check whether a room is within plot boundaries
-  static bool isRoomWithinPlot(PlanRoom room, double plotWidth, double plotLength) {
+  static bool isRoomWithinPlot(
+    PlanRoom room,
+    double plotWidth,
+    double plotLength,
+  ) {
     if (room.x < 0 || room.y < 0) return false;
     if (room.x + room.width > plotWidth + 0.01) return false;
     if (room.y + room.length > plotLength + 0.01) return false;
@@ -58,8 +62,12 @@ class PlanGeometry {
     double plotLength, {
     double minDim = minRoomDimensionFeet,
   }) {
-    final w = room.width.clamp(minDim, math.max<double>(minDim, plotWidth)).toDouble();
-    final l = room.length.clamp(minDim, math.max<double>(minDim, plotLength)).toDouble();
+    final w = room.width
+        .clamp(minDim, math.max<double>(minDim, plotWidth))
+        .toDouble();
+    final l = room.length
+        .clamp(minDim, math.max<double>(minDim, plotLength))
+        .toDouble();
     final maxX = math.max<double>(0.0, plotWidth - w);
     final maxY = math.max<double>(0.0, plotLength - l);
     final x = room.x.clamp(0.0, maxX).toDouble();
@@ -198,7 +206,11 @@ class PlanGeometry {
   }
 
   /// Calculate world-space segment for an opening on a room's wall
-  static Rect getOpeningRect(PlanRoom room, PlanOpening opening, {double thicknessFeet = 0.8}) {
+  static Rect getOpeningRect(
+    PlanRoom room,
+    PlanOpening opening, {
+    double thicknessFeet = 0.8,
+  }) {
     final r = room.rect;
     final halfThick = thicknessFeet / 2;
 
@@ -258,7 +270,9 @@ class PlanGeometry {
   /// Clamps opening offset and width so it fits safely along its designated wall
   static PlanOpening clampOpening(PlanOpening opening, PlanRoom room) {
     final wallLen = room.wallLength(opening.wallSide);
-    final w = opening.widthFeet.clamp(1.5, math.max<double>(1.5, wallLen - 0.2)).toDouble();
+    final w = opening.widthFeet
+        .clamp(1.5, math.max<double>(1.5, wallLen - 0.2))
+        .toDouble();
     final maxOffset = math.max<double>(0.0, wallLen - w);
     final offset = opening.offsetFeet.clamp(0.0, maxOffset).toDouble();
 
@@ -274,37 +288,45 @@ class PlanGeometry {
       final r = room.rect;
 
       // North wall
-      walls.add(PlanWall(
-        id: 'wall_${wallId++}',
-        startX: r.left,
-        startY: r.top,
-        endX: r.right,
-        endY: r.top,
-      ));
+      walls.add(
+        PlanWall(
+          id: 'wall_${wallId++}',
+          startX: r.left,
+          startY: r.top,
+          endX: r.right,
+          endY: r.top,
+        ),
+      );
       // South wall
-      walls.add(PlanWall(
-        id: 'wall_${wallId++}',
-        startX: r.left,
-        startY: r.bottom,
-        endX: r.right,
-        endY: r.bottom,
-      ));
+      walls.add(
+        PlanWall(
+          id: 'wall_${wallId++}',
+          startX: r.left,
+          startY: r.bottom,
+          endX: r.right,
+          endY: r.bottom,
+        ),
+      );
       // West wall
-      walls.add(PlanWall(
-        id: 'wall_${wallId++}',
-        startX: r.left,
-        startY: r.top,
-        endX: r.left,
-        endY: r.bottom,
-      ));
+      walls.add(
+        PlanWall(
+          id: 'wall_${wallId++}',
+          startX: r.left,
+          startY: r.top,
+          endX: r.left,
+          endY: r.bottom,
+        ),
+      );
       // East wall
-      walls.add(PlanWall(
-        id: 'wall_${wallId++}',
-        startX: r.right,
-        startY: r.top,
-        endX: r.right,
-        endY: r.bottom,
-      ));
+      walls.add(
+        PlanWall(
+          id: 'wall_${wallId++}',
+          startX: r.right,
+          startY: r.top,
+          endX: r.right,
+          endY: r.bottom,
+        ),
+      );
     }
 
     return walls;

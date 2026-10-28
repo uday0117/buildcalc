@@ -125,8 +125,8 @@ class MaterialSelectionSheet extends StatelessWidget {
                   mode == CutawayMode.full
                       ? 'Full 10ft'
                       : mode == CutawayMode.dollhouse
-                          ? 'Cutaway 4ft'
-                          : 'Slab 0.5ft',
+                      ? 'Cutaway 4ft'
+                      : 'Slab 0.5ft',
                   style: const TextStyle(fontSize: 11),
                 ),
               );
@@ -166,14 +166,16 @@ class MaterialSelectionSheet extends StatelessWidget {
                     width: 100,
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF0F172A) : Colors.grey.shade50,
+                      color: isDark
+                          ? const Color(0xFF0F172A)
+                          : Colors.grey.shade50,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isSelected
                             ? const Color(0xFFFF8C00)
                             : isDark
-                                ? Colors.white10
-                                : Colors.grey.shade300,
+                            ? Colors.white10
+                            : Colors.grey.shade300,
                         width: isSelected ? 2 : 1,
                       ),
                     ),
@@ -208,7 +210,9 @@ class MaterialSelectionSheet extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 10,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -248,14 +252,16 @@ class MaterialSelectionSheet extends StatelessWidget {
                     width: 100,
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF0F172A) : Colors.grey.shade50,
+                      color: isDark
+                          ? const Color(0xFF0F172A)
+                          : Colors.grey.shade50,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isSelected
                             ? const Color(0xFFFF8C00)
                             : isDark
-                                ? Colors.white10
-                                : Colors.grey.shade300,
+                            ? Colors.white10
+                            : Colors.grey.shade300,
                         width: isSelected ? 2 : 1,
                       ),
                     ),
@@ -290,7 +296,9 @@ class MaterialSelectionSheet extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 10,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -306,7 +314,10 @@ class MaterialSelectionSheet extends StatelessWidget {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             dense: true,
-            title: const Text('Show 3D Room Badges & Dimensions', style: TextStyle(fontSize: 13)),
+            title: const Text(
+              'Show 3D Room Badges & Dimensions',
+              style: TextStyle(fontSize: 13),
+            ),
             value: showRoomLabels,
             activeTrackColor: const Color(0xFFFF8C00),
             onChanged: onToggleRoomLabels,

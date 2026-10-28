@@ -89,7 +89,9 @@ class PlanThumbnailPainter extends CustomPainter {
 
     // 1. Draw subtle architectural grid in background
     final gridPaint = Paint()
-      ..color = (isDark ? Colors.white : const Color(0xFF1E3A5F)).withValues(alpha: 0.05)
+      ..color = (isDark ? Colors.white : const Color(0xFF1E3A5F)).withValues(
+        alpha: 0.05,
+      )
       ..strokeWidth = 1.0;
 
     const gridSpacing = 16.0;
@@ -115,24 +117,60 @@ class PlanThumbnailPainter extends CustomPainter {
       ..strokeWidth = 2.0;
     const tLen = 6.0;
     // Top-left
-    canvas.drawLine(Offset(originX - 2, originY), Offset(originX + tLen, originY), tickPaint);
-    canvas.drawLine(Offset(originX, originY - 2), Offset(originX, originY + tLen), tickPaint);
+    canvas.drawLine(
+      Offset(originX - 2, originY),
+      Offset(originX + tLen, originY),
+      tickPaint,
+    );
+    canvas.drawLine(
+      Offset(originX, originY - 2),
+      Offset(originX, originY + tLen),
+      tickPaint,
+    );
     // Top-right
-    canvas.drawLine(Offset(originX + plotPixelW + 2, originY), Offset(originX + plotPixelW - tLen, originY), tickPaint);
-    canvas.drawLine(Offset(originX + plotPixelW, originY - 2), Offset(originX + plotPixelW, originY + tLen), tickPaint);
+    canvas.drawLine(
+      Offset(originX + plotPixelW + 2, originY),
+      Offset(originX + plotPixelW - tLen, originY),
+      tickPaint,
+    );
+    canvas.drawLine(
+      Offset(originX + plotPixelW, originY - 2),
+      Offset(originX + plotPixelW, originY + tLen),
+      tickPaint,
+    );
     // Bottom-left
-    canvas.drawLine(Offset(originX - 2, originY + plotPixelH), Offset(originX + tLen, originY + plotPixelH), tickPaint);
-    canvas.drawLine(Offset(originX, originY + plotPixelH + 2), Offset(originX, originY + plotPixelH - tLen), tickPaint);
+    canvas.drawLine(
+      Offset(originX - 2, originY + plotPixelH),
+      Offset(originX + tLen, originY + plotPixelH),
+      tickPaint,
+    );
+    canvas.drawLine(
+      Offset(originX, originY + plotPixelH + 2),
+      Offset(originX, originY + plotPixelH - tLen),
+      tickPaint,
+    );
     // Bottom-right
-    canvas.drawLine(Offset(originX + plotPixelW + 2, originY + plotPixelH), Offset(originX + plotPixelW - tLen, originY + plotPixelH), tickPaint);
-    canvas.drawLine(Offset(originX + plotPixelW, originY + plotPixelH + 2), Offset(originX + plotPixelW, originY + plotPixelH - tLen), tickPaint);
+    canvas.drawLine(
+      Offset(originX + plotPixelW + 2, originY + plotPixelH),
+      Offset(originX + plotPixelW - tLen, originY + plotPixelH),
+      tickPaint,
+    );
+    canvas.drawLine(
+      Offset(originX + plotPixelW, originY + plotPixelH + 2),
+      Offset(originX + plotPixelW, originY + plotPixelH - tLen),
+      tickPaint,
+    );
 
     // 3. Draw Setback envelope if specified
-    if (sideSetbackFeet != null && frontSetbackFeet != null && rearSetbackFeet != null) {
+    if (sideSetbackFeet != null &&
+        frontSetbackFeet != null &&
+        rearSetbackFeet != null) {
       final sbLeft = originX + (sideSetbackFeet! * scale);
       final sbTop = originY + (frontSetbackFeet! * scale);
       final sbWidth = (plan.plotWidthFeet - (sideSetbackFeet! * 2)) * scale;
-      final sbHeight = (plan.plotLengthFeet - (frontSetbackFeet! + rearSetbackFeet!)) * scale;
+      final sbHeight =
+          (plan.plotLengthFeet - (frontSetbackFeet! + rearSetbackFeet!)) *
+          scale;
 
       if (sbWidth > 0 && sbHeight > 0) {
         final sbRect = Rect.fromLTWH(sbLeft, sbTop, sbWidth, sbHeight);
@@ -147,7 +185,9 @@ class PlanThumbnailPainter extends CustomPainter {
 
     // 4. Draw Rooms
     final wallPaint = Paint()
-      ..color = (isDark ? Colors.white.withValues(alpha: 0.87) : const Color(0xFF1E293B))
+      ..color = (isDark
+          ? Colors.white.withValues(alpha: 0.87)
+          : const Color(0xFF1E293B))
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.8;
 
@@ -181,7 +221,9 @@ class PlanThumbnailPainter extends CustomPainter {
         );
 
         final textSpan = TextSpan(
-          text: room.name.length > 12 ? '${room.name.substring(0, 10)}..' : room.name,
+          text: room.name.length > 12
+              ? '${room.name.substring(0, 10)}..'
+              : room.name,
           style: textStyle,
         );
         final tp = TextPainter(
@@ -216,7 +258,9 @@ class PlanThumbnailPainter extends CustomPainter {
     final opWidth = op.widthFeet * scale;
 
     final openingPaint = Paint()
-      ..color = op.type.isDoor ? const Color(0xFFFF8C00) : const Color(0xFF0284C7)
+      ..color = op.type.isDoor
+          ? const Color(0xFFFF8C00)
+          : const Color(0xFF0284C7)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
@@ -256,18 +300,45 @@ class PlanThumbnailPainter extends CustomPainter {
     canvas.drawLine(Offset(x1, y1), Offset(x2, y2), openingPaint);
   }
 
-  void _drawDashedRect(Canvas canvas, Rect rect, Paint paint, double dashW, double gapW) {
+  void _drawDashedRect(
+    Canvas canvas,
+    Rect rect,
+    Paint paint,
+    double dashW,
+    double gapW,
+  ) {
     // Top
     _drawDashedLine(canvas, rect.topLeft, rect.topRight, paint, dashW, gapW);
     // Right
-    _drawDashedLine(canvas, rect.topRight, rect.bottomRight, paint, dashW, gapW);
+    _drawDashedLine(
+      canvas,
+      rect.topRight,
+      rect.bottomRight,
+      paint,
+      dashW,
+      gapW,
+    );
     // Bottom
-    _drawDashedLine(canvas, rect.bottomRight, rect.bottomLeft, paint, dashW, gapW);
+    _drawDashedLine(
+      canvas,
+      rect.bottomRight,
+      rect.bottomLeft,
+      paint,
+      dashW,
+      gapW,
+    );
     // Left
     _drawDashedLine(canvas, rect.bottomLeft, rect.topLeft, paint, dashW, gapW);
   }
 
-  void _drawDashedLine(Canvas canvas, Offset p1, Offset p2, Paint paint, double dash, double gap) {
+  void _drawDashedLine(
+    Canvas canvas,
+    Offset p1,
+    Offset p2,
+    Paint paint,
+    double dash,
+    double gap,
+  ) {
     final dx = p2.dx - p1.dx;
     final dy = p2.dy - p1.dy;
     final totalLen = math.sqrt(dx * dx + dy * dy);

@@ -91,21 +91,44 @@ class _ExcavationPainter extends CustomPainter {
       ..color = strokeColor
       ..strokeWidth = 2.0;
 
-    canvas.drawLine(Offset(padLeft - 15, groundY), Offset(pitLeft, groundY), groundPaint);
-    canvas.drawLine(Offset(pitRight, groundY), Offset(size.width - padRight + 20, groundY), groundPaint);
+    canvas.drawLine(
+      Offset(padLeft - 15, groundY),
+      Offset(pitLeft, groundY),
+      groundPaint,
+    );
+    canvas.drawLine(
+      Offset(pitRight, groundY),
+      Offset(size.width - padRight + 20, groundY),
+      groundPaint,
+    );
 
     // Natural ground hatching on the left & right
     final hatchPaint = Paint()
       ..color = strokeColor.withValues(alpha: 0.4)
       ..strokeWidth = 1.0;
     for (double x = padLeft - 10; x < pitLeft - 5; x += 10) {
-      canvas.drawLine(Offset(x, groundY), Offset(x - 6, groundY + 10), hatchPaint);
+      canvas.drawLine(
+        Offset(x, groundY),
+        Offset(x - 6, groundY + 10),
+        hatchPaint,
+      );
     }
     for (double x = pitRight + 8; x < size.width - padRight + 15; x += 10) {
-      canvas.drawLine(Offset(x, groundY), Offset(x - 6, groundY + 10), hatchPaint);
+      canvas.drawLine(
+        Offset(x, groundY),
+        Offset(x - 6, groundY + 10),
+        hatchPaint,
+      );
     }
 
-    _drawText(canvas, 'NGL', Offset(padLeft + 4, groundY - 10), textColor, fontSize: 10, isBold: true);
+    _drawText(
+      canvas,
+      'NGL',
+      Offset(padLeft + 4, groundY - 10),
+      textColor,
+      fontSize: 10,
+      isBold: true,
+    );
 
     // Trench / Pit excavated contour
     final pitRect = Rect.fromLTRB(pitLeft, groundY, pitRight, pitBottomY);
@@ -120,7 +143,10 @@ class _ExcavationPainter extends CustomPainter {
 
     // Inner concrete foundation block
     final workingSpaceRatio = input.workingSpace > 0
-        ? (input.workingSpace / (input.width + (2 * input.workingSpace))).clamp(0.08, 0.25)
+        ? (input.workingSpace / (input.width + (2 * input.workingSpace))).clamp(
+            0.08,
+            0.25,
+          )
         : 0.12;
 
     final wsWidthPx = pitWidth * workingSpaceRatio;
@@ -130,14 +156,29 @@ class _ExcavationPainter extends CustomPainter {
     final footingTop = pitBottomY - footingHeightPx;
 
     // Backfill zones on the sides
-    final leftBackfill = Rect.fromLTRB(pitLeft, footingTop, footingLeft, pitBottomY);
-    final rightBackfill = Rect.fromLTRB(footingRight, footingTop, pitRight, pitBottomY);
+    final leftBackfill = Rect.fromLTRB(
+      pitLeft,
+      footingTop,
+      footingLeft,
+      pitBottomY,
+    );
+    final rightBackfill = Rect.fromLTRB(
+      footingRight,
+      footingTop,
+      pitRight,
+      pitBottomY,
+    );
     final backfillPaint = Paint()..color = backfillColor;
     canvas.drawRect(leftBackfill, backfillPaint);
     canvas.drawRect(rightBackfill, backfillPaint);
 
     // Draw concrete footing
-    final footingRect = Rect.fromLTRB(footingLeft, footingTop, footingRight, pitBottomY);
+    final footingRect = Rect.fromLTRB(
+      footingLeft,
+      footingTop,
+      footingRight,
+      pitBottomY,
+    );
     final concretePaint = Paint()..color = concreteColor;
     canvas.drawRect(footingRect, concretePaint);
     canvas.drawRect(footingRect, borderPaint);
@@ -151,18 +192,54 @@ class _ExcavationPainter extends CustomPainter {
     canvas.drawRect(colRect, borderPaint);
 
     // Text labels on structure
-    _drawText(canvas, 'Footing', Offset((footingLeft + footingRight) / 2, footingTop + (footingHeightPx / 2)), Colors.white, fontSize: 10, isBold: true);
-    _drawText(canvas, 'Backfill', Offset(pitLeft + (wsWidthPx / 2), footingTop + (footingHeightPx / 2)), textColor, fontSize: 8);
-    _drawText(canvas, 'Backfill', Offset(pitRight - (wsWidthPx / 2), footingTop + (footingHeightPx / 2)), textColor, fontSize: 8);
+    _drawText(
+      canvas,
+      'Footing',
+      Offset(
+        (footingLeft + footingRight) / 2,
+        footingTop + (footingHeightPx / 2),
+      ),
+      Colors.white,
+      fontSize: 10,
+      isBold: true,
+    );
+    _drawText(
+      canvas,
+      'Backfill',
+      Offset(pitLeft + (wsWidthPx / 2), footingTop + (footingHeightPx / 2)),
+      textColor,
+      fontSize: 8,
+    );
+    _drawText(
+      canvas,
+      'Backfill',
+      Offset(pitRight - (wsWidthPx / 2), footingTop + (footingHeightPx / 2)),
+      textColor,
+      fontSize: 8,
+    );
 
     // Dimension: Depth D on right
     final dimDepthX = pitRight + 14.0;
     final dimPaint = Paint()
       ..color = accentColor
       ..strokeWidth = 1.5;
-    canvas.drawLine(Offset(dimDepthX, groundY), Offset(dimDepthX, pitBottomY), dimPaint);
-    _drawArrow(canvas, Offset(dimDepthX, groundY), const Offset(0, 1), dimPaint);
-    _drawArrow(canvas, Offset(dimDepthX, pitBottomY), const Offset(0, -1), dimPaint);
+    canvas.drawLine(
+      Offset(dimDepthX, groundY),
+      Offset(dimDepthX, pitBottomY),
+      dimPaint,
+    );
+    _drawArrow(
+      canvas,
+      Offset(dimDepthX, groundY),
+      const Offset(0, 1),
+      dimPaint,
+    );
+    _drawArrow(
+      canvas,
+      Offset(dimDepthX, pitBottomY),
+      const Offset(0, -1),
+      dimPaint,
+    );
     _drawText(
       canvas,
       'D = ${input.depth.toStringAsFixed(2)}m',
@@ -173,9 +250,23 @@ class _ExcavationPainter extends CustomPainter {
 
     // Dimension: Width at bottom
     final dimWidthY = pitBottomY + 14.0;
-    canvas.drawLine(Offset(pitLeft, dimWidthY), Offset(pitRight, dimWidthY), dimPaint);
-    _drawArrow(canvas, Offset(pitLeft, dimWidthY), const Offset(1, 0), dimPaint);
-    _drawArrow(canvas, Offset(pitRight, dimWidthY), const Offset(-1, 0), dimPaint);
+    canvas.drawLine(
+      Offset(pitLeft, dimWidthY),
+      Offset(pitRight, dimWidthY),
+      dimPaint,
+    );
+    _drawArrow(
+      canvas,
+      Offset(pitLeft, dimWidthY),
+      const Offset(1, 0),
+      dimPaint,
+    );
+    _drawArrow(
+      canvas,
+      Offset(pitRight, dimWidthY),
+      const Offset(-1, 0),
+      dimPaint,
+    );
     _drawText(
       canvas,
       'Total Width = ${result.effectiveWidthMeters.toStringAsFixed(2)}m',
@@ -241,4 +332,3 @@ class _ExcavationPainter extends CustomPainter {
         oldDelegate.isDark != isDark;
   }
 }
-

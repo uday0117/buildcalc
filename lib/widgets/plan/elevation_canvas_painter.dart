@@ -54,8 +54,18 @@ class ElevationCanvasPainter extends CustomPainter {
         plinthY,
         scale,
       );
-      _paintIllustrativeForeground(canvas, size, bldgLeftPx, bldgRightPx, groundY);
-      _paintWatermark(canvas, size, 'ILLUSTRATIVE DESIGN CONCEPT • NOT CONSTRUCTION-READY');
+      _paintIllustrativeForeground(
+        canvas,
+        size,
+        bldgLeftPx,
+        bldgRightPx,
+        groundY,
+      );
+      _paintWatermark(
+        canvas,
+        size,
+        'ILLUSTRATIVE DESIGN CONCEPT • NOT CONSTRUCTION-READY',
+      );
     } else {
       _paintDimensionedDraft(
         canvas,
@@ -67,7 +77,11 @@ class ElevationCanvasPainter extends CustomPainter {
         plinthY,
         scale,
       );
-      _paintWatermark(canvas, size, 'DIMENSIONED SCHEMATIC • FOR PRELIMINARY PLANNING ONLY');
+      _paintWatermark(
+        canvas,
+        size,
+        'DIMENSIONED SCHEMATIC • FOR PRELIMINARY PLANNING ONLY',
+      );
     }
   }
 
@@ -85,14 +99,20 @@ class ElevationCanvasPainter extends CustomPainter {
 
     // Ground lawn and earth
     final groundPaint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: isDark
-            ? [const Color(0xFF1B4332), const Color(0xFF081C15)]
-            : [const Color(0xFF86EFAC), const Color(0xFF4ADE80)],
-      ).createShader(Rect.fromLTWH(0, groundY, size.width, size.height - groundY));
-    canvas.drawRect(Rect.fromLTWH(0, groundY, size.width, size.height - groundY), groundPaint);
+      ..shader =
+          LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: isDark
+                ? [const Color(0xFF1B4332), const Color(0xFF081C15)]
+                : [const Color(0xFF86EFAC), const Color(0xFF4ADE80)],
+          ).createShader(
+            Rect.fromLTWH(0, groundY, size.width, size.height - groundY),
+          );
+    canvas.drawRect(
+      Rect.fromLTWH(0, groundY, size.width, size.height - groundY),
+      groundPaint,
+    );
 
     // Ground curb line
     final curbPaint = Paint()
@@ -115,20 +135,40 @@ class ElevationCanvasPainter extends CustomPainter {
 
     // 1. Plinth / Foundation Base
     final plinthPaint = Paint()..color = const Color(0xFF64748B);
-    final plinthRect = Rect.fromLTRB(bldgLeft - 8, plinthY, bldgRight + 8, groundY);
+    final plinthRect = Rect.fromLTRB(
+      bldgLeft - 8,
+      plinthY,
+      bldgRight + 8,
+      groundY,
+    );
     canvas.drawRect(plinthRect, plinthPaint);
 
     // Plinth stone lines
     final plinthDetailPaint = Paint()
       ..color = const Color(0xFF475569)
       ..strokeWidth = 1.0;
-    canvas.drawRect(plinthRect, Paint()..style = PaintingStyle.stroke..color = const Color(0xFF334155)..strokeWidth = 1.5);
+    canvas.drawRect(
+      plinthRect,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = const Color(0xFF334155)
+        ..strokeWidth = 1.5,
+    );
     final plinthMidY = (plinthY + groundY) / 2;
-    canvas.drawLine(Offset(bldgLeft - 8, plinthMidY), Offset(bldgRight + 8, plinthMidY), plinthDetailPaint);
+    canvas.drawLine(
+      Offset(bldgLeft - 8, plinthMidY),
+      Offset(bldgRight + 8, plinthMidY),
+      plinthDetailPaint,
+    );
 
     // 2. Main Wall Body for all floors
     final topOfUpperFloorY = plinthY - (floorCount * floorHeightPx);
-    final bodyRect = Rect.fromLTRB(bldgLeft, topOfUpperFloorY, bldgRight, plinthY);
+    final bodyRect = Rect.fromLTRB(
+      bldgLeft,
+      topOfUpperFloorY,
+      bldgRight,
+      plinthY,
+    );
 
     // Wall Paint with primary color
     final wallPaint = Paint()..color = config.primaryColor;
@@ -152,7 +192,12 @@ class ElevationCanvasPainter extends CustomPainter {
 
       // Floor slab line / cornice
       if (i < floorCount) {
-        final slabRect = Rect.fromLTRB(bldgLeft - 4, floorTopY - 4, bldgRight + 4, floorTopY + 2);
+        final slabRect = Rect.fromLTRB(
+          bldgLeft - 4,
+          floorTopY - 4,
+          bldgRight + 4,
+          floorTopY + 2,
+        );
         canvas.drawRect(slabRect, slabPaint);
       }
 
@@ -201,7 +246,11 @@ class ElevationCanvasPainter extends CustomPainter {
           ..strokeWidth = 1.0;
         final rowHeight = 6.0;
         for (double y = rect.top + rowHeight; y < rect.bottom; y += rowHeight) {
-          canvas.drawLine(Offset(rect.left, y), Offset(rect.right, y), brickPaint);
+          canvas.drawLine(
+            Offset(rect.left, y),
+            Offset(rect.right, y),
+            brickPaint,
+          );
         }
         break;
       case FinishPreset.teakWoodSlat:
@@ -210,7 +259,11 @@ class ElevationCanvasPainter extends CustomPainter {
           ..strokeWidth = 2.0;
         final rowHeight = 7.0;
         for (double y = rect.top + rowHeight; y < rect.bottom; y += rowHeight) {
-          canvas.drawLine(Offset(rect.left, y), Offset(rect.right, y), slatPaint);
+          canvas.drawLine(
+            Offset(rect.left, y),
+            Offset(rect.right, y),
+            slatPaint,
+          );
         }
         break;
       case FinishPreset.stoneVeneer:
@@ -218,12 +271,17 @@ class ElevationCanvasPainter extends CustomPainter {
           ..color = const Color(0xFF334155).withValues(alpha: 0.3)
           ..strokeWidth = 1.0;
         for (double y = rect.top + 10.0; y < rect.bottom; y += 12.0) {
-          canvas.drawLine(Offset(rect.left, y), Offset(rect.right, y), stonePaint);
+          canvas.drawLine(
+            Offset(rect.left, y),
+            Offset(rect.right, y),
+            stonePaint,
+          );
         }
         break;
       case FinishPreset.exposedConcrete:
         // Concrete tie rod holes
-        final dotPaint = Paint()..color = const Color(0xFF475569).withValues(alpha: 0.4);
+        final dotPaint = Paint()
+          ..color = const Color(0xFF475569).withValues(alpha: 0.4);
         for (double y = rect.top + 20.0; y < rect.bottom; y += 35.0) {
           for (double x = rect.left + 25.0; x < rect.right; x += 40.0) {
             canvas.drawCircle(Offset(x, y), 2.0, dotPaint);
@@ -237,7 +295,11 @@ class ElevationCanvasPainter extends CustomPainter {
           ..color = config.trimColor.withValues(alpha: 0.15)
           ..strokeWidth = 1.0;
         for (double y = rect.top + 25.0; y < rect.bottom; y += 30.0) {
-          canvas.drawLine(Offset(rect.left, y), Offset(rect.right, y), groovePaint);
+          canvas.drawLine(
+            Offset(rect.left, y),
+            Offset(rect.right, y),
+            groovePaint,
+          );
         }
         break;
     }
@@ -266,22 +328,53 @@ class ElevationCanvasPainter extends CustomPainter {
 
       // Entrance Portico / Canopy
       if (config.hasEntrancePortico) {
-        final canopyRect = Rect.fromLTWH(doorLeft - 8, doorTop - 6, doorWidth + 16, 6);
+        final canopyRect = Rect.fromLTWH(
+          doorLeft - 8,
+          doorTop - 6,
+          doorWidth + 16,
+          6,
+        );
         canvas.drawRect(canopyRect, Paint()..color = config.accentColor);
-        canvas.drawRect(canopyRect, Paint()..style = PaintingStyle.stroke..color = config.trimColor..strokeWidth = 1.5);
+        canvas.drawRect(
+          canopyRect,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..color = config.trimColor
+            ..strokeWidth = 1.5,
+        );
       }
 
       // Main Door Body
       canvas.drawRect(doorRect, Paint()..color = config.accentColor);
-      canvas.drawRect(doorRect, Paint()..style = PaintingStyle.stroke..color = config.trimColor..strokeWidth = 2.0);
+      canvas.drawRect(
+        doorRect,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = config.trimColor
+          ..strokeWidth = 2.0,
+      );
 
       // Door Handle & Paneling
-      final handlePaint = Paint()..color = Colors.amber.shade200..strokeWidth = 2.5;
-      canvas.drawLine(Offset(doorLeft + doorWidth * 0.85, doorTop + doorHeight * 0.5), Offset(doorLeft + doorWidth * 0.85, doorTop + doorHeight * 0.62), handlePaint);
+      final handlePaint = Paint()
+        ..color = Colors.amber.shade200
+        ..strokeWidth = 2.5;
+      canvas.drawLine(
+        Offset(doorLeft + doorWidth * 0.85, doorTop + doorHeight * 0.5),
+        Offset(doorLeft + doorWidth * 0.85, doorTop + doorHeight * 0.62),
+        handlePaint,
+      );
 
       // Accent wall panel behind / beside entrance
-      final featureRect = Rect.fromLTWH(doorLeft - 18, floorTopY + 10, 14, floorH - 10);
-      canvas.drawRect(featureRect, Paint()..color = config.accentColor.withValues(alpha: 0.85));
+      final featureRect = Rect.fromLTWH(
+        doorLeft - 18,
+        floorTopY + 10,
+        14,
+        floorH - 10,
+      );
+      canvas.drawRect(
+        featureRect,
+        Paint()..color = config.accentColor.withValues(alpha: 0.85),
+      );
 
       // Ground Floor Windows
       final winWidth = math.min(50.0, bldgWidth * 0.26);
@@ -296,7 +389,10 @@ class ElevationCanvasPainter extends CustomPainter {
       final winTop = floorTopY + floorH * 0.22;
 
       // Left Window
-      _paintWindow(canvas, Rect.fromLTWH(bldgLeft + bldgWidth * 0.12, winTop, winWidth, winHeight));
+      _paintWindow(
+        canvas,
+        Rect.fromLTWH(bldgLeft + bldgWidth * 0.12, winTop, winWidth, winHeight),
+      );
 
       // Right Window or Balcony Door
       final rightWinLeft = bldgLeft + bldgWidth * 0.56;
@@ -305,24 +401,48 @@ class ElevationCanvasPainter extends CustomPainter {
         final balDoorWidth = math.min(42.0, bldgWidth * 0.28);
         final balDoorHeight = floorH * 0.72;
         final balDoorTop = floorBottomY - balDoorHeight;
-        final balDoorRect = Rect.fromLTWH(rightWinLeft, balDoorTop, balDoorWidth, balDoorHeight);
+        final balDoorRect = Rect.fromLTWH(
+          rightWinLeft,
+          balDoorTop,
+          balDoorWidth,
+          balDoorHeight,
+        );
         _paintWindow(canvas, balDoorRect);
 
         // Balcony Slab Protrusion
-        final balSlabRect = Rect.fromLTWH(rightWinLeft - 6, floorBottomY - 4, balDoorWidth + 12, 6);
+        final balSlabRect = Rect.fromLTWH(
+          rightWinLeft - 6,
+          floorBottomY - 4,
+          balDoorWidth + 12,
+          6,
+        );
         canvas.drawRect(balSlabRect, Paint()..color = config.trimColor);
 
         // Balcony Railing
         final balRailingHeight = floorH * 0.35;
-        final balRailingRect = Rect.fromLTWH(rightWinLeft - 6, floorBottomY - balRailingHeight, balDoorWidth + 12, balRailingHeight);
+        final balRailingRect = Rect.fromLTWH(
+          rightWinLeft - 6,
+          floorBottomY - balRailingHeight,
+          balDoorWidth + 12,
+          balRailingHeight,
+        );
         _paintBalcony(canvas, balRailingRect, config.balconyOption);
       } else {
-        _paintWindow(canvas, Rect.fromLTWH(rightWinLeft, winTop, winWidth, winHeight));
+        _paintWindow(
+          canvas,
+          Rect.fromLTWH(rightWinLeft, winTop, winWidth, winHeight),
+        );
       }
 
       // Modern Architectural Box Cantilever Frame Accent
-      if (config.style == ElevationStyle.modern || config.style == ElevationStyle.contemporary) {
-        final boxFrameRect = Rect.fromLTWH(bldgLeft + bldgWidth * 0.08, floorTopY + 8, bldgWidth * 0.40, floorH - 12);
+      if (config.style == ElevationStyle.modern ||
+          config.style == ElevationStyle.contemporary) {
+        final boxFrameRect = Rect.fromLTWH(
+          bldgLeft + bldgWidth * 0.08,
+          floorTopY + 8,
+          bldgWidth * 0.40,
+          floorH - 12,
+        );
         canvas.drawRect(
           boxFrameRect,
           Paint()
@@ -343,8 +463,16 @@ class ElevationCanvasPainter extends CustomPainter {
     final reflectPaint = Paint()
       ..color = Colors.white.withValues(alpha: 0.35)
       ..strokeWidth = 2.0;
-    canvas.drawLine(Offset(rect.left + 4, rect.bottom - 4), Offset(rect.left + rect.width * 0.6, rect.top + 4), reflectPaint);
-    canvas.drawLine(Offset(rect.left + 14, rect.bottom - 4), Offset(rect.left + rect.width * 0.8, rect.top + 4), reflectPaint);
+    canvas.drawLine(
+      Offset(rect.left + 4, rect.bottom - 4),
+      Offset(rect.left + rect.width * 0.6, rect.top + 4),
+      reflectPaint,
+    );
+    canvas.drawLine(
+      Offset(rect.left + 14, rect.bottom - 4),
+      Offset(rect.left + rect.width * 0.8, rect.top + 4),
+      reflectPaint,
+    );
 
     // Window Frame
     final framePaint = Paint()
@@ -359,32 +487,62 @@ class ElevationCanvasPainter extends CustomPainter {
       case WindowStyle.minimalistFrameless:
         // Single vertical mullion
         final midX = rect.left + rect.width * 0.5;
-        canvas.drawLine(Offset(midX, rect.top), Offset(midX, rect.bottom), framePaint);
+        canvas.drawLine(
+          Offset(midX, rect.top),
+          Offset(midX, rect.bottom),
+          framePaint,
+        );
         break;
       case WindowStyle.traditionalMullion:
         // 2x2 grid mullions
         final midX = rect.left + rect.width * 0.5;
         final midY = rect.top + rect.height * 0.5;
-        canvas.drawLine(Offset(midX, rect.top), Offset(midX, rect.bottom), framePaint);
-        canvas.drawLine(Offset(rect.left, midY), Offset(rect.right, midY), framePaint);
+        canvas.drawLine(
+          Offset(midX, rect.top),
+          Offset(midX, rect.bottom),
+          framePaint,
+        );
+        canvas.drawLine(
+          Offset(rect.left, midY),
+          Offset(rect.right, midY),
+          framePaint,
+        );
         break;
       case WindowStyle.traditionalArched:
         // Arched top header
         final archPath = Path()
           ..moveTo(rect.left, rect.top + rect.height * 0.3)
-          ..quadraticBezierTo(rect.center.dx, rect.top - 8, rect.right, rect.top + rect.height * 0.3);
+          ..quadraticBezierTo(
+            rect.center.dx,
+            rect.top - 8,
+            rect.right,
+            rect.top + rect.height * 0.3,
+          );
         canvas.drawPath(archPath, framePaint);
-        canvas.drawLine(Offset(rect.center.dx, rect.top - 8), Offset(rect.center.dx, rect.bottom), framePaint);
+        canvas.drawLine(
+          Offset(rect.center.dx, rect.top - 8),
+          Offset(rect.center.dx, rect.bottom),
+          framePaint,
+        );
         break;
       case WindowStyle.ribbonHorizontal:
         // Horizontal intermediate mullion
         final midY = rect.top + rect.height * 0.5;
-        canvas.drawLine(Offset(rect.left, midY), Offset(rect.right, midY), framePaint);
+        canvas.drawLine(
+          Offset(rect.left, midY),
+          Offset(rect.right, midY),
+          framePaint,
+        );
         break;
     }
 
     // Window Sill
-    final sillRect = Rect.fromLTWH(rect.left - 3, rect.bottom, rect.width + 6, 3.5);
+    final sillRect = Rect.fromLTWH(
+      rect.left - 3,
+      rect.bottom,
+      rect.width + 6,
+      3.5,
+    );
     canvas.drawRect(sillRect, Paint()..color = config.trimColor);
   }
 
@@ -392,22 +550,39 @@ class ElevationCanvasPainter extends CustomPainter {
     switch (option) {
       case BalconyOption.glassRailing:
         // Tempered glass panel with reflections
-        final glassPaint = Paint()..color = config.glassColor.withValues(alpha: 0.6);
+        final glassPaint = Paint()
+          ..color = config.glassColor.withValues(alpha: 0.6);
         canvas.drawRect(rect, glassPaint);
 
         // Stainless steel top rail
         final railPaint = Paint()
           ..color = const Color(0xFFCBD5E1)
           ..strokeWidth = 3.0;
-        canvas.drawLine(Offset(rect.left, rect.top), Offset(rect.right, rect.top), railPaint);
+        canvas.drawLine(
+          Offset(rect.left, rect.top),
+          Offset(rect.right, rect.top),
+          railPaint,
+        );
 
         // Posts
         final postPaint = Paint()
           ..color = const Color(0xFF94A3B8)
           ..strokeWidth = 2.0;
-        canvas.drawLine(Offset(rect.left + 4, rect.top), Offset(rect.left + 4, rect.bottom), postPaint);
-        canvas.drawLine(Offset(rect.center.dx, rect.top), Offset(rect.center.dx, rect.bottom), postPaint);
-        canvas.drawLine(Offset(rect.right - 4, rect.top), Offset(rect.right - 4, rect.bottom), postPaint);
+        canvas.drawLine(
+          Offset(rect.left + 4, rect.top),
+          Offset(rect.left + 4, rect.bottom),
+          postPaint,
+        );
+        canvas.drawLine(
+          Offset(rect.center.dx, rect.top),
+          Offset(rect.center.dx, rect.bottom),
+          postPaint,
+        );
+        canvas.drawLine(
+          Offset(rect.right - 4, rect.top),
+          Offset(rect.right - 4, rect.bottom),
+          postPaint,
+        );
         break;
 
       case BalconyOption.metalLouver:
@@ -415,28 +590,64 @@ class ElevationCanvasPainter extends CustomPainter {
         final louverPaint = Paint()
           ..color = config.trimColor
           ..strokeWidth = 2.0;
-        canvas.drawLine(Offset(rect.left, rect.top), Offset(rect.right, rect.top), louverPaint..strokeWidth = 3.0);
+        canvas.drawLine(
+          Offset(rect.left, rect.top),
+          Offset(rect.right, rect.top),
+          louverPaint..strokeWidth = 3.0,
+        );
         for (double x = rect.left + 4; x <= rect.right - 4; x += 5.5) {
-          canvas.drawLine(Offset(x, rect.top), Offset(x, rect.bottom), louverPaint..strokeWidth = 1.5);
+          canvas.drawLine(
+            Offset(x, rect.top),
+            Offset(x, rect.bottom),
+            louverPaint..strokeWidth = 1.5,
+          );
         }
         break;
 
       case BalconyOption.masonryParapet:
         // Solid wall
         canvas.drawRect(rect, Paint()..color = config.primaryColor);
-        canvas.drawRect(rect, Paint()..style = PaintingStyle.stroke..color = config.trimColor..strokeWidth = 1.5);
+        canvas.drawRect(
+          rect,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..color = config.trimColor
+            ..strokeWidth = 1.5,
+        );
         // Architectural groove line
-        canvas.drawLine(Offset(rect.left, rect.center.dy), Offset(rect.right, rect.center.dy), Paint()..color = config.accentColor..strokeWidth = 2.0);
+        canvas.drawLine(
+          Offset(rect.left, rect.center.dy),
+          Offset(rect.right, rect.center.dy),
+          Paint()
+            ..color = config.accentColor
+            ..strokeWidth = 2.0,
+        );
         break;
 
       case BalconyOption.ornateTraditional:
         // Traditional turned balusters
-        final topRail = Paint()..color = config.accentColor..strokeWidth = 3.5;
-        canvas.drawLine(Offset(rect.left, rect.top), Offset(rect.right, rect.top), topRail);
-        final balusterPaint = Paint()..color = config.accentColor..strokeWidth = 2.5;
+        final topRail = Paint()
+          ..color = config.accentColor
+          ..strokeWidth = 3.5;
+        canvas.drawLine(
+          Offset(rect.left, rect.top),
+          Offset(rect.right, rect.top),
+          topRail,
+        );
+        final balusterPaint = Paint()
+          ..color = config.accentColor
+          ..strokeWidth = 2.5;
         for (double x = rect.left + 6; x <= rect.right - 6; x += 9.0) {
-          canvas.drawLine(Offset(x, rect.top + 2), Offset(x, rect.bottom), balusterPaint);
-          canvas.drawCircle(Offset(x, rect.center.dy), 2.5, Paint()..color = config.accentColor);
+          canvas.drawLine(
+            Offset(x, rect.top + 2),
+            Offset(x, rect.bottom),
+            balusterPaint,
+          );
+          canvas.drawCircle(
+            Offset(x, rect.center.dy),
+            2.5,
+            Paint()..color = config.accentColor,
+          );
         }
         break;
 
@@ -457,14 +668,36 @@ class ElevationCanvasPainter extends CustomPainter {
       case RoofStyle.flatParapet:
         // 3 ft Parapet wall
         final parapetH = config.parapetHeightFeet * scale;
-        final parapetRect = Rect.fromLTRB(bldgLeft, topY - parapetH, bldgRight, topY);
+        final parapetRect = Rect.fromLTRB(
+          bldgLeft,
+          topY - parapetH,
+          bldgRight,
+          topY,
+        );
         canvas.drawRect(parapetRect, Paint()..color = config.primaryColor);
-        canvas.drawRect(parapetRect, Paint()..style = PaintingStyle.stroke..color = config.trimColor..strokeWidth = 1.5);
+        canvas.drawRect(
+          parapetRect,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..color = config.trimColor
+            ..strokeWidth = 1.5,
+        );
 
         // Coping stone band
-        final copingRect = Rect.fromLTRB(bldgLeft - 4, topY - parapetH - 4, bldgRight + 4, topY - parapetH);
+        final copingRect = Rect.fromLTRB(
+          bldgLeft - 4,
+          topY - parapetH - 4,
+          bldgRight + 4,
+          topY - parapetH,
+        );
         canvas.drawRect(copingRect, Paint()..color = config.accentColor);
-        canvas.drawRect(copingRect, Paint()..style = PaintingStyle.stroke..color = config.trimColor..strokeWidth = 1.0);
+        canvas.drawRect(
+          copingRect,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..color = config.trimColor
+            ..strokeWidth = 1.0,
+        );
         break;
 
       case RoofStyle.pitchedTile:
@@ -479,7 +712,13 @@ class ElevationCanvasPainter extends CustomPainter {
 
         // Shingle terracotta color
         canvas.drawPath(roofPath, Paint()..color = const Color(0xFFC2410C));
-        canvas.drawPath(roofPath, Paint()..style = PaintingStyle.stroke..color = config.trimColor..strokeWidth = 2.0);
+        canvas.drawPath(
+          roofPath,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..color = config.trimColor
+            ..strokeWidth = 2.0,
+        );
 
         // Shingle lines
         final shinglePaint = Paint()
@@ -489,30 +728,65 @@ class ElevationCanvasPainter extends CustomPainter {
           final frac = (dy - (topY - ridgeH)) / ridgeH;
           final xSpan = (bldgWidth / 2 + eaveOverhang) * frac;
           final midX = (bldgLeft + bldgRight) / 2;
-          canvas.drawLine(Offset(midX - xSpan, dy), Offset(midX + xSpan, dy), shinglePaint);
+          canvas.drawLine(
+            Offset(midX - xSpan, dy),
+            Offset(midX + xSpan, dy),
+            shinglePaint,
+          );
         }
         break;
 
       case RoofStyle.terracePergola:
         // Flat parapet plus open pergola rafters
         final parapetH = config.parapetHeightFeet * scale * 0.7;
-        final parapetRect = Rect.fromLTRB(bldgLeft, topY - parapetH, bldgRight, topY);
+        final parapetRect = Rect.fromLTRB(
+          bldgLeft,
+          topY - parapetH,
+          bldgRight,
+          topY,
+        );
         canvas.drawRect(parapetRect, Paint()..color = config.primaryColor);
 
         // Pergola posts and cross rafters
         final pergolaH = 6.0 * scale;
-        final postPaint = Paint()..color = config.accentColor..strokeWidth = 3.5;
-        canvas.drawLine(Offset(bldgLeft + bldgWidth * 0.15, topY), Offset(bldgLeft + bldgWidth * 0.15, topY - pergolaH), postPaint);
-        canvas.drawLine(Offset(bldgLeft + bldgWidth * 0.85, topY), Offset(bldgLeft + bldgWidth * 0.85, topY - pergolaH), postPaint);
+        final postPaint = Paint()
+          ..color = config.accentColor
+          ..strokeWidth = 3.5;
+        canvas.drawLine(
+          Offset(bldgLeft + bldgWidth * 0.15, topY),
+          Offset(bldgLeft + bldgWidth * 0.15, topY - pergolaH),
+          postPaint,
+        );
+        canvas.drawLine(
+          Offset(bldgLeft + bldgWidth * 0.85, topY),
+          Offset(bldgLeft + bldgWidth * 0.85, topY - pergolaH),
+          postPaint,
+        );
 
         // Horizontal beam
-        final beamPaint = Paint()..color = config.accentColor..strokeWidth = 4.0;
-        canvas.drawLine(Offset(bldgLeft + bldgWidth * 0.10, topY - pergolaH), Offset(bldgLeft + bldgWidth * 0.90, topY - pergolaH), beamPaint);
+        final beamPaint = Paint()
+          ..color = config.accentColor
+          ..strokeWidth = 4.0;
+        canvas.drawLine(
+          Offset(bldgLeft + bldgWidth * 0.10, topY - pergolaH),
+          Offset(bldgLeft + bldgWidth * 0.90, topY - pergolaH),
+          beamPaint,
+        );
 
         // Cross slats
-        final slatPaint = Paint()..color = config.trimColor..strokeWidth = 2.0;
-        for (double x = bldgLeft + bldgWidth * 0.12; x <= bldgLeft + bldgWidth * 0.88; x += 12.0) {
-          canvas.drawLine(Offset(x, topY - pergolaH - 3), Offset(x, topY - pergolaH + 3), slatPaint);
+        final slatPaint = Paint()
+          ..color = config.trimColor
+          ..strokeWidth = 2.0;
+        for (
+          double x = bldgLeft + bldgWidth * 0.12;
+          x <= bldgLeft + bldgWidth * 0.88;
+          x += 12.0
+        ) {
+          canvas.drawLine(
+            Offset(x, topY - pergolaH - 3),
+            Offset(x, topY - pergolaH + 3),
+            slatPaint,
+          );
         }
         break;
 
@@ -527,7 +801,13 @@ class ElevationCanvasPainter extends CustomPainter {
           ..close();
 
         canvas.drawPath(roofPath, Paint()..color = const Color(0xFF475569));
-        canvas.drawPath(roofPath, Paint()..style = PaintingStyle.stroke..color = config.trimColor..strokeWidth = 2.0);
+        canvas.drawPath(
+          roofPath,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..color = config.trimColor
+            ..strokeWidth = 2.0,
+        );
         break;
     }
   }
@@ -547,12 +827,21 @@ class ElevationCanvasPainter extends CustomPainter {
     // Porch Slab
     final slabRect = Rect.fromLTWH(porchLeft, porchTop, porchWidth, 5.0);
     canvas.drawRect(slabRect, Paint()..color = config.accentColor);
-    canvas.drawRect(slabRect, Paint()..style = PaintingStyle.stroke..color = config.trimColor..strokeWidth = 1.5);
+    canvas.drawRect(
+      slabRect,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = config.trimColor
+        ..strokeWidth = 1.5,
+    );
 
     // Structural Pillars
     final pillarPaint = Paint()..color = config.trimColor;
     final colLeft = porchLeft + 4.0;
-    canvas.drawRect(Rect.fromLTWH(colLeft, porchTop + 5.0, 5.0, groundY - (porchTop + 5.0)), pillarPaint);
+    canvas.drawRect(
+      Rect.fromLTWH(colLeft, porchTop + 5.0, 5.0, groundY - (porchTop + 5.0)),
+      pillarPaint,
+    );
 
     // Car silhouette outline under porch
     final carPaint = Paint()
@@ -579,13 +868,16 @@ class ElevationCanvasPainter extends CustomPainter {
   ) {
     // Driveway / Entrance Path
     final pathPaint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: isDark
-            ? [const Color(0xFF334155), const Color(0xFF1E293B)]
-            : [const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)],
-      ).createShader(Rect.fromLTWH(bldgLeft + 20, groundY, 40, size.height - groundY));
+      ..shader =
+          LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: isDark
+                ? [const Color(0xFF334155), const Color(0xFF1E293B)]
+                : [const Color(0xFFE2E8F0), const Color(0xFFCBD5E1)],
+          ).createShader(
+            Rect.fromLTWH(bldgLeft + 20, groundY, 40, size.height - groundY),
+          );
 
     final pathPoly = Path()
       ..moveTo(bldgLeft + 25, groundY)
@@ -601,13 +893,27 @@ class ElevationCanvasPainter extends CustomPainter {
   }
 
   void _paintPlant(Canvas canvas, Offset center, double radius) {
-    final plantPaint = Paint()..color = isDark ? const Color(0xFF15803D) : const Color(0xFF22C55E);
+    final plantPaint = Paint()
+      ..color = isDark ? const Color(0xFF15803D) : const Color(0xFF22C55E);
     canvas.drawCircle(center, radius, plantPaint);
-    canvas.drawCircle(Offset(center.dx - 4, center.dy + 3), radius * 0.7, plantPaint);
-    canvas.drawCircle(Offset(center.dx + 4, center.dy + 3), radius * 0.7, plantPaint);
+    canvas.drawCircle(
+      Offset(center.dx - 4, center.dy + 3),
+      radius * 0.7,
+      plantPaint,
+    );
+    canvas.drawCircle(
+      Offset(center.dx + 4, center.dy + 3),
+      radius * 0.7,
+      plantPaint,
+    );
     // Pot
     final potPaint = Paint()..color = const Color(0xFF9A3412);
-    final potRect = Rect.fromLTWH(center.dx - 6, center.dy + radius * 0.6, 12, 10);
+    final potRect = Rect.fromLTWH(
+      center.dx - 6,
+      center.dy + radius * 0.6,
+      12,
+      10,
+    );
     canvas.drawRect(potRect, potPaint);
   }
 
@@ -630,12 +936,14 @@ class ElevationCanvasPainter extends CustomPainter {
     final topOfUpperFloorY = plinthY - (floorCount * floorHeightPx);
 
     // CAD Blueprint / Drafting background
-    final bgPaint = Paint()..color = isDark ? const Color(0xFF0F172A) : const Color(0xFFFFFFFF);
+    final bgPaint = Paint()
+      ..color = isDark ? const Color(0xFF0F172A) : const Color(0xFFFFFFFF);
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPaint);
 
     // CAD Grid lines (subtle)
     final cadGridPaint = Paint()
-      ..color = (isDark ? Colors.blue.shade900 : Colors.blue.shade50).withValues(alpha: 0.5)
+      ..color = (isDark ? Colors.blue.shade900 : Colors.blue.shade50)
+          .withValues(alpha: 0.5)
       ..strokeWidth = 0.5;
     for (double x = 0; x < size.width; x += 25.0) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), cadGridPaint);
@@ -653,26 +961,50 @@ class ElevationCanvasPainter extends CustomPainter {
       ..strokeWidth = 1.0;
 
     // Ground line (Heavy CAD ground symbol)
-    canvas.drawLine(Offset(size.width * 0.05, groundY), Offset(size.width * 0.95, groundY), cadLinePaint..strokeWidth = 2.5);
+    canvas.drawLine(
+      Offset(size.width * 0.05, groundY),
+      Offset(size.width * 0.95, groundY),
+      cadLinePaint..strokeWidth = 2.5,
+    );
     // Ground hatch marks
     final hatchPaint = Paint()
       ..color = isDark ? Colors.white54 : Colors.black45
       ..strokeWidth = 1.0;
     for (double x = size.width * 0.08; x < size.width * 0.92; x += 12.0) {
-      canvas.drawLine(Offset(x, groundY), Offset(x - 8, groundY + 8), hatchPaint);
+      canvas.drawLine(
+        Offset(x, groundY),
+        Offset(x - 8, groundY + 8),
+        hatchPaint,
+      );
     }
 
     // Plinth Box
-    canvas.drawRect(Rect.fromLTRB(bldgLeft, plinthY, bldgRight, groundY), Paint()..style = PaintingStyle.stroke..color = cadLinePaint.color..strokeWidth = 2.0);
+    canvas.drawRect(
+      Rect.fromLTRB(bldgLeft, plinthY, bldgRight, groundY),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = cadLinePaint.color
+        ..strokeWidth = 2.0,
+    );
 
     // Main Structural Outer Wall Envelope
-    canvas.drawRect(Rect.fromLTRB(bldgLeft, topOfUpperFloorY, bldgRight, plinthY), Paint()..style = PaintingStyle.stroke..color = cadLinePaint.color..strokeWidth = 2.5);
+    canvas.drawRect(
+      Rect.fromLTRB(bldgLeft, topOfUpperFloorY, bldgRight, plinthY),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = cadLinePaint.color
+        ..strokeWidth = 2.5,
+    );
 
     // Floor Level Intermediates
     for (int i = 1; i <= floorCount; i++) {
       final floorY = plinthY - (i * floorHeightPx);
       // Floor slab line
-      canvas.drawLine(Offset(bldgLeft, floorY), Offset(bldgRight, floorY), cadLinePaint..strokeWidth = 1.5);
+      canvas.drawLine(
+        Offset(bldgLeft, floorY),
+        Offset(bldgRight, floorY),
+        cadLinePaint..strokeWidth = 1.5,
+      );
 
       // Floor Fenestrations (Schematic Doors & Windows)
       final winTop = floorY + floorHeightPx * 0.25;
@@ -682,7 +1014,13 @@ class ElevationCanvasPainter extends CustomPainter {
 
       // Window CAD box with diagonal cross
       final winRect = Rect.fromLTRB(winLeft, winTop, winRight, winBottom);
-      canvas.drawRect(winRect, Paint()..style = PaintingStyle.stroke..color = cadLinePaint.color..strokeWidth = 1.5);
+      canvas.drawRect(
+        winRect,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = cadLinePaint.color
+          ..strokeWidth = 1.5,
+      );
       canvas.drawLine(winRect.topLeft, winRect.bottomRight, hatchPaint);
       canvas.drawLine(winRect.bottomLeft, winRect.topRight, hatchPaint);
 
@@ -692,20 +1030,43 @@ class ElevationCanvasPainter extends CustomPainter {
         final doorRight = doorLeft + bldgWidth * 0.22;
         final doorTop = plinthY - floorHeightPx * 0.75;
         final doorRect = Rect.fromLTRB(doorLeft, doorTop, doorRight, plinthY);
-        canvas.drawRect(doorRect, Paint()..style = PaintingStyle.stroke..color = cadLinePaint.color..strokeWidth = 2.0);
+        canvas.drawRect(
+          doorRect,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..color = cadLinePaint.color
+            ..strokeWidth = 2.0,
+        );
       } else {
         // Upper floor window
         final upWinLeft = bldgLeft + bldgWidth * 0.60;
         final upWinRight = upWinLeft + bldgWidth * 0.25;
-        final upWinRect = Rect.fromLTRB(upWinLeft, winTop, upWinRight, winBottom);
-        canvas.drawRect(upWinRect, Paint()..style = PaintingStyle.stroke..color = cadLinePaint.color..strokeWidth = 1.5);
+        final upWinRect = Rect.fromLTRB(
+          upWinLeft,
+          winTop,
+          upWinRight,
+          winBottom,
+        );
+        canvas.drawRect(
+          upWinRect,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..color = cadLinePaint.color
+            ..strokeWidth = 1.5,
+        );
       }
     }
 
     // Parapet / Roof outline
     final parapetH = config.parapetHeightFeet * scale;
     final parapetTopY = topOfUpperFloorY - parapetH;
-    canvas.drawRect(Rect.fromLTRB(bldgLeft, parapetTopY, bldgRight, topOfUpperFloorY), Paint()..style = PaintingStyle.stroke..color = cadLinePaint.color..strokeWidth = 2.0);
+    canvas.drawRect(
+      Rect.fromLTRB(bldgLeft, parapetTopY, bldgRight, topOfUpperFloorY),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = cadLinePaint.color
+        ..strokeWidth = 2.0,
+    );
 
     // =========================================================================
     // LEVEL DATUMS (Standard Architectural Elevation Callouts)
@@ -713,21 +1074,45 @@ class ElevationCanvasPainter extends CustomPainter {
     final datumX = bldgRight + 25.0;
 
     // 1. Ground Level (GL)
-    _drawDatumMarker(canvas, datumX, groundY, '±0\'0" GL (GROUND LEVEL)', isDark);
+    _drawDatumMarker(
+      canvas,
+      datumX,
+      groundY,
+      '±0\'0" GL (GROUND LEVEL)',
+      isDark,
+    );
 
     // 2. Plinth Level (PL)
-    _drawDatumMarker(canvas, datumX, plinthY, '+${config.plinthHeightFeet.toStringAsFixed(1)}\' PL (PLINTH LEVEL)', isDark);
+    _drawDatumMarker(
+      canvas,
+      datumX,
+      plinthY,
+      '+${config.plinthHeightFeet.toStringAsFixed(1)}\' PL (PLINTH LEVEL)',
+      isDark,
+    );
 
     // 3. Each Floor Level
     for (int i = 1; i <= floorCount; i++) {
       final floorY = plinthY - (i * floorHeightPx);
       final levelFeet = config.plinthHeightFeet + (i * config.floorHeightFeet);
-      final name = i == 1 ? 'FIRST FLOOR' : i == 2 ? 'SECOND FLOOR' : i == 3 ? 'THIRD FLOOR' : 'ROOF SLAB';
+      final name = i == 1
+          ? 'FIRST FLOOR'
+          : i == 2
+          ? 'SECOND FLOOR'
+          : i == 3
+          ? 'THIRD FLOOR'
+          : 'ROOF SLAB';
       _drawDatumMarker(canvas, datumX, floorY, '+$levelFeet\' $name', isDark);
     }
 
     // 4. Top of Parapet
-    _drawDatumMarker(canvas, datumX, parapetTopY, '+${config.totalHeightFeet.toStringAsFixed(1)}\' TOP OF PARAPET', isDark);
+    _drawDatumMarker(
+      canvas,
+      datumX,
+      parapetTopY,
+      '+${config.totalHeightFeet.toStringAsFixed(1)}\' TOP OF PARAPET',
+      isDark,
+    );
 
     // =========================================================================
     // DIMENSION CHAINS
@@ -759,12 +1144,33 @@ class ElevationCanvasPainter extends CustomPainter {
     _drawCADTitleBlock(canvas, size, isDark);
   }
 
-  void _drawDatumMarker(Canvas canvas, double x, double y, String label, bool isDark) {
+  void _drawDatumMarker(
+    Canvas canvas,
+    double x,
+    double y,
+    String label,
+    bool isDark,
+  ) {
     final markerPaint = Paint()..color = const Color(0xFFEF4444);
     // Datum circle & crosshair
-    canvas.drawCircle(Offset(x, y), 4.5, Paint()..style = PaintingStyle.stroke..color = markerPaint.color..strokeWidth = 1.5);
-    canvas.drawLine(Offset(x - 8, y), Offset(x + 16, y), markerPaint..strokeWidth = 1.0);
-    canvas.drawLine(Offset(x, y - 6), Offset(x, y + 6), markerPaint..strokeWidth = 1.0);
+    canvas.drawCircle(
+      Offset(x, y),
+      4.5,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = markerPaint.color
+        ..strokeWidth = 1.5,
+    );
+    canvas.drawLine(
+      Offset(x - 8, y),
+      Offset(x + 16, y),
+      markerPaint..strokeWidth = 1.0,
+    );
+    canvas.drawLine(
+      Offset(x, y - 6),
+      Offset(x, y + 6),
+      markerPaint..strokeWidth = 1.0,
+    );
 
     // Text Label
     final textSpan = TextSpan(
@@ -796,12 +1202,28 @@ class ElevationCanvasPainter extends CustomPainter {
 
     // Extension witness ticks
     final tickHeight = 6.0;
-    canvas.drawLine(Offset(start.dx, start.dy - tickHeight), Offset(start.dx, start.dy + tickHeight), dimPaint);
-    canvas.drawLine(Offset(end.dx, end.dy - tickHeight), Offset(end.dx, end.dy + tickHeight), dimPaint);
+    canvas.drawLine(
+      Offset(start.dx, start.dy - tickHeight),
+      Offset(start.dx, start.dy + tickHeight),
+      dimPaint,
+    );
+    canvas.drawLine(
+      Offset(end.dx, end.dy - tickHeight),
+      Offset(end.dx, end.dy + tickHeight),
+      dimPaint,
+    );
 
     // Dimension Arrow heads (45 deg architectural ticks)
-    canvas.drawLine(Offset(start.dx - 3, start.dy - 3), Offset(start.dx + 3, start.dy + 3), dimPaint..strokeWidth = 1.8);
-    canvas.drawLine(Offset(end.dx - 3, end.dy - 3), Offset(end.dx + 3, end.dy + 3), dimPaint..strokeWidth = 1.8);
+    canvas.drawLine(
+      Offset(start.dx - 3, start.dy - 3),
+      Offset(start.dx + 3, start.dy + 3),
+      dimPaint..strokeWidth = 1.8,
+    );
+    canvas.drawLine(
+      Offset(end.dx - 3, end.dy - 3),
+      Offset(end.dx + 3, end.dy + 3),
+      dimPaint..strokeWidth = 1.8,
+    );
 
     // Dimension Text
     final textSpan = TextSpan(
@@ -818,7 +1240,10 @@ class ElevationCanvasPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     )..layout();
     final midX = (start.dx + end.dx) / 2;
-    textPainter.paint(canvas, Offset(midX - textPainter.width / 2, start.dy + 4));
+    textPainter.paint(
+      canvas,
+      Offset(midX - textPainter.width / 2, start.dy + 4),
+    );
   }
 
   void _drawVerticalDimensionLine(
@@ -922,7 +1347,13 @@ class ElevationCanvasPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: size.width - 24);
 
-    painter.paint(canvas, Offset((size.width - painter.width) / 2, size.height - painter.height - 8));
+    painter.paint(
+      canvas,
+      Offset(
+        (size.width - painter.width) / 2,
+        size.height - painter.height - 8,
+      ),
+    );
   }
 
   @override

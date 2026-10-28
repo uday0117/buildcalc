@@ -43,17 +43,17 @@ class EmptyStateView extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               message,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
-                  ),
+                color: isDark ? Colors.grey[400] : Colors.grey[600],
+              ),
             ),
             if (actionLabel != null && onAction != null) ...[
               const SizedBox(height: 20),
@@ -76,4 +76,3 @@ class EmptyStateView extends StatelessWidget {
     );
   }
 }
-

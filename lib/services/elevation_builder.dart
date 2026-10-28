@@ -28,41 +28,46 @@ class ElevationBuilder {
 
     // 2. Check for front balcony or porch rooms
     final hasBalconyRoom = plan.rooms.any((r) => r.type == RoomType.balcony);
-    final hasFoyer = plan.rooms.any((r) => r.type == RoomType.foyer || r.name.toLowerCase().contains('foyer') || r.name.toLowerCase().contains('porch'));
+    final hasFoyer = plan.rooms.any(
+      (r) =>
+          r.type == RoomType.foyer ||
+          r.name.toLowerCase().contains('foyer') ||
+          r.name.toLowerCase().contains('porch'),
+    );
 
     // 3. Select appropriate style attributes
     final palette = style == ElevationStyle.traditional
         ? ElevationColorPalette.warmTerracotta
         : style == ElevationStyle.minimalist
-            ? ElevationColorPalette.minimalistMonochrome
-            : style == ElevationStyle.contemporary
-                ? ElevationColorPalette.contemporarySlate
-                : ElevationColorPalette.modernIvoryWood;
+        ? ElevationColorPalette.minimalistMonochrome
+        : style == ElevationStyle.contemporary
+        ? ElevationColorPalette.contemporarySlate
+        : ElevationColorPalette.modernIvoryWood;
 
     final windowStyle = style == ElevationStyle.traditional
         ? WindowStyle.traditionalMullion
         : style == ElevationStyle.minimalist
-            ? WindowStyle.minimalistFrameless
-            : WindowStyle.modernPicture;
+        ? WindowStyle.minimalistFrameless
+        : WindowStyle.modernPicture;
 
     final roofStyle = style == ElevationStyle.traditional
         ? RoofStyle.pitchedTile
         : style == ElevationStyle.contemporary
-            ? RoofStyle.terracePergola
-            : RoofStyle.flatParapet;
+        ? RoofStyle.terracePergola
+        : RoofStyle.flatParapet;
 
     final finishPreset = style == ElevationStyle.traditional
         ? FinishPreset.exposedBrick
         : style == ElevationStyle.minimalist
-            ? FinishPreset.exposedConcrete
-            : style == ElevationStyle.contemporary
-                ? FinishPreset.teakWoodSlat
-                : FinishPreset.smoothPlaster;
+        ? FinishPreset.exposedConcrete
+        : style == ElevationStyle.contemporary
+        ? FinishPreset.teakWoodSlat
+        : FinishPreset.smoothPlaster;
 
     final balconyOption = hasBalconyRoom
         ? (style == ElevationStyle.traditional
-            ? BalconyOption.ornateTraditional
-            : BalconyOption.glassRailing)
+              ? BalconyOption.ornateTraditional
+              : BalconyOption.glassRailing)
         : BalconyOption.metalLouver;
 
     return ElevationConfig(
@@ -86,7 +91,8 @@ class ElevationBuilder {
       roofStyle: roofStyle,
       hasCarPorch: facadeWidth >= 26.0,
       hasEntrancePortico: hasFoyer || facadeWidth >= 20.0,
-      notes: 'Generated from "${plan.name}" with frontage of ${facadeWidth.toStringAsFixed(1)} ft.',
+      notes:
+          'Generated from "${plan.name}" with frontage of ${facadeWidth.toStringAsFixed(1)} ft.',
       createdAt: now,
       updatedAt: now,
     );
@@ -114,15 +120,27 @@ class ElevationBuilder {
     buffer.writeln('Floor Typology:    ${config.floorCountLabel}');
     buffer.writeln('');
     buffer.writeln('📐 DIMENSIONS & LEVELS:');
-    buffer.writeln('• Facade Frontage:      ${config.facadeWidthFeet.toStringAsFixed(1)} ft');
-    buffer.writeln('• Plinth Level (PL):    +${config.plinthHeightFeet.toStringAsFixed(1)} ft above Ground Level (GL)');
-    buffer.writeln('• Floor-to-Floor Height: ${config.floorHeightFeet.toStringAsFixed(1)} ft typical');
-    buffer.writeln('• Parapet / Roof Ridge: +${config.parapetHeightFeet.toStringAsFixed(1)} ft');
-    buffer.writeln('• Total Height (GL-Top): ${config.totalHeightFeet.toStringAsFixed(1)} ft');
+    buffer.writeln(
+      '• Facade Frontage:      ${config.facadeWidthFeet.toStringAsFixed(1)} ft',
+    );
+    buffer.writeln(
+      '• Plinth Level (PL):    +${config.plinthHeightFeet.toStringAsFixed(1)} ft above Ground Level (GL)',
+    );
+    buffer.writeln(
+      '• Floor-to-Floor Height: ${config.floorHeightFeet.toStringAsFixed(1)} ft typical',
+    );
+    buffer.writeln(
+      '• Parapet / Roof Ridge: +${config.parapetHeightFeet.toStringAsFixed(1)} ft',
+    );
+    buffer.writeln(
+      '• Total Height (GL-Top): ${config.totalHeightFeet.toStringAsFixed(1)} ft',
+    );
     buffer.writeln('');
     buffer.writeln('🎨 FINISHES & MATERIALS:');
     buffer.writeln('• Primary Facade Finish: ${config.finishPreset.label}');
-    buffer.writeln('• Base Color Palette:    ${_colorHex(config.primaryColor)}');
+    buffer.writeln(
+      '• Base Color Palette:    ${_colorHex(config.primaryColor)}',
+    );
     buffer.writeln('• Accent Feature Color:  ${_colorHex(config.accentColor)}');
     buffer.writeln('• Trim & Frame Color:    ${_colorHex(config.trimColor)}');
     buffer.writeln('• Glazing Tint:          ${_colorHex(config.glassColor)}');
@@ -131,8 +149,12 @@ class ElevationBuilder {
     buffer.writeln('• Window Styling:        ${config.windowStyle.label}');
     buffer.writeln('• Balcony Enclosure:     ${config.balconyOption.label}');
     buffer.writeln('• Roof Silhouette:       ${config.roofStyle.label}');
-    buffer.writeln('• Covered Car Porch:     ${config.hasCarPorch ? "Included" : "None"}');
-    buffer.writeln('• Entrance Portico:      ${config.hasEntrancePortico ? "Featured Entrance" : "Standard"}');
+    buffer.writeln(
+      '• Covered Car Porch:     ${config.hasCarPorch ? "Included" : "None"}',
+    );
+    buffer.writeln(
+      '• Entrance Portico:      ${config.hasEntrancePortico ? "Featured Entrance" : "Standard"}',
+    );
     if (config.notes.isNotEmpty) {
       buffer.writeln('');
       buffer.writeln('📝 ARCHITECTURAL NOTES:');
@@ -144,7 +166,9 @@ class ElevationBuilder {
     buffer.writeln('This elevation preview is an illustrative design concept');
     buffer.writeln('intended for aesthetic and spatial visualization only.');
     buffer.writeln('It does not constitute structural engineering drawings,');
-    buffer.writeln('working blueprints, or municipal building permit documents.');
+    buffer.writeln(
+      'working blueprints, or municipal building permit documents.',
+    );
     buffer.writeln('All dimensions, structural spans, and local setback');
     buffer.writeln('regulations must be verified by a licensed architect');
     buffer.writeln('or certified structural engineer prior to construction.');
@@ -157,4 +181,3 @@ class ElevationBuilder {
     return '#${c.toARGB32().toRadixString(16).substring(2).toUpperCase()}';
   }
 }
-

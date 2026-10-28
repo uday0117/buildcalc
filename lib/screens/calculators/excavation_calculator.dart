@@ -71,9 +71,9 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
     if (res.isValid) {
       _saveToHistory(res);
     } else if (res.errorMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(res.errorMessage!)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(res.errorMessage!)));
     }
   }
 
@@ -362,10 +362,7 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 6),
-              ExcavationSketchWidget(
-                input: _lastInput!,
-                result: res,
-              ),
+              ExcavationSketchWidget(input: _lastInput!, result: res),
 
               // Safety warning banner
               if (res.warnings.isNotEmpty) ...[
@@ -382,15 +379,20 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.shield_outlined,
-                              size: 18, color: Colors.amber.shade800),
+                          Icon(
+                            Icons.shield_outlined,
+                            size: 18,
+                            color: Colors.amber.shade800,
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             'Trench Safety & Geotechnical Advisory',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.amber[200] : Colors.amber[900],
+                              color: isDark
+                                  ? Colors.amber[200]
+                                  : Colors.amber[900],
                             ),
                           ),
                         ],
@@ -420,7 +422,8 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
                 title: 'Excavation Quantities',
                 icon: Icons.layers_rounded,
                 onSave: _bookmark,
-                note: 'Effective pit: ${res.effectiveLengthMeters.toStringAsFixed(2)}m × ${res.effectiveWidthMeters.toStringAsFixed(2)}m (with +${_workingSpaceController.text}m working space)',
+                note:
+                    'Effective pit: ${res.effectiveLengthMeters.toStringAsFixed(2)}m × ${res.effectiveWidthMeters.toStringAsFixed(2)}m (with +${_workingSpaceController.text}m working space)',
                 rows: [
                   ResultRowItem(
                     label: 'In-Situ Excavation Volume',
@@ -429,11 +432,13 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
                   ),
                   ResultRowItem(
                     label: 'Loose / Bulked Soil Volume',
-                    value: '${res.looseSoilM3.toStringAsFixed(2)} m³ (+${_bulkingController.text}% swell)',
+                    value:
+                        '${res.looseSoilM3.toStringAsFixed(2)} m³ (+${_bulkingController.text}% swell)',
                   ),
                   ResultRowItem(
                     label: 'Total Footprint Area',
-                    value: '${(res.pitAreaM2 * (_lastInput?.quantity ?? 1)).toStringAsFixed(2)} m²',
+                    value:
+                        '${(res.pitAreaM2 * (_lastInput?.quantity ?? 1)).toStringAsFixed(2)} m²',
                   ),
                 ],
               ),
@@ -444,7 +449,8 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
               ResultCard(
                 title: 'Backfilling & Cartage',
                 icon: Icons.local_shipping_rounded,
-                note: 'Compacted backfill void after erecting concrete structure',
+                note:
+                    'Compacted backfill void after erecting concrete structure',
                 rows: [
                   ResultRowItem(
                     label: 'Backfill Void Volume',
@@ -453,7 +459,8 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
                   ),
                   ResultRowItem(
                     label: 'Required Compacted Soil',
-                    value: '${res.requiredCompactedBackfillM3.toStringAsFixed(2)} m³ (with ${_compactionController.text}% compaction)',
+                    value:
+                        '${res.requiredCompactedBackfillM3.toStringAsFixed(2)} m³ (with ${_compactionController.text}% compaction)',
                   ),
                   ResultRowItem(
                     label: 'Surplus Soil to Haul',
@@ -461,7 +468,8 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
                   ),
                   ResultRowItem(
                     label: 'Estimated Truck Trips',
-                    value: '${res.truckTrips} trips (${_truckCapacityController.text} m³ truck)',
+                    value:
+                        '${res.truckTrips} trips (${_truckCapacityController.text} m³ truck)',
                   ),
                 ],
               ),
@@ -472,7 +480,9 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E293B) : Colors.grey.shade100,
+                  color: isDark
+                      ? const Color(0xFF1E293B)
+                      : Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isDark ? Colors.white12 : Colors.grey.shade300,
@@ -522,4 +532,3 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
     super.dispose();
   }
 }
-

@@ -17,7 +17,9 @@ class StaircaseCalculatorService {
       return StaircaseResult.failure('Flight width must be greater than zero.');
     }
     if (input.waistThickness <= 0) {
-      return StaircaseResult.failure('Waist slab thickness must be greater than zero.');
+      return StaircaseResult.failure(
+        'Waist slab thickness must be greater than zero.',
+      );
     }
     if (input.landingLength < 0) {
       return StaircaseResult.failure('Landing length cannot be negative.');
@@ -69,15 +71,18 @@ class StaircaseCalculatorService {
 
     // Concrete volume calculations
     final waistThicknessMeters = input.waistThickness / 1000.0;
-    final waistSlabVol = inclineLengthMeters * input.flightWidth * waistThicknessMeters;
+    final waistSlabVol =
+        inclineLengthMeters * input.flightWidth * waistThicknessMeters;
 
-    final singleStepVolume = 0.5 *
+    final singleStepVolume =
+        0.5 *
         (actualRiserMm / 1000.0) *
         (actualTreadMm / 1000.0) *
         input.flightWidth;
     final stepsVol = singleStepVolume * numTreads;
 
-    final landingVol = input.landingLength *
+    final landingVol =
+        input.landingLength *
         input.flightWidth *
         waistThicknessMeters *
         input.flightCount;
@@ -86,7 +91,8 @@ class StaircaseCalculatorService {
     final totalDryVolume = totalWetVolume * 1.54;
 
     final grade = input.concreteGrade;
-    final cementVolume = (totalDryVolume * grade.cementRatio) / grade.totalRatio;
+    final cementVolume =
+        (totalDryVolume * grade.cementRatio) / grade.totalRatio;
     final cementBags = cementVolume / 0.0347;
 
     final sandM3 = (totalDryVolume * grade.sandRatio) / grade.totalRatio;
@@ -123,4 +129,3 @@ class StaircaseCalculatorService {
     );
   }
 }
-

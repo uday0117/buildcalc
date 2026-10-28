@@ -19,36 +19,52 @@ class Plan3DBuilder {
     final List<String> warnings = [];
 
     if (plan.rooms.isEmpty) {
-      errors.add('Floor plan contains no rooms. Add rooms in the 2D editor to generate 3D geometry.');
+      errors.add(
+        'Floor plan contains no rooms. Add rooms in the 2D editor to generate 3D geometry.',
+      );
     }
 
     if (plan.plotWidthFeet <= 0 || plan.plotLengthFeet <= 0) {
-      errors.add('Plot dimensions must be greater than zero (${plan.plotWidthFeet} × ${plan.plotLengthFeet} ft).');
+      errors.add(
+        'Plot dimensions must be greater than zero (${plan.plotWidthFeet} × ${plan.plotLengthFeet} ft).',
+      );
     }
 
     for (final room in plan.rooms) {
       if (room.width <= 0 || room.length <= 0) {
-        errors.add('Room "${room.name}" has invalid dimensions: ${room.width.toStringAsFixed(1)} × ${room.length.toStringAsFixed(1)} ft.');
+        errors.add(
+          'Room "${room.name}" has invalid dimensions: ${room.width.toStringAsFixed(1)} × ${room.length.toStringAsFixed(1)} ft.',
+        );
       }
 
-      if (!PlanGeometry.isRoomWithinPlot(room, plan.plotWidthFeet, plan.plotLengthFeet)) {
+      if (!PlanGeometry.isRoomWithinPlot(
+        room,
+        plan.plotWidthFeet,
+        plan.plotLengthFeet,
+      )) {
         warnings.add('Room "${room.name}" extends beyond the plot boundary.');
       }
 
       for (final op in room.openings) {
         final wallLen = room.wallLength(op.wallSide);
         if (op.widthFeet > wallLen) {
-          warnings.add('Opening (${op.type.label}) in "${room.name}" exceeds wall length (${op.widthFeet} > $wallLen ft).');
+          warnings.add(
+            'Opening (${op.type.label}) in "${room.name}" exceeds wall length (${op.widthFeet} > $wallLen ft).',
+          );
         }
         if (op.offsetFeet + op.widthFeet > wallLen + 0.1) {
-          warnings.add('Opening (${op.type.label}) in "${room.name}" extends past wall boundary and will be clipped.');
+          warnings.add(
+            'Opening (${op.type.label}) in "${room.name}" extends past wall boundary and will be clipped.',
+          );
         }
       }
     }
 
     final overlappingPairs = PlanGeometry.findOverlappingPairs(plan.rooms);
     for (final pair in overlappingPairs) {
-      warnings.add('Rooms "${pair[0].name}" and "${pair[1].name}" overlap. Shared interior boundaries may intersect.');
+      warnings.add(
+        'Rooms "${pair[0].name}" and "${pair[1].name}" overlap. Shared interior boundaries may intersect.',
+      );
     }
 
     return Plan3DValidationResult(
@@ -74,7 +90,8 @@ class Plan3DBuilder {
     }
 
     // Support ground floor first, extensible to multi-level
-    final levels = customLevels ??
+    final levels =
+        customLevels ??
         [
           BuildingFloorLevel(
             levelIndex: 0,
@@ -114,7 +131,9 @@ class Plan3DBuilder {
             Point3D(plotRight, plotBottom, baseTopZ),
             Point3D(plotLeft, plotBottom, baseTopZ),
           ],
-          baseColor: const Color(0xFFE2E8F0), // Clean architectural lawn / courtyard slate
+          baseColor: const Color(
+            0xFFE2E8F0,
+          ), // Clean architectural lawn / courtyard slate
           category: PolygonCategory.groundPlot,
           edgeColor: const Color(0xFFCBD5E1),
           edgeWidth: 1.0,
@@ -135,7 +154,10 @@ class Plan3DBuilder {
     // 2. Iterate through levels (Ground Floor first)
     for (final level in levels) {
       final baseZ = level.elevationFeet;
-      final effectiveWallHeight = math.min(level.heightFeet, cutawayMode.wallHeightFeet);
+      final effectiveWallHeight = math.min(
+        level.heightFeet,
+        cutawayMode.wallHeightFeet,
+      );
       final levelTopZ = baseZ + effectiveWallHeight;
 
       if (levelTopZ > maxZ) maxZ = levelTopZ;
@@ -148,7 +170,9 @@ class Plan3DBuilder {
         if (r.bottom > maxY) maxY = r.bottom;
 
         // Room Floor Slab
-        final roomFloorZ = baseZ + 0.02; // Slight raise above plot base to eliminate z-fighting
+        final roomFloorZ =
+            baseZ +
+            0.02; // Slight raise above plot base to eliminate z-fighting
         polygons.add(
           Polygon3D.fromVertices(
             vertices: [
@@ -171,7 +195,10 @@ class Plan3DBuilder {
             RoomAnnotation3D(
               id: room.id,
               name: room.name,
-              dimensionsText: displayUnit.formatDimensions(room.width, room.length),
+              dimensionsText: displayUnit.formatDimensions(
+                room.width,
+                room.length,
+              ),
               position: Point3D(
                 r.left + room.width / 2,
                 r.top + room.length / 2,
@@ -328,7 +355,9 @@ class Plan3DBuilder {
     for (final op in sortedOpenings) {
       // Clamped opening position
       final opStart = op.offsetFeet.clamp(0.0, wallLength).toDouble();
-      final opWidth = op.widthFeet.clamp(0.5, math.max<double>(0.5, wallLength - opStart)).toDouble();
+      final opWidth = op.widthFeet
+          .clamp(0.5, math.max<double>(0.5, wallLength - opStart))
+          .toDouble();
       final opEnd = (opStart + opWidth).clamp(0.0, wallLength).toDouble();
 
       // Solid wall segment before opening
@@ -470,8 +499,10 @@ class Plan3DBuilder {
     final hingePoint = pA + dir * frameThick;
     final doorSwingAngle = math.pi / 4; // 45 degrees open
     final leafDir = Offset(
-      dir.dx * math.cos(doorSwingAngle) - perp.dx * math.sin(doorSwingAngle) * swingDir,
-      dir.dy * math.cos(doorSwingAngle) - perp.dy * math.sin(doorSwingAngle) * swingDir,
+      dir.dx * math.cos(doorSwingAngle) -
+          perp.dx * math.sin(doorSwingAngle) * swingDir,
+      dir.dy * math.cos(doorSwingAngle) -
+          perp.dy * math.sin(doorSwingAngle) * swingDir,
     );
     final leafEnd = hingePoint + leafDir * (doorWidth - frameThick * 2);
     final doorLeafHeight = math.min(wallHeight, defaultDoorHeightFeet - 0.1);
@@ -703,15 +734,50 @@ class Plan3DBuilder {
     final border = edgeColor ?? Colors.black.withValues(alpha: 0.15);
 
     // Top
-    polygons.add(Polygon3D.fromVertices(vertices: [c5, c6, c7, c8], baseColor: color, category: category, edgeColor: border));
+    polygons.add(
+      Polygon3D.fromVertices(
+        vertices: [c5, c6, c7, c8],
+        baseColor: color,
+        category: category,
+        edgeColor: border,
+      ),
+    );
     // North
-    polygons.add(Polygon3D.fromVertices(vertices: [c1, c2, c6, c5], baseColor: color, category: category, edgeColor: border));
+    polygons.add(
+      Polygon3D.fromVertices(
+        vertices: [c1, c2, c6, c5],
+        baseColor: color,
+        category: category,
+        edgeColor: border,
+      ),
+    );
     // South
-    polygons.add(Polygon3D.fromVertices(vertices: [c3, c4, c8, c7], baseColor: color, category: category, edgeColor: border));
+    polygons.add(
+      Polygon3D.fromVertices(
+        vertices: [c3, c4, c8, c7],
+        baseColor: color,
+        category: category,
+        edgeColor: border,
+      ),
+    );
     // West
-    polygons.add(Polygon3D.fromVertices(vertices: [c4, c1, c5, c8], baseColor: color, category: category, edgeColor: border));
+    polygons.add(
+      Polygon3D.fromVertices(
+        vertices: [c4, c1, c5, c8],
+        baseColor: color,
+        category: category,
+        edgeColor: border,
+      ),
+    );
     // East
-    polygons.add(Polygon3D.fromVertices(vertices: [c2, c3, c7, c6], baseColor: color, category: category, edgeColor: border));
+    polygons.add(
+      Polygon3D.fromVertices(
+        vertices: [c2, c3, c7, c6],
+        baseColor: color,
+        category: category,
+        edgeColor: border,
+      ),
+    );
   }
 
   /// Blends the room's identity color with selected floor material

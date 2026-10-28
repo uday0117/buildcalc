@@ -50,7 +50,9 @@ class UnitSelector<T> extends StatelessWidget {
                     labelBuilder(val),
                     style: TextStyle(
                       fontSize: 13,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.w500,
                       color: isSelected
                           ? Colors.white
                           : (isDark ? Colors.white70 : const Color(0xFF2C3E50)),
@@ -65,4 +67,3 @@ class UnitSelector<T> extends StatelessWidget {
     );
   }
 }
-

@@ -55,9 +55,9 @@ class _TileCalculatorState extends State<TileCalculator> {
 
       _saveToHistory();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter all values')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter all values')));
     }
   }
 
@@ -112,7 +112,9 @@ class _TileCalculatorState extends State<TileCalculator> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final sectionHeaderColor = isDark ? const Color(0xFFFFA726) : const Color(0xFF1E3A5F);
+    final sectionHeaderColor = isDark
+        ? const Color(0xFFFFA726)
+        : const Color(0xFF1E3A5F);
 
     return Scaffold(
       appBar: AppBar(
@@ -235,7 +237,8 @@ class _TileCalculatorState extends State<TileCalculator> {
                 title: 'Results',
                 icon: Icons.dashboard_rounded,
                 onSave: _bookmark,
-                note: 'Includes 10% wastage for cutting. Box count assumes 10 tiles/box.',
+                note:
+                    'Includes 10% wastage for cutting. Box count assumes 10 tiles/box.',
                 rows: [
                   ResultRowItem(
                     label: 'Tiles Required',

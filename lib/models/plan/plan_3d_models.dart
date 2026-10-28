@@ -7,7 +7,8 @@ enum ProjectionMode {
   perspective,
   isometric;
 
-  String get label => this == ProjectionMode.perspective ? 'Perspective' : 'Isometric';
+  String get label =>
+      this == ProjectionMode.perspective ? 'Perspective' : 'Isometric';
 }
 
 enum CutawayMode {
@@ -22,15 +23,7 @@ enum CutawayMode {
   const CutawayMode(this.wallHeightFeet, this.label, this.icon);
 }
 
-enum MaterialTextureType {
-  smooth,
-  brick,
-  wood,
-  tile,
-  concrete,
-  marble,
-  glass,
-}
+enum MaterialTextureType { smooth, brick, wood, tile, concrete, marble, glass }
 
 class Scene3DMaterial {
   final String id;
@@ -204,12 +197,12 @@ class BuildingFloorLevel {
   }
 
   Map<String, dynamic> toJson() => {
-        'levelIndex': levelIndex,
-        'name': name,
-        'elevationFeet': elevationFeet,
-        'heightFeet': heightFeet,
-        'rooms': rooms.map((r) => r.toJson()).toList(),
-      };
+    'levelIndex': levelIndex,
+    'name': name,
+    'elevationFeet': elevationFeet,
+    'heightFeet': heightFeet,
+    'rooms': rooms.map((r) => r.toJson()).toList(),
+  };
 
   factory BuildingFloorLevel.fromJson(Map<String, dynamic> json) =>
       BuildingFloorLevel(
@@ -217,7 +210,8 @@ class BuildingFloorLevel {
         name: json['name'] as String? ?? 'Ground Floor',
         elevationFeet: (json['elevationFeet'] as num?)?.toDouble() ?? 0.0,
         heightFeet: (json['heightFeet'] as num?)?.toDouble() ?? 10.0,
-        rooms: (json['rooms'] as List<dynamic>?)
+        rooms:
+            (json['rooms'] as List<dynamic>?)
                 ?.map((r) => PlanRoom.fromJson(Map<String, dynamic>.from(r)))
                 .toList() ??
             const [],
@@ -231,17 +225,20 @@ class Point3D {
 
   const Point3D(this.x, this.y, this.z);
 
-  Point3D operator +(Point3D other) => Point3D(x + other.x, y + other.y, z + other.z);
-  Point3D operator -(Point3D other) => Point3D(x - other.x, y - other.y, z - other.z);
-  Point3D operator *(double scalar) => Point3D(x * scalar, y * scalar, z * scalar);
+  Point3D operator +(Point3D other) =>
+      Point3D(x + other.x, y + other.y, z + other.z);
+  Point3D operator -(Point3D other) =>
+      Point3D(x - other.x, y - other.y, z - other.z);
+  Point3D operator *(double scalar) =>
+      Point3D(x * scalar, y * scalar, z * scalar);
 
   double dot(Point3D other) => x * other.x + y * other.y + z * other.z;
 
   Point3D cross(Point3D other) => Point3D(
-        y * other.z - z * other.y,
-        z * other.x - x * other.z,
-        x * other.y - y * other.x,
-      );
+    y * other.z - z * other.y,
+    z * other.x - x * other.z,
+    x * other.y - y * other.x,
+  );
 
   double get length => math.sqrt(x * x + y * y + z * z);
 
@@ -252,7 +249,8 @@ class Point3D {
   }
 
   @override
-  String toString() => 'Point3D(${x.toStringAsFixed(2)}, ${y.toStringAsFixed(2)}, ${z.toStringAsFixed(2)})';
+  String toString() =>
+      'Point3D(${x.toStringAsFixed(2)}, ${y.toStringAsFixed(2)}, ${z.toStringAsFixed(2)})';
 }
 
 enum PolygonCategory {
@@ -502,4 +500,3 @@ class Plan3DValidationResult {
   bool get hasWarnings => warnings.isNotEmpty;
   bool get hasErrors => errors.isNotEmpty;
 }
-

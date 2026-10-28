@@ -8,10 +8,7 @@ import '../../screens/plan/plan_templates_screen.dart';
 class PlotSetupDialog extends StatefulWidget {
   final FloorPlan? currentPlan;
 
-  const PlotSetupDialog({
-    super.key,
-    this.currentPlan,
-  });
+  const PlotSetupDialog({super.key, this.currentPlan});
 
   @override
   State<PlotSetupDialog> createState() => _PlotSetupDialogState();
@@ -76,8 +73,12 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
       _selectedTemplate = template;
       if (widget.currentPlan == null) {
         final defSizeFeet = PlanTemplates.getDefaultPlotSize(template);
-        _widthController.text = _selectedUnit.fromFeet(defSizeFeet.width).toStringAsFixed(1);
-        _lengthController.text = _selectedUnit.fromFeet(defSizeFeet.height).toStringAsFixed(1);
+        _widthController.text = _selectedUnit
+            .fromFeet(defSizeFeet.width)
+            .toStringAsFixed(1);
+        _lengthController.text = _selectedUnit
+            .fromFeet(defSizeFeet.height)
+            .toStringAsFixed(1);
         _nameController.text = '$template House Plan';
       }
     });
@@ -110,7 +111,8 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
 
     final curW = double.tryParse(_widthController.text.trim()) ?? 0.0;
     final curL = double.tryParse(_lengthController.text.trim()) ?? 0.0;
-    final plotAreaSqFt = _selectedUnit.toFeet(curW) * _selectedUnit.toFeet(curL);
+    final plotAreaSqFt =
+        _selectedUnit.toFeet(curW) * _selectedUnit.toFeet(curL);
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -131,7 +133,9 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFF8C00).withValues(alpha: 0.15),
+                          color: const Color(
+                            0xFFFF8C00,
+                          ).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Icon(
@@ -143,11 +147,15 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          isEditing ? 'Plot & Layout Setup' : 'Create 2D House Plan',
+                          isEditing
+                              ? 'Plot & Layout Setup'
+                              : 'Create 2D House Plan',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : const Color(0xFF1E3A5F),
+                            color: isDark
+                                ? Colors.white
+                                : const Color(0xFF1E3A5F),
                           ),
                         ),
                       ),
@@ -160,10 +168,17 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
                     controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'Plan Name',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
                     ),
-                    validator: (val) => (val == null || val.trim().isEmpty) ? 'Please enter a name' : null,
+                    validator: (val) => (val == null || val.trim().isEmpty)
+                        ? 'Please enter a name'
+                        : null,
                   ),
                   const SizedBox(height: 14),
 
@@ -183,8 +198,12 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
                         selectedColor: const Color(0xFFFF8C00),
                         labelStyle: TextStyle(
                           fontSize: 12,
-                          fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                          color: isSel ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                          fontWeight: isSel
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: isSel
+                              ? Colors.white
+                              : (isDark ? Colors.white70 : Colors.black87),
                         ),
                         onSelected: (_) => _onUnitChanged(unit),
                       );
@@ -198,27 +217,41 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
                     children: [
                       const Text(
                         'Starting Layout',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       TextButton.icon(
                         onPressed: () async {
                           final selected = await Navigator.push<FloorPlan>(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const PlanTemplatesScreen(selectOnly: true),
+                              builder: (_) =>
+                                  const PlanTemplatesScreen(selectOnly: true),
                             ),
                           );
                           if (selected != null && context.mounted) {
                             Navigator.of(context).pop(selected);
                           }
                         },
-                        icon: const Icon(Icons.auto_awesome_mosaic_rounded, size: 14, color: Color(0xFFFF8C00)),
+                        icon: const Icon(
+                          Icons.auto_awesome_mosaic_rounded,
+                          size: 14,
+                          color: Color(0xFFFF8C00),
+                        ),
                         label: const Text(
                           'Ready-Made Templates',
-                          style: TextStyle(fontSize: 11, color: Color(0xFFFF8C00)),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFFFF8C00),
+                          ),
                         ),
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
@@ -237,8 +270,12 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
                         selectedColor: const Color(0xFF1E3A5F),
                         labelStyle: TextStyle(
                           fontSize: 12,
-                          fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                          color: isSel ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                          fontWeight: isSel
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: isSel
+                              ? Colors.white
+                              : (isDark ? Colors.white70 : Colors.black87),
                         ),
                         onSelected: (_) => _onTemplateSelected(template),
                       );
@@ -252,17 +289,26 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
                       Expanded(
                         child: TextFormField(
                           controller: _widthController,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
                           decoration: InputDecoration(
                             labelText: 'Plot Width (${_selectedUnit.symbol})',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
                           ),
                           onChanged: (_) => setState(() {}),
                           validator: (val) {
                             final num = double.tryParse(val ?? '');
                             if (num == null || num <= 0) return 'Enter width';
-                            if (_selectedUnit.toFeet(num) < 15.0) return 'Min 15 ft';
+                            if (_selectedUnit.toFeet(num) < 15.0) {
+                              return 'Min 15 ft';
+                            }
                             return null;
                           },
                         ),
@@ -271,17 +317,26 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
                       Expanded(
                         child: TextFormField(
                           controller: _lengthController,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
                           decoration: InputDecoration(
                             labelText: 'Plot Length (${_selectedUnit.symbol})',
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
                           ),
                           onChanged: (_) => setState(() {}),
                           validator: (val) {
                             final num = double.tryParse(val ?? '');
                             if (num == null || num <= 0) return 'Enter length';
-                            if (_selectedUnit.toFeet(num) < 15.0) return 'Min 15 ft';
+                            if (_selectedUnit.toFeet(num) < 15.0) {
+                              return 'Min 15 ft';
+                            }
                             return null;
                           },
                         ),
@@ -293,9 +348,14 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
                   // Calculated Plot Area Badge
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
-                      color: (isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9)),
+                      color: (isDark
+                          ? const Color(0xFF0F172A)
+                          : const Color(0xFFF1F5F9)),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(
@@ -303,7 +363,10 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
                       children: [
                         const Text(
                           'Calculated Plot Area:',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         Text(
                           _selectedUnit.formatArea(plotAreaSqFt),
@@ -332,9 +395,13 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
                         style: FilledButton.styleFrom(
                           backgroundColor: const Color(0xFFFF8C00),
                           foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
-                        child: Text(isEditing ? 'Apply Layout' : 'Generate Plan'),
+                        child: Text(
+                          isEditing ? 'Apply Layout' : 'Generate Plan',
+                        ),
                       ),
                     ],
                   ),
@@ -347,4 +414,3 @@ class _PlotSetupDialogState extends State<PlotSetupDialog> {
     );
   }
 }
-

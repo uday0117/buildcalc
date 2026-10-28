@@ -42,7 +42,10 @@ class ReadyMadePlanTemplate {
       (plotWidthFeet - (sideSetbackFeet * 2)).clamp(0.0, plotWidthFeet);
 
   double get usablePlotLengthFeet =>
-      (plotLengthFeet - (frontSetbackFeet + rearSetbackFeet)).clamp(0.0, plotLengthFeet);
+      (plotLengthFeet - (frontSetbackFeet + rearSetbackFeet)).clamp(
+        0.0,
+        plotLengthFeet,
+      );
 
   double get usablePlotAreaSqFt => usablePlotWidthFeet * usablePlotLengthFeet;
 
@@ -80,10 +83,7 @@ class ReadyMadePlanTemplate {
         );
       }).toList();
 
-      return r.copyWith(
-        id: freshRoomId,
-        openings: freshOpenings,
-      );
+      return r.copyWith(id: freshRoomId, openings: freshOpenings);
     }).toList();
 
     return FloorPlan(
@@ -280,7 +280,8 @@ class ReadyMadePlanCatalog {
 
       if (dimension != null && dimension != 'All Sizes') {
         final dimNorm = dimension.replaceAll(' ft', '').replaceAll(' ', '');
-        final plotTag = '${template.plotWidthFeet.toInt()}x${template.plotLengthFeet.toInt()}';
+        final plotTag =
+            '${template.plotWidthFeet.toInt()}x${template.plotLengthFeet.toInt()}';
         if (plotTag != dimNorm) {
           return false;
         }
@@ -291,7 +292,9 @@ class ReadyMadePlanCatalog {
         final matchesTitle = template.title.toLowerCase().contains(q);
         final matchesDesc = template.description.toLowerCase().contains(q);
         final matchesBhk = template.bhkType.toLowerCase().contains(q);
-        final matchesDim = template.plotDimensionsLabel.toLowerCase().contains(q);
+        final matchesDim = template.plotDimensionsLabel.toLowerCase().contains(
+          q,
+        );
         if (!matchesTitle && !matchesDesc && !matchesBhk && !matchesDim) {
           return false;
         }

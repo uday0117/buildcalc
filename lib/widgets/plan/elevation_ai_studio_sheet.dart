@@ -48,7 +48,11 @@ class ElevationAIStudioSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
-                  const Icon(Icons.auto_awesome_rounded, color: Color(0xFFFF8C00), size: 22),
+                  const Icon(
+                    Icons.auto_awesome_rounded,
+                    color: Color(0xFFFF8C00),
+                    size: 22,
+                  ),
                   const SizedBox(width: 8),
                   const Text(
                     'AI Concept Studio & Export',
@@ -79,7 +83,11 @@ class ElevationAIStudioSheet extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.warning_amber_rounded, color: Colors.amber.shade900, size: 22),
+                        Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.amber.shade900,
+                          size: 22,
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Column(
@@ -133,9 +141,13 @@ class ElevationAIStudioSheet extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+                      color: isDark
+                          ? const Color(0xFF0F172A)
+                          : const Color(0xFFF1F5F9),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: isDark ? Colors.white10 : Colors.grey.shade300),
+                      border: Border.all(
+                        color: isDark ? Colors.white10 : Colors.grey.shade300,
+                      ),
                     ),
                     child: SelectableText(
                       prompt,
@@ -156,21 +168,32 @@ class ElevationAIStudioSheet extends StatelessWidget {
                           onPressed: () {
                             Clipboard.setData(ClipboardData(text: prompt));
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('AI prompt copied to clipboard!')),
+                              const SnackBar(
+                                content: Text('AI prompt copied to clipboard!'),
+                              ),
                             );
                           },
                           icon: const Icon(Icons.copy_rounded, size: 16),
-                          label: const Text('Copy AI Prompt', style: TextStyle(fontSize: 12)),
+                          label: const Text(
+                            'Copy AI Prompt',
+                            style: TextStyle(fontSize: 12),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: () {
-                            Share.share(prompt, subject: '${config.name} - AI Facade Prompt');
+                            Share.share(
+                              prompt,
+                              subject: '${config.name} - AI Facade Prompt',
+                            );
                           },
                           icon: const Icon(Icons.share_rounded, size: 16),
-                          label: const Text('Share Prompt', style: TextStyle(fontSize: 12)),
+                          label: const Text(
+                            'Share Prompt',
+                            style: TextStyle(fontSize: 12),
+                          ),
                         ),
                       ),
                     ],
@@ -198,11 +221,27 @@ class ElevationAIStudioSheet extends StatelessWidget {
                         color: const Color(0xFFFF8C00).withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.image_outlined, color: Color(0xFFFF8C00), size: 20),
+                      child: const Icon(
+                        Icons.image_outlined,
+                        color: Color(0xFFFF8C00),
+                        size: 20,
+                      ),
                     ),
-                    title: const Text('Export Elevation Preview (PNG)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                    subtitle: const Text('Save or share high-resolution facade drawing', style: TextStyle(fontSize: 11)),
-                    trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+                    title: const Text(
+                      'Export Elevation Preview (PNG)',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: const Text(
+                      'Save or share high-resolution facade drawing',
+                      style: TextStyle(fontSize: 11),
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 14,
+                    ),
                     onTap: () {
                       Navigator.pop(context);
                       onExportImage();
@@ -218,14 +257,34 @@ class ElevationAIStudioSheet extends StatelessWidget {
                         color: Colors.blue.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.description_outlined, color: Colors.blue, size: 20),
+                      child: const Icon(
+                        Icons.description_outlined,
+                        color: Colors.blue,
+                        size: 20,
+                      ),
                     ),
-                    title: const Text('Share Architectural Specification', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                    subtitle: const Text('Detailed text report with levels, finishes & dimensions', style: TextStyle(fontSize: 11)),
-                    trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+                    title: const Text(
+                      'Share Architectural Specification',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: const Text(
+                      'Detailed text report with levels, finishes & dimensions',
+                      style: TextStyle(fontSize: 11),
+                    ),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 14,
+                    ),
                     onTap: () {
-                      final report = ElevationBuilder.generateSpecificationReport(config);
-                      Share.share(report, subject: '${config.name} - Specification Report');
+                      final report =
+                          ElevationBuilder.generateSpecificationReport(config);
+                      Share.share(
+                        report,
+                        subject: '${config.name} - Specification Report',
+                      );
                     },
                   ),
 
@@ -239,4 +298,3 @@ class ElevationAIStudioSheet extends StatelessWidget {
     );
   }
 }
-

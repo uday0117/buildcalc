@@ -55,10 +55,7 @@ class _CostEstimatorState extends State<CostEstimator> {
         'area': _areaController.text,
         'construction_type': _constructionType,
       },
-      results: {
-        'total_cost': _totalCost,
-        'rate_per_sqft': _costPerSqFt,
-      },
+      results: {'total_cost': _totalCost, 'rate_per_sqft': _costPerSqFt},
       timestamp: DateTime.now(),
     );
   }
@@ -176,13 +173,17 @@ class _CostEstimatorState extends State<CostEstimator> {
                           padding: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? const Color(0xFFFF8C00).withValues(alpha: isDark ? 0.2 : 0.1)
+                                ? const Color(
+                                    0xFFFF8C00,
+                                  ).withValues(alpha: isDark ? 0.2 : 0.1)
                                 : cardBg,
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(
                               color: isSelected
                                   ? const Color(0xFFFF8C00)
-                                  : (isDark ? Colors.white12 : Colors.grey.shade300),
+                                  : (isDark
+                                        ? Colors.white12
+                                        : Colors.grey.shade300),
                               width: isSelected ? 2 : 1,
                             ),
                           ),
@@ -208,14 +209,18 @@ class _CostEstimatorState extends State<CostEstimator> {
                                         fontWeight: FontWeight.bold,
                                         color: isSelected
                                             ? const Color(0xFFFF8C00)
-                                            : (isDark ? Colors.white : const Color(0xFF1E3A5F)),
+                                            : (isDark
+                                                  ? Colors.white
+                                                  : const Color(0xFF1E3A5F)),
                                       ),
                                     ),
                                     Text(
                                       '₹${_costRates[type]?.toStringAsFixed(0)} per sq ft',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: isDark ? Colors.white60 : Colors.grey[600],
+                                        color: isDark
+                                            ? Colors.white60
+                                            : Colors.grey[600],
                                       ),
                                     ),
                                   ],
@@ -254,13 +259,15 @@ class _CostEstimatorState extends State<CostEstimator> {
                 title: 'Estimated Cost',
                 icon: Icons.calculate_rounded,
                 onSave: _bookmark,
-                note: 'Approximate estimate. Actual costs may vary based on location, materials, and contractor rates.',
+                note:
+                    'Approximate estimate. Actual costs may vary based on location, materials, and contractor rates.',
                 rows: [
                   ResultRowItem(
                     label: 'Total Cost',
                     value: '₹${_totalCost.toStringAsFixed(0)}',
                     isPrimary: true,
-                    subtitle: '≈ ₹${(_totalCost / 100000).toStringAsFixed(2)} Lakhs',
+                    subtitle:
+                        '≈ ₹${(_totalCost / 100000).toStringAsFixed(2)} Lakhs',
                   ),
                   ResultRowItem(
                     label: 'Construction Grade',
