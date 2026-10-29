@@ -14,22 +14,26 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await AdService.initialize();
 
-  runApp(const BuildCalcApp());
+  final initialSettings = await AppSettingsService.loadSettings();
+
+  runApp(BuildCalcApp(initialSettings: initialSettings));
 }
 
 class BuildCalcApp extends StatefulWidget {
-  const BuildCalcApp({super.key});
+  final AppSettings? initialSettings;
+  const BuildCalcApp({super.key, this.initialSettings});
 
   @override
   State<BuildCalcApp> createState() => _BuildCalcAppState();
 }
 
 class _BuildCalcAppState extends State<BuildCalcApp> {
-  AppSettings _settings = const AppSettings();
+  late AppSettings _settings;
 
   @override
   void initState() {
     super.initState();
+    _settings = widget.initialSettings ?? const AppSettings();
     _loadSettings();
   }
 
@@ -53,8 +57,21 @@ class _BuildCalcAppState extends State<BuildCalcApp> {
       themeMode: _settings.themeMode,
       locale: _settings.locale,
       supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: [
-        const AppLocalizationsDelegate(),
+      localeResolutionCallback: (deviceLocale, supportedLocales) {
+        if (_settings.locale != null) {
+          return _settings.locale;
+        }
+        if (deviceLocale != null) {
+          for (final supported in supportedLocales) {
+            if (supported.languageCode == deviceLocale.languageCode) {
+              return supported;
+            }
+          }
+        }
+        return const Locale('en');
+      },
+      localizationsDelegates: const [
+        AppLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 
+import 'app_localizations.dart';
+
 class AppSettings {
   const AppSettings({
     this.themeMode = ThemeMode.system,
-    this.locale = const Locale('en'),
+    this.locale,
   });
 
   final ThemeMode themeMode;
-  final Locale locale;
+  /// If null, the app follows the system / device language.
+  final Locale? locale;
 
-  static const List<Locale> supportedLocales = [Locale('en'), Locale('ar')];
+  static List<Locale> get supportedLocales => AppLocalizations.supportedLocales;
 
-  AppSettings copyWith({ThemeMode? themeMode, Locale? locale}) {
+  AppSettings copyWith({
+    ThemeMode? themeMode,
+    Locale? locale,
+    bool clearLocale = false,
+  }) {
     return AppSettings(
       themeMode: themeMode ?? this.themeMode,
-      locale: locale ?? this.locale,
+      locale: clearLocale ? null : (locale ?? this.locale),
     );
   }
 
@@ -25,7 +32,6 @@ class AppSettings {
       case 'light':
         return ThemeMode.light;
       case 'system':
-        return ThemeMode.system;
       default:
         return ThemeMode.system;
     }
@@ -42,8 +48,17 @@ class AppSettings {
     }
   }
 
-  static Locale localeFromString(String? value) {
-    if (value == 'ar') return const Locale('ar');
-    return const Locale('en');
+  static Locale? localeFromString(String? value) {
+    if (value == null || value.isEmpty || value == 'system') {
+      return null;
+    }
+    final isSupported = AppLocalizations.supportedLocales.any(
+      (l) => l.languageCode == value,
+    );
+    return isSupported ? Locale(value) : null;
+  }
+
+  static String localeToString(Locale? locale) {
+    return locale?.languageCode ?? 'system';
   }
 }

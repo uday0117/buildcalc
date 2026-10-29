@@ -21,8 +21,12 @@ class AppSettingsService {
     await prefs.setString(_themeKey, AppSettings.themeModeToString(mode));
   }
 
-  static Future<void> saveLocale(Locale locale) async {
+  static Future<void> saveLocale(Locale? locale) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_localeKey, locale.languageCode);
+    if (locale == null) {
+      await prefs.setString(_localeKey, 'system');
+    } else {
+      await prefs.setString(_localeKey, locale.languageCode);
+    }
   }
 }

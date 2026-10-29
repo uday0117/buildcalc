@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../app_localizations.dart';
 import '../models/calculation.dart';
+import '../models/calculator_item.dart';
 import '../services/storage_service.dart';
 
 class SavedScreen extends StatefulWidget {
@@ -102,7 +104,8 @@ class _SavedScreenState extends State<SavedScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    calc.title,
+                    CalculatorItem.findById(calc.type)?.localizedTitle(context) ??
+                        calc.title,
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -205,9 +208,9 @@ class _SavedScreenState extends State<SavedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Saved',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.translate(context, 'saved'),
+          style: const TextStyle(
             color: Color(0xFF1E3A5F),
             fontWeight: FontWeight.bold,
           ),
@@ -227,7 +230,7 @@ class _SavedScreenState extends State<SavedScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No saved calculations',
+                    AppLocalizations.translate(context, 'noCalculationsYet'),
                     style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                   ),
                 ],
@@ -238,6 +241,9 @@ class _SavedScreenState extends State<SavedScreen> {
               itemCount: _saved.length,
               itemBuilder: (context, index) {
                 final calc = _saved[index];
+                final localizedTitle =
+                    CalculatorItem.findById(calc.type)?.localizedTitle(context) ??
+                        calc.title;
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
                   child: ListTile(
@@ -255,7 +261,7 @@ class _SavedScreenState extends State<SavedScreen> {
                       ),
                     ),
                     title: Text(
-                      calc.title,
+                      localizedTitle,
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     subtitle: Text(

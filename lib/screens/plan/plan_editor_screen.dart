@@ -238,11 +238,11 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 160),
+                Flexible(
                   child: Text(
                     plan.name,
                     overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -274,40 +274,18 @@ class _PlanEditorScreenState extends State<PlanEditorScreen> {
           ),
         ),
         actions: [
-          // Materials Estimate
-          IconButton(
-            icon: const Icon(
-              Icons.calculate_outlined,
-              color: Color(0xFF059669),
-            ),
-            tooltip: 'Material & Cost Estimate',
-            onPressed: _openMaterialEstimate,
-          ),
-          // 3D View
-          IconButton(
-            icon: const Icon(
-              Icons.view_in_ar_rounded,
-              color: Color(0xFFFF8C00),
-            ),
-            tooltip: '3D House View',
-            onPressed: _open3DView,
-          ),
-          // Front Elevation
-          IconButton(
-            icon: const Icon(Icons.villa_outlined, color: Color(0xFF0284C7)),
-            tooltip: 'Front Elevation Generator',
-            onPressed: _openElevation,
-          ),
           // Undo
           IconButton(
             icon: const Icon(Icons.undo_rounded),
             tooltip: 'Undo',
+            visualDensity: VisualDensity.compact,
             onPressed: _controller.canUndo ? () => _controller.undo() : null,
           ),
           // Redo
           IconButton(
             icon: const Icon(Icons.redo_rounded),
             tooltip: 'Redo',
+            visualDensity: VisualDensity.compact,
             onPressed: _controller.canRedo ? () => _controller.redo() : null,
           ),
           // Unit & Settings Menu

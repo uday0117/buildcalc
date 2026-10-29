@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../app_localizations.dart';
 import '../models/calculation.dart';
+import '../models/calculator_item.dart';
 import '../services/storage_service.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -33,17 +35,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear History'),
-        content: const Text('Are you sure you want to clear all history?'),
+        title: Text(AppLocalizations.translate(context, 'clearHistory')),
+        content: Text(
+          AppLocalizations.translate(context, 'clearHistoryConfirm'),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.translate(context, 'cancel')),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Clear'),
+            child: Text(AppLocalizations.translate(context, 'clear')),
           ),
         ],
       ),
@@ -101,9 +105,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'History',
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.translate(context, 'history'),
+          style: const TextStyle(
             color: Color(0xFF1E3A5F),
             fontWeight: FontWeight.bold,
           ),
@@ -126,7 +130,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   Icon(Icons.history, size: 80, color: Colors.grey[300]),
                   const SizedBox(height: 16),
                   Text(
-                    'No calculations yet',
+                    AppLocalizations.translate(context, 'noCalculationsYet'),
                     style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                   ),
                 ],
@@ -137,6 +141,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
               itemCount: _history.length,
               itemBuilder: (context, index) {
                 final calc = _history[index];
+                final localizedTitle =
+                    CalculatorItem.findById(calc.type)?.localizedTitle(context) ??
+                        calc.title;
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
                   child: ListTile(
@@ -154,7 +161,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       ),
                     ),
                     title: Text(
-                      calc.title,
+                      localizedTitle,
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     subtitle: Text(
@@ -170,9 +177,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         await StorageService.saveCalculation(calc);
                         if (!mounted) return;
                         messenger?.showSnackBar(
-                          const SnackBar(
-                            content: Text('Saved to bookmarks'),
-                            duration: Duration(seconds: 1),
+                          SnackBar(
+                            content: Text(
+                              AppLocalizations.translate(
+                                context,
+                                'savedToBookmarks',
+                              ),
+                            ),
+                            duration: const Duration(seconds: 1),
                           ),
                         );
                       },

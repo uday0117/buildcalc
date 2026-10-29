@@ -83,9 +83,11 @@ The app is currently running on device **2311DRN14I**. To take screenshots:
 ### App Details:
 - **App Name**: BuildCalc
 - **Package Name**: com.uksolutions.buildcalc
-- **Version**: 1.0.0+1
-- **Target SDK**: 34 (Android 14)
+- **Version**: 1.0.1+2
+- **Compile SDK**: 36 (Android 16)
+- **Target SDK**: 36 (Android 16)
 - **Min SDK**: 21 (Android 5.0)
+- **16 KB Memory Page Size Support**: Enabled (AGP 8.11.1, uncompressed page-aligned native libs)
 
 ### Description Suggestions:
 **Short Description (80 chars)**:
@@ -131,6 +133,26 @@ Perfect for:
 - intl: ^0.18.1 (Date formatting)
 - url_launcher: ^6.2.5 (External links - not yet used)
 - cupertino_icons: ^1.0.8 (iOS icons)
+
+## 🛡️ Android 16 (API 36) & 16 KB Page Support
+
+### 1. Compile & Target SDK 36 (Android 16)
+- Configured in `android/app/build.gradle.kts`:
+  - `compileSdk = 36`
+  - `targetSdk = 36`
+- Ensures full compliance with Google Play's latest target API level requirements.
+
+### 2. 16 KB Memory Page Size Support
+- Modern Android devices (Android 15+ and 16) support 16 KB memory page sizes for improved performance and efficiency.
+- Google Play requires all apps targeting Android 15+ with native libraries (`.so`) to support 16 KB page sizes.
+- **Configured in this build:**
+  - `useLegacyPackaging = false` in `android/app/build.gradle.kts` inside `packaging.jniLibs`
+  - `android.bundle.enableUncompressedNativeLibs=true` in `android/gradle.properties`
+  - Android Gradle Plugin `8.11.1` & Gradle `8.14` (both natively support 16 KB alignment)
+- **Verification steps:**
+  1. Build the App Bundle: `flutter build appbundle --release`
+  2. Open Android Studio -> **Build** -> **Analyze APK...** -> select `app-release.aab`
+  3. Inspect `lib/arm64-v8a/` binaries to verify 16 KB alignment (`LOAD` segments aligned to `0x4000` / 16384 bytes).
 
 ## 🚀 Build Commands Reference
 

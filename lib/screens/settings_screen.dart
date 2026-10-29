@@ -17,7 +17,7 @@ class SettingsScreen extends StatefulWidget {
 
   final AppSettings settings;
   final ValueChanged<ThemeMode> onThemeChanged;
-  final ValueChanged<Locale> onLocaleChanged;
+  final ValueChanged<Locale?> onLocaleChanged;
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -107,42 +107,124 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showLanguageDialog() {
-    final options = AppSettings.supportedLocales;
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.translate(context, 'language')),
-        content: SizedBox(
-          width: 260,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: options.map((locale) {
-              final label = locale.languageCode == 'ar'
-                  ? AppLocalizations.translate(context, 'arabic')
-                  : AppLocalizations.translate(context, 'english');
+      builder: (dialogContext) {
+        String query = '';
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            final activeLocale = widget.settings.locale;
+            final isSystem = activeLocale == null;
+            final deviceLanguage = Localizations.localeOf(context).languageCode;
+            final deviceLangName = AppLocalizations.getNativeName(deviceLanguage);
 
-              final isSelected = widget.settings.locale == locale;
+            final filteredLanguages = AppLocalizations.supportedLanguages.where((l) {
+              if (query.trim().isEmpty) return true;
+              final q = query.toLowerCase().trim();
+              return l.nativeName.toLowerCase().contains(q) ||
+                  l.englishName.toLowerCase().contains(q) ||
+                  l.code.toLowerCase().contains(q);
+            }).toList();
 
-              return ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Icon(
-                  isSelected
-                      ? Icons.check_circle_rounded
-                      : Icons.circle_outlined,
-                  color: isSelected
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.grey,
+            return AlertDialog(
+              title: Text(AppLocalizations.translate(context, 'language')),
+              contentPadding: const EdgeInsets.only(top: 12, bottom: 8),
+              content: SizedBox(
+                width: double.maxFinite,
+                height: 380,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: AppLocalizations.translate(context, 'searchCalculators'),
+                          prefixIcon: const Icon(Icons.search, size: 20),
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onChanged: (val) {
+                          setDialogState(() => query = val);
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          if (query.trim().isEmpty) ...[
+                            ListTile(
+                              leading: Icon(
+                                isSystem
+                                    ? Icons.check_circle_rounded
+                                    : Icons.circle_outlined,
+                                color: isSystem
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Colors.grey,
+                              ),
+                              title: Row(
+                                children: [
+                                  const Text('🌐 '),
+                                  Text(AppLocalizations.translate(context, 'systemDefault')),
+                                ],
+                              ),
+                              subtitle: Text(
+                                '${AppLocalizations.translate(context, 'followSystem')} ($deviceLangName)',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              onTap: () {
+                                widget.onLocaleChanged(null);
+                                Navigator.pop(dialogContext);
+                              },
+                            ),
+                            const Divider(height: 1),
+                          ],
+                          ...filteredLanguages.map((lang) {
+                            final isSelected = !isSystem && activeLocale.languageCode == lang.code;
+                            return ListTile(
+                              leading: Icon(
+                                isSelected
+                                    ? Icons.check_circle_rounded
+                                    : Icons.circle_outlined,
+                                color: isSelected
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Colors.grey,
+                              ),
+                              title: Text(lang.nativeName),
+                              subtitle: Text(
+                                lang.englishName,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                              onTap: () {
+                                widget.onLocaleChanged(Locale(lang.code));
+                                Navigator.pop(dialogContext);
+                              },
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                title: Text(label),
-                onTap: () {
-                  widget.onLocaleChanged(locale);
-                  Navigator.pop(context);
-                },
-              );
-            }).toList(),
-          ),
-        ),
-      ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: Text(AppLocalizations.translate(context, 'cancel')),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 
@@ -226,9 +308,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         context,
                         icon: Icons.language_rounded,
                         title: AppLocalizations.translate(context, 'language'),
-                        subtitle: widget.settings.locale.languageCode == 'ar'
-                            ? AppLocalizations.translate(context, 'arabic')
-                            : AppLocalizations.translate(context, 'english'),
+                        subtitle: widget.settings.locale == null
+                            ? '${AppLocalizations.translate(context, 'systemDefault')} (${AppLocalizations.getNativeName(Localizations.localeOf(context).languageCode)})'
+                            : AppLocalizations.getNativeName(
+                                widget.settings.locale!.languageCode,
+                              ),
                         onTap: _showLanguageDialog,
                       ),
                     ],

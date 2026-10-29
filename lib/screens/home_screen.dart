@@ -67,7 +67,10 @@ class _HomeScreenState extends State<HomeScreen> {
           widget.onSettingsChanged(nextSettings);
         },
         onLocaleChanged: (locale) {
-          final nextSettings = _settings.copyWith(locale: locale);
+          final nextSettings = _settings.copyWith(
+            locale: locale,
+            clearLocale: locale == null,
+          );
           setState(() => _settings = nextSettings);
           widget.onSettingsChanged(nextSettings);
         },
@@ -173,7 +176,7 @@ class _HomeContentState extends State<HomeContent> {
       }
 
       // Search filter
-      if (_searchQuery.isNotEmpty && !calc.matchesSearch(_searchQuery)) {
+      if (_searchQuery.isNotEmpty && !calc.matchesSearch(_searchQuery, context)) {
         return false;
       }
 
@@ -221,7 +224,7 @@ class _HomeContentState extends State<HomeContent> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          calc.title,
+                          matchingItem?.localizedTitle(context) ?? calc.title,
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -495,7 +498,7 @@ class _HomeContentState extends State<HomeContent> {
                       ),
                       decoration: InputDecoration(
                         hintText:
-                            'Search calculators (cement, tiles, paint...)...',
+                            AppLocalizations.translate(context, 'searchCalculators'),
                         hintStyle: TextStyle(
                           color: isDark ? Colors.white38 : Colors.grey.shade400,
                           fontSize: 14,
@@ -575,7 +578,12 @@ class _HomeContentState extends State<HomeContent> {
                                     ),
                                     const SizedBox(width: 4),
                                   ],
-                                  Text(cat),
+                                  Text(
+                                    CalculatorCategory.localizedCategory(
+                                      context,
+                                      cat,
+                                    ),
+                                  ),
                                   if (isFavCategory &&
                                       _favoriteIds.isNotEmpty) ...[
                                     const SizedBox(width: 4),
@@ -661,16 +669,19 @@ class _HomeContentState extends State<HomeContent> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
-                            children: const [
-                              Icon(
+                            children: [
+                              const Icon(
                                 Icons.star_rounded,
                                 color: Color(0xFFFF8C00),
                                 size: 20,
                               ),
-                              SizedBox(width: 6),
+                              const SizedBox(width: 6),
                               Text(
-                                'Quick Favorites',
-                                style: TextStyle(
+                                AppLocalizations.translate(
+                                  context,
+                                  'quickFavorites',
+                                ),
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -684,9 +695,9 @@ class _HomeContentState extends State<HomeContent> {
                                     CalculatorCategory.favorites,
                               );
                             },
-                            child: const Text(
-                              'View all',
-                              style: TextStyle(
+                            child: Text(
+                              AppLocalizations.translate(context, 'viewAll'),
+                              style: const TextStyle(
                                 color: Color(0xFFFF8C00),
                                 fontSize: 13,
                               ),
@@ -747,7 +758,7 @@ class _HomeContentState extends State<HomeContent> {
                                       const SizedBox(width: 10),
                                       Expanded(
                                         child: Text(
-                                          item.title,
+                                          item.localizedTitle(context),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
@@ -787,16 +798,19 @@ class _HomeContentState extends State<HomeContent> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
-                            children: const [
-                              Icon(
+                            children: [
+                              const Icon(
                                 Icons.history_rounded,
                                 color: Color(0xFF42A5F5),
                                 size: 20,
                               ),
-                              SizedBox(width: 6),
+                              const SizedBox(width: 6),
                               Text(
-                                'Recent Calculations',
-                                style: TextStyle(
+                                AppLocalizations.translate(
+                                  context,
+                                  'recentCalculations',
+                                ),
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -809,9 +823,9 @@ class _HomeContentState extends State<HomeContent> {
                                   .findAncestorStateOfType<_HomeScreenState>();
                               parent?.setState(() => parent._currentIndex = 1);
                             },
-                            child: const Text(
-                              'Full history',
-                              style: TextStyle(
+                            child: Text(
+                              AppLocalizations.translate(context, 'viewAll'),
+                              style: const TextStyle(
                                 color: Color(0xFFFF8C00),
                                 fontSize: 13,
                               ),
@@ -847,7 +861,7 @@ class _HomeContentState extends State<HomeContent> {
                               ),
                             ),
                             title: Text(
-                              calc.title,
+                              item?.localizedTitle(context) ?? calc.title,
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -941,11 +955,15 @@ class _HomeContentState extends State<HomeContent> {
                                 children: [
                                   Row(
                                     children: [
-                                      const Text(
-                                        '2D House Plan Generator',
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
+                                      const Flexible(
+                                        child: Text(
+                                          '2D House Plan Generator',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(width: 6),
@@ -1210,8 +1228,8 @@ class _HomeContentState extends State<HomeContent> {
                       ? Icons.star_border_rounded
                       : Icons.search_off_rounded,
                   title: _selectedCategory == CalculatorCategory.favorites
-                      ? 'No favorite calculators yet'
-                      : 'No calculators found',
+                      ? AppLocalizations.translate(context, 'favorites')
+                      : AppLocalizations.translate(context, 'noCalculationsYet'),
                   message: _selectedCategory == CalculatorCategory.favorites
                       ? 'Tap the star icon on any calculator to pin it to your favorites!'
                       : 'Try a different search keyword or switch category filters.',
@@ -1252,9 +1270,12 @@ class _HomeContentState extends State<HomeContent> {
 
                         return CalculatorCard(
                           icon: item.icon,
-                          title: item.title,
+                          title: item.localizedTitle(context),
                           iconColor: item.iconColor,
-                          category: item.category,
+                          category: CalculatorCategory.localizedCategory(
+                            context,
+                            item.category,
+                          ),
                           isFavorite: isFav,
                           onFavoriteToggle: () => _toggleFavorite(item.id),
                           onTap: () => Navigator.push(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../app_localizations.dart';
 import '../screens/calculators/area_calculator.dart';
 import '../screens/calculators/brick_calculator.dart';
 import '../screens/calculators/cement_calculator.dart';
@@ -27,6 +28,25 @@ class CalculatorCategory {
     structural,
     estimation,
   ];
+
+  static String localizedCategory(BuildContext context, String category) {
+    switch (category) {
+      case all:
+        return AppLocalizations.translate(context, 'all');
+      case favorites:
+        return AppLocalizations.translate(context, 'favorites');
+      case masonry:
+        return AppLocalizations.translate(context, 'masonryAndConcrete');
+      case finishing:
+        return AppLocalizations.translate(context, 'finishingAndSurfaces');
+      case structural:
+        return AppLocalizations.translate(context, 'structuralAndSizing');
+      case estimation:
+        return AppLocalizations.translate(context, 'estimationAndCost');
+      default:
+        return category;
+    }
+  }
 }
 
 class CalculatorItem {
@@ -50,12 +70,31 @@ class CalculatorItem {
     required this.builder,
   });
 
-  bool matchesSearch(String query) {
+  String localizedTitle(BuildContext context) {
+    final trans = AppLocalizations.translate(context, id);
+    return trans != id ? trans : title;
+  }
+
+  String localizedDescription(BuildContext context) {
+    final trans = AppLocalizations.translate(context, '${id}Desc');
+    return trans != '${id}Desc' ? trans : description;
+  }
+
+  bool matchesSearch(String query, [BuildContext? context]) {
     if (query.trim().isEmpty) return true;
     final clean = query.trim().toLowerCase();
     if (title.toLowerCase().contains(clean)) return true;
     if (category.toLowerCase().contains(clean)) return true;
     if (description.toLowerCase().contains(clean)) return true;
+    if (context != null) {
+      final locTitle = localizedTitle(context).toLowerCase();
+      if (locTitle.contains(clean)) return true;
+      final locDesc = localizedDescription(context).toLowerCase();
+      if (locDesc.contains(clean)) return true;
+      final locCat =
+          CalculatorCategory.localizedCategory(context, category).toLowerCase();
+      if (locCat.contains(clean)) return true;
+    }
     for (final kw in keywords) {
       if (kw.toLowerCase().contains(clean)) return true;
     }
