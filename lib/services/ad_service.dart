@@ -41,6 +41,7 @@ class AdService {
 
   static InterstitialAd? _interstitialAd;
   static DateTime? _lastInterstitialShownAt;
+  static int _calculationCountSinceAd = 0;
 
   static Future<void> initialize() async {
     await MobileAds.instance.initialize();
@@ -99,19 +100,38 @@ class AdService {
     );
   }
 
-  static Future<void> maybeShowInterstitial() async {
+  /// Displays an interstitial ad if conditions are met:
+  /// - At least 2 calculations completed since last ad
+  /// - Minimum 3 minutes cooldown between full-screen ads
+  /// - Ad is preloaded and ready
+  static Future<void> showInterstitialAfterCalculation() async {
+    _calculationCountSinceAd++;
+    if (_calculationCountSinceAd < 2) {
+      return;
+    }
+
+    final shown = await maybeShowInterstitial();
+    if (shown) {
+      _calculationCountSinceAd = 0;
+    }
+  }
+
+  /// Shows the interstitial ad respecting the 3-minute cooldown period.
+  /// Returns true if an ad was displayed.
+  static Future<bool> maybeShowInterstitial() async {
     final now = DateTime.now();
     if (_lastInterstitialShownAt != null &&
         now.difference(_lastInterstitialShownAt!).inMinutes < 3) {
-      return;
+      return false;
     }
 
     final ad = _interstitialAd;
     if (ad == null) {
       preloadInterstitial();
-      return;
+      return false;
     }
 
     await ad.show();
+    return true;
   }
 }

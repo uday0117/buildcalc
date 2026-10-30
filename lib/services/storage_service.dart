@@ -10,6 +10,18 @@ class StorageService {
   static const String _savedKey = 'saved_calculations';
   static const String _projectsKey = 'project_management';
   static const String _favoritesKey = 'favorite_calculators';
+  static const String _onboardingKey = 'has_seen_onboarding';
+
+  // Onboarding status
+  static Future<bool> hasSeenOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_onboardingKey) ?? false;
+  }
+
+  static Future<void> setSeenOnboarding([bool seen = true]) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_onboardingKey, seen);
+  }
 
   // Save calculation to history
   static Future<void> saveToHistory(Calculation calculation) async {

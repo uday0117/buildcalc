@@ -174,16 +174,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       icon: const Icon(Icons.bookmark_border),
                       onPressed: () async {
                         final messenger = ScaffoldMessenger.maybeOf(context);
+                        final message = AppLocalizations.translate(
+                          context,
+                          'savedToBookmarks',
+                        );
                         await StorageService.saveCalculation(calc);
                         if (!mounted) return;
                         messenger?.showSnackBar(
                           SnackBar(
-                            content: Text(
-                              AppLocalizations.translate(
-                                context,
-                                'savedToBookmarks',
-                              ),
-                            ),
+                            content: Text(message),
                             duration: const Duration(seconds: 1),
                           ),
                         );

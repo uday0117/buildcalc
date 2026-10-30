@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
+
 class CalculatorCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -26,31 +28,31 @@ class CalculatorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? const Color(0xFF1E293B) : Colors.white;
-    final titleColor = isDark ? Colors.white : const Color(0xFF1E293B);
+    final titleColor = isDark ? Colors.white : AppColors.textDark;
     final borderColor = isDark
         ? Colors.white.withValues(alpha: 0.08)
-        : Colors.black.withValues(alpha: 0.04);
+        : const Color(0xFFE2E8F0);
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppTheme.radiusL),
         child: Ink(
           decoration: BoxDecoration(
             color: cardBg,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: borderColor),
+            borderRadius: BorderRadius.circular(AppTheme.radiusL),
+            border: Border.all(color: borderColor, width: 1),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
-                blurRadius: 10,
+                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.04),
+                blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.all(14.0),
+            padding: const EdgeInsets.all(13.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,26 +63,41 @@ class CalculatorCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(9),
                       decoration: BoxDecoration(
-                        color: iconColor.withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(14),
+                        gradient: LinearGradient(
+                          colors: [
+                            iconColor.withValues(alpha: 0.18),
+                            iconColor.withValues(alpha: 0.06),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(13),
+                        border: Border.all(
+                          color: iconColor.withValues(alpha: 0.25),
+                          width: 1,
+                        ),
                       ),
-                      child: Icon(icon, size: 26, color: iconColor),
+                      child: Icon(icon, size: 24, color: iconColor),
                     ),
                     if (onFavoriteToggle != null)
                       IconButton(
                         visualDensity: VisualDensity.compact,
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
-                        icon: Icon(
-                          isFavorite
-                              ? Icons.star_rounded
-                              : Icons.star_outline_rounded,
-                          color: isFavorite
-                              ? const Color(0xFFFF8C00)
-                              : (isDark ? Colors.white38 : Colors.grey[400]),
-                          size: 24,
+                        icon: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: Icon(
+                            isFavorite
+                                ? Icons.star_rounded
+                                : Icons.star_outline_rounded,
+                            key: ValueKey(isFavorite),
+                            color: isFavorite
+                                ? AppColors.accent
+                                : (isDark ? Colors.white38 : Colors.grey.shade400),
+                            size: 24,
+                          ),
                         ),
                         onPressed: onFavoriteToggle,
                         tooltip: isFavorite
@@ -89,13 +106,13 @@ class CalculatorCard extends StatelessWidget {
                       ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
 
                 // Category tag if present
                 if (category != null) ...[
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
+                      horizontal: 7,
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
@@ -105,10 +122,10 @@ class CalculatorCard extends StatelessWidget {
                     child: Text(
                       category!,
                       style: TextStyle(
-                        fontSize: 9,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 9.5,
+                        fontWeight: FontWeight.w700,
                         color: iconColor,
-                        letterSpacing: 0.3,
+                        letterSpacing: 0.2,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -126,10 +143,11 @@ class CalculatorCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 13.5,
                         fontWeight: FontWeight.w700,
                         height: 1.25,
                         color: titleColor,
+                        letterSpacing: -0.1,
                       ),
                     ),
                   ),
@@ -142,7 +160,7 @@ class CalculatorCard extends StatelessWidget {
                     Icon(
                       Icons.arrow_forward_rounded,
                       size: 14,
-                      color: isDark ? Colors.white38 : Colors.grey[400],
+                      color: isDark ? Colors.white38 : Colors.grey.shade400,
                     ),
                   ],
                 ),

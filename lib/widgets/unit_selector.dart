@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
+
 class UnitSelector<T> extends StatelessWidget {
   final List<T> values;
   final T selectedValue;
@@ -17,15 +19,17 @@ class UnitSelector<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final activeBg = const Color(0xFFFF8C00);
+    const activeBg = AppColors.accent;
     final inactiveBg = isDark ? const Color(0xFF1E293B) : Colors.white;
-    final borderColor = isDark ? Colors.white12 : Colors.grey.shade300;
+    final borderColor = isDark
+        ? Colors.white.withValues(alpha: 0.1)
+        : const Color(0xFFE2E8F0);
 
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF0F172A) : Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
+        color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: borderColor),
       ),
       child: Row(
@@ -34,28 +38,41 @@ class UnitSelector<T> extends StatelessWidget {
           final isSelected = val == selectedValue;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: Material(
-              color: isSelected ? activeBg : inactiveBg,
-              borderRadius: BorderRadius.circular(8),
-              elevation: isSelected ? 1 : 0,
-              child: InkWell(
-                onTap: () => onSelected(val),
-                borderRadius: BorderRadius.circular(8),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 8,
-                  ),
-                  child: Text(
-                    labelBuilder(val),
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: isSelected
-                          ? FontWeight.bold
-                          : FontWeight.w500,
-                      color: isSelected
-                          ? Colors.white
-                          : (isDark ? Colors.white70 : const Color(0xFF2C3E50)),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+              decoration: BoxDecoration(
+                color: isSelected ? activeBg : inactiveBg,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: AppColors.accent.withValues(alpha: 0.35),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => onSelected(val),
+                  borderRadius: BorderRadius.circular(10),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    child: Text(
+                      labelBuilder(val),
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                        color: isSelected
+                            ? Colors.white
+                            : (isDark ? Colors.white70 : const Color(0xFF334155)),
+                      ),
                     ),
                   ),
                 ),

@@ -131,11 +131,11 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accentColor = Theme.of(context).colorScheme.secondary;
+    final accentColor = const Color(0xFFFF8C00);
     final textColor = isDark ? Colors.white : const Color(0xFF1E3A5F);
     final secondaryTextColor = isDark
-        ? Colors.white.withValues(alpha: 0.8)
-        : Colors.black.withValues(alpha: 0.7);
+        ? Colors.white.withValues(alpha: 0.75)
+        : const Color(0xFF64748B);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -147,42 +147,102 @@ class _SplashScreenState extends State<SplashScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 12),
-                Text(
-                  'BuildCalc',
-                  style: TextStyle(
-                    fontSize: 42,
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
-                    letterSpacing: 2,
+                // Branded App Icon Badge
+                Container(
+                  width: 96,
+                  height: 96,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF1E3A5F), Color(0xFF2C5F8D)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(26),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF1E3A5F).withValues(alpha: 0.35),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
                   ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.construction_rounded,
+                      size: 52,
+                      color: Color(0xFFFF8C00),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'BuildCalc',
+                      style: TextStyle(
+                        fontSize: 38,
+                        fontWeight: FontWeight.w800,
+                        color: textColor,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFF8C00),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text(
+                        'PRO',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 Text(
                   AppLocalizations.translate(context, 'professional'),
-                  style: TextStyle(fontSize: 16, color: secondaryTextColor),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: secondaryTextColor,
+                  ),
                 ),
-                const SizedBox(height: 54),
+                const SizedBox(height: 52),
                 SizedBox(
-                  width: 48,
-                  height: 48,
+                  width: 36,
+                  height: 36,
                   child: CircularProgressIndicator(
                     strokeWidth: 3,
                     valueColor: AlwaysStoppedAnimation<Color>(accentColor),
                   ),
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: 20),
                 Text(
                   AppLocalizations.translate(context, 'loading'),
-                  style: TextStyle(fontSize: 15, color: secondaryTextColor),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: secondaryTextColor,
+                  ),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 8),
                 Text(
                   'v$_version',
                   style: TextStyle(
                     fontSize: 12,
-                    letterSpacing: 1.1,
-                    color: secondaryTextColor,
+                    letterSpacing: 0.5,
+                    color: secondaryTextColor.withValues(alpha: 0.8),
                   ),
                 ),
               ],

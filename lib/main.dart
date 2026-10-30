@@ -8,6 +8,7 @@ import 'firebase_options.dart';
 import 'screens/splash_screen.dart';
 import 'services/ad_service.dart';
 import 'services/app_settings_service.dart';
+import 'theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,84 +77,8 @@ class _BuildCalcAppState extends State<BuildCalcApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1E3A5F),
-          brightness: Brightness.light,
-          primary: const Color(0xFF1E3A5F),
-          secondary: const Color(0xFFFF8C00),
-          surface: Colors.white,
-        ),
-        scaffoldBackgroundColor: const Color(0xFFF5F7FB),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          centerTitle: false,
-          iconTheme: IconThemeData(color: Color(0xFF1E3A5F)),
-          titleTextStyle: TextStyle(
-            color: Color(0xFF1E3A5F),
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        cardTheme: CardThemeData(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-          ),
-          elevation: 0,
-          color: Colors.white,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFFF8C00),
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-          ),
-        ),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFFF8C00),
-          brightness: Brightness.dark,
-          primary: const Color(0xFFFF8C00),
-          secondary: const Color(0xFFFFA726),
-          surface: const Color(0xFF1E293B),
-        ),
-        scaffoldBackgroundColor: const Color(0xFF0F172A),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          centerTitle: false,
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        cardTheme: CardThemeData(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-          ),
-          elevation: 0,
-          color: const Color(0xFF1E293B),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFFF8C00),
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-          ),
-        ),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       home: SplashScreen(
         settings: _settings,
         onSettingsChanged: _updateSettings,
