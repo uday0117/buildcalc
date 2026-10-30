@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../models/calculation.dart';
 import '../../models/calculators/staircase_calculation.dart';
+import '../../services/ad_service.dart';
 import '../../services/calculators/staircase_calculator_service.dart';
+import '../../services/review_service.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/ad_banner.dart';
+import '../../widgets/calculators/staircase_sketch_painter.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/result_card.dart';
 import '../../widgets/unit_selector.dart';
-import '../../widgets/calculators/staircase_sketch_painter.dart';
 
 class StaircaseCalculator extends StatefulWidget {
   const StaircaseCalculator({super.key});
@@ -28,6 +32,7 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
   int _flightCount = 1;
   StaircaseResult? _result;
   StaircaseInput? _lastInput;
+  bool _isFirstInit = true;
 
   @override
   void initState() {
@@ -63,6 +68,11 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
 
     if (res.isValid) {
       _saveToHistory(res);
+      if (!_isFirstInit) {
+        AdService.showInterstitialAfterCalculation();
+        ReviewService.checkAndPromptReview();
+      }
+      _isFirstInit = false;
     } else if (res.errorMessage != null) {
       ScaffoldMessenger.of(
         context,
@@ -396,6 +406,18 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
                 title: 'Staircase Dimensions',
                 icon: Icons.square_foot_rounded,
                 onSave: _bookmark,
+                onShare: () {
+                  Share.share(
+                    'Staircase Sizing by BuildCalc:\n'
+                    'Total Height: ${_heightController.text} m\n'
+                    'Risers: ${res.totalRisers} (${res.actualRiserMm.toStringAsFixed(1)} mm)\n'
+                    'Treads: ${res.totalTreads} (${res.actualTreadMm.toStringAsFixed(0)} mm)\n'
+                    'Going Run: ${res.totalGoingMeters.toStringAsFixed(2)} m\n'
+                    'Concrete: ${res.totalWetVolumeM3.toStringAsFixed(2)} m³\n\n'
+                    'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
+                    subject: 'BuildCalc - Staircase Calculation',
+                  );
+                },
                 note:
                     'Step formula: Blondel rule (2R + T = ${res.blondelComfortIndexMm.toStringAsFixed(0)} mm)',
                 rows: [
@@ -501,6 +523,10 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
             const SizedBox(height: 24),
           ],
         ),
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

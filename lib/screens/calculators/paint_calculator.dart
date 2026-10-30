@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../models/calculation.dart';
+import '../../services/ad_service.dart';
+import '../../services/review_service.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/ad_banner.dart';
+import '../../widgets/calculator_header.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/result_card.dart';
 
@@ -48,6 +53,8 @@ class _PaintCalculatorState extends State<PaintCalculator> {
       });
 
       _saveToHistory();
+      AdService.showInterstitialAfterCalculation();
+      ReviewService.checkAndPromptReview();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter length and height')),
@@ -122,27 +129,12 @@ class _PaintCalculatorState extends State<PaintCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.format_paint_rounded,
-                      size: 54,
-                      color: Color(0xFF42A5F5),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Calculate paint quantity\nfor your walls',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const CalculatorHeader(
+              icon: Icons.format_paint_rounded,
+              iconColor: Color(0xFF42A5F5),
+              title: 'Wall Paint & Primer',
+              description: 'Calculate paint required for room walls with coats & deductions',
+              formulaHint: 'Standard: 10 m²/L • 10% wastage buffer',
             ),
             const SizedBox(height: 20),
 
@@ -264,6 +256,16 @@ class _PaintCalculatorState extends State<PaintCalculator> {
                 title: 'Results',
                 icon: Icons.format_paint_rounded,
                 onSave: _bookmark,
+                onShare: () {
+                  Share.share(
+                    'Paint Calculation by BuildCalc:\n'
+                    'Paint Required: ${_paintLiters.toStringAsFixed(2)} liters\n'
+                    'Net Wall Area: ${_wallArea.toStringAsFixed(2)} m²\n'
+                    'Coats: ${_coats.toInt()}\n\n'
+                    'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
+                    subject: 'BuildCalc - Paint Calculation',
+                  );
+                },
                 note:
                     'Includes 10% extra allowance. Assumes 10 m²/L standard coverage',
                 rows: [
@@ -285,6 +287,10 @@ class _PaintCalculatorState extends State<PaintCalculator> {
             ],
           ],
         ),
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

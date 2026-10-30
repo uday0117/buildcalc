@@ -6,6 +6,7 @@ import '../../models/plan/material_estimation_models.dart';
 import '../../models/plan/plan_models.dart';
 import '../../models/plan/plan_unit.dart';
 import '../../services/plan_material_estimator.dart';
+import '../../widgets/ad_banner.dart';
 import '../../widgets/plan/material_assumptions_sheet.dart';
 import '../../widgets/plan/plan_export_dialog.dart';
 
@@ -263,6 +264,10 @@ class _PlanMaterialEstimateScreenState extends State<PlanMaterialEstimateScreen>
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

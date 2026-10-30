@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/plan/ready_made_template_models.dart';
 import '../../services/plan_storage_service.dart';
+import '../../widgets/ad_banner.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/plan/plan_thumbnail_painter.dart';
 import '../../widgets/plan/template_preview_sheet.dart';
@@ -279,6 +280,10 @@ class _PlanTemplatesScreenState extends State<PlanTemplatesScreen> {
                   ),
           ),
         ],
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

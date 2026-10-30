@@ -3,7 +3,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UpdateService {
-  static const String _latestVersion = '1.1.0';
+  static const String _latestVersion = '1.0.1';
   static const String playStoreUrl =
       'https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc';
 

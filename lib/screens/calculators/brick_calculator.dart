@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../models/calculation.dart';
+import '../../services/ad_service.dart';
+import '../../services/review_service.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/ad_banner.dart';
+import '../../widgets/calculator_header.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/result_card.dart';
 
@@ -51,6 +56,8 @@ class _BrickCalculatorState extends State<BrickCalculator> {
       });
 
       _saveToHistory();
+      AdService.showInterstitialAfterCalculation();
+      ReviewService.checkAndPromptReview();
     } else {
       ScaffoldMessenger.of(
         context,
@@ -101,8 +108,6 @@ class _BrickCalculatorState extends State<BrickCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -122,27 +127,12 @@ class _BrickCalculatorState extends State<BrickCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.grid_4x4_rounded,
-                      size: 54,
-                      color: Color(0xFFD32F2F),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Calculate number of bricks\nrequired for wall construction',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const CalculatorHeader(
+              icon: Icons.grid_4x4_rounded,
+              iconColor: Color(0xFFD32F2F),
+              title: 'Brick Wall Estimator',
+              description: 'Calculate brick quantities with wall thickness and wastage',
+              formulaHint: 'Standard: 190×90×90mm • 10% wastage included',
             ),
             const SizedBox(height: 20),
 
@@ -196,6 +186,15 @@ class _BrickCalculatorState extends State<BrickCalculator> {
                 title: 'Results',
                 icon: Icons.grid_4x4_rounded,
                 onSave: _bookmark,
+                onShare: () {
+                  Share.share(
+                    'Brick Calculation by BuildCalc:\n'
+                    'Bricks Required: ${_bricksRequired.toStringAsFixed(0)} bricks (incl. 10% wastage)\n'
+                    'Wall Area: ${_wallArea.toStringAsFixed(2)} m²\n\n'
+                    'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
+                    subject: 'BuildCalc - Brick Calculation',
+                  );
+                },
                 note:
                     'Includes 10% wastage factor for cuts and transport breakage',
                 rows: [
@@ -213,6 +212,10 @@ class _BrickCalculatorState extends State<BrickCalculator> {
             ],
           ],
         ),
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

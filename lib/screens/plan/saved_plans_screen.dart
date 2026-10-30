@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../models/plan/plan_models.dart';
 import '../../services/plan_backup_service.dart';
 import '../../services/plan_storage_service.dart';
+import '../../widgets/ad_banner.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/plan/plan_export_dialog.dart';
 import '../../widgets/plan/plot_setup_dialog.dart';
@@ -712,6 +713,10 @@ class _SavedPlansScreenState extends State<SavedPlansScreen> {
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add),
         label: const Text('Create New Plan'),
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

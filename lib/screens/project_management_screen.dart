@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../models/project.dart';
 import '../services/storage_service.dart';
+import '../widgets/ad_banner.dart';
 
 class ProjectManagementScreen extends StatefulWidget {
   const ProjectManagementScreen({super.key});
@@ -260,6 +261,10 @@ class _ProjectManagementScreenState extends State<ProjectManagementScreen> {
                 );
               },
             ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
+      ),
     );
   }
 }

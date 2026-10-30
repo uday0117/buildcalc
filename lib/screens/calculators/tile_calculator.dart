@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../models/calculation.dart';
+import '../../services/ad_service.dart';
+import '../../services/review_service.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/ad_banner.dart';
+import '../../widgets/calculator_header.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/result_card.dart';
 
@@ -54,6 +59,8 @@ class _TileCalculatorState extends State<TileCalculator> {
       });
 
       _saveToHistory();
+      AdService.showInterstitialAfterCalculation();
+      ReviewService.checkAndPromptReview();
     } else {
       ScaffoldMessenger.of(
         context,
@@ -135,27 +142,12 @@ class _TileCalculatorState extends State<TileCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.dashboard_rounded,
-                      size: 54,
-                      color: Color(0xFF8D6E63),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Calculate tiles required\nfor flooring',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const CalculatorHeader(
+              icon: Icons.dashboard_rounded,
+              iconColor: Color(0xFF8D6E63),
+              title: 'Floor & Wall Tile Estimator',
+              description: 'Calculate tile counts and packaging boxes with wastage',
+              formulaHint: 'Standard: 10% cutting wastage • 10 tiles/box',
             ),
             const SizedBox(height: 20),
 
@@ -237,6 +229,16 @@ class _TileCalculatorState extends State<TileCalculator> {
                 title: 'Results',
                 icon: Icons.dashboard_rounded,
                 onSave: _bookmark,
+                onShare: () {
+                  Share.share(
+                    'Tile Calculation by BuildCalc:\n'
+                    'Tiles Required: ${_tilesRequired.toStringAsFixed(0)} tiles (incl. 10% wastage)\n'
+                    'Boxes Required: ${_boxes.toStringAsFixed(1)} boxes\n'
+                    'Total Floor Area: ${_areaToTile.toStringAsFixed(2)} m²\n\n'
+                    'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
+                    subject: 'BuildCalc - Tile Calculation',
+                  );
+                },
                 note:
                     'Includes 10% wastage for cutting. Box count assumes 10 tiles/box.',
                 rows: [
@@ -258,6 +260,10 @@ class _TileCalculatorState extends State<TileCalculator> {
             ],
           ],
         ),
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

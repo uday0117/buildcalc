@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../models/calculation.dart';
+import '../../services/ad_service.dart';
+import '../../services/review_service.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/ad_banner.dart';
+import '../../widgets/calculator_header.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/result_card.dart';
 
@@ -39,6 +44,8 @@ class _CostEstimatorState extends State<CostEstimator> {
       });
 
       _saveToHistory();
+      AdService.showInterstitialAfterCalculation();
+      ReviewService.checkAndPromptReview();
     } else {
       ScaffoldMessenger.of(
         context,
@@ -109,27 +116,12 @@ class _CostEstimatorState extends State<CostEstimator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.calculate_rounded,
-                      size: 54,
-                      color: Color(0xFFFF8C00),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Estimate construction cost\nbased on area and quality grade',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const CalculatorHeader(
+              icon: Icons.calculate_rounded,
+              iconColor: Color(0xFFFF8C00),
+              title: 'Construction Cost Budget',
+              description: 'Estimate construction budget based on area and quality grade',
+              formulaHint: 'Basic • Standard • Premium • Luxury tiers',
             ),
             const SizedBox(height: 20),
 
@@ -259,6 +251,16 @@ class _CostEstimatorState extends State<CostEstimator> {
                 title: 'Estimated Cost',
                 icon: Icons.calculate_rounded,
                 onSave: _bookmark,
+                onShare: () {
+                  Share.share(
+                    'Construction Cost Estimate by BuildCalc:\n'
+                    'Total Cost: ₹${_totalCost.toStringAsFixed(0)} (≈ ₹${(_totalCost / 100000).toStringAsFixed(2)} Lakhs)\n'
+                    'Area: ${_areaController.text} sq ft\n'
+                    'Grade: $_constructionType @ ₹${_costPerSqFt.toStringAsFixed(0)}/sq ft\n\n'
+                    'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
+                    subject: 'BuildCalc - Cost Estimate',
+                  );
+                },
                 note:
                     'Approximate estimate. Actual costs may vary based on location, materials, and contractor rates.',
                 rows: [
@@ -286,6 +288,10 @@ class _CostEstimatorState extends State<CostEstimator> {
             ],
           ],
         ),
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

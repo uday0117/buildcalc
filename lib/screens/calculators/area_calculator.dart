@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../models/calculation.dart';
+import '../../services/ad_service.dart';
+import '../../services/review_service.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/ad_banner.dart';
+import '../../widgets/calculator_header.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/result_card.dart';
 
@@ -80,6 +85,8 @@ class _AreaCalculatorState extends State<AreaCalculator> {
     });
 
     _saveToHistory();
+    AdService.showInterstitialAfterCalculation();
+    ReviewService.checkAndPromptReview();
   }
 
   Calculation _createCalculationModel() {
@@ -186,27 +193,12 @@ class _AreaCalculatorState extends State<AreaCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.square_foot_rounded,
-                      size: 54,
-                      color: Color(0xFF66BB6A),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Calculate area and perimeter\nof different geometric shapes',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const CalculatorHeader(
+              icon: Icons.square_foot_rounded,
+              iconColor: Color(0xFF66BB6A),
+              title: 'Geometric Area & Perimeter',
+              description: 'Calculate area and perimeter for rectangle, square, circle & triangle',
+              formulaHint: 'Supports 4 geometric standard profiles',
             ),
             const SizedBox(height: 20),
 
@@ -329,6 +321,16 @@ class _AreaCalculatorState extends State<AreaCalculator> {
                 title: 'Results',
                 icon: Icons.square_foot_rounded,
                 onSave: _bookmark,
+                onShare: () {
+                  Share.share(
+                    'Area Calculation by BuildCalc:\n'
+                    'Shape: $_selectedShape\n'
+                    'Total Area: ${_area.toStringAsFixed(2)} m²\n'
+                    '${_perimeter > 0 ? "Perimeter: ${_perimeter.toStringAsFixed(2)} m\n" : ""}\n'
+                    'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
+                    subject: 'BuildCalc - Area Calculation',
+                  );
+                },
                 note: 'Shape: $_selectedShape',
                 rows: [
                   ResultRowItem(
@@ -346,6 +348,10 @@ class _AreaCalculatorState extends State<AreaCalculator> {
             ],
           ],
         ),
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

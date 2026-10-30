@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../app_localizations.dart';
 import '../app_settings.dart';
 import '../services/app_settings_service.dart';
-import '../services/update_service.dart';
 import 'home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -61,9 +59,6 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _navigateToHome() async {
     if (!mounted) return;
 
-    final hasUpdate = await UpdateService.hasUpdate();
-    if (!mounted) return;
-
     final latestSettings = await AppSettingsService.loadSettings();
     if (!mounted) return;
 
@@ -76,38 +71,6 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       ),
     );
-
-    if (hasUpdate) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (dialogCtx) => AlertDialog(
-            title: Text(AppLocalizations.translate(dialogCtx, 'updateAvailable')),
-            content: const Text(
-              'A newer version of BuildCalc is ready to install with improved features and fixes.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(dialogCtx).pop(),
-                child: Text(AppLocalizations.translate(dialogCtx, 'later')),
-              ),
-              FilledButton(
-                onPressed: () async {
-                  final url = Uri.parse(UpdateService.playStoreUrl);
-                  if (await canLaunchUrl(url)) {
-                    await launchUrl(url, mode: LaunchMode.externalApplication);
-                  }
-                  if (dialogCtx.mounted) Navigator.of(dialogCtx).pop();
-                },
-                child: Text(AppLocalizations.translate(dialogCtx, 'installUpdate')),
-              ),
-            ],
-          ),
-        );
-      });
-    }
   }
 
   Future<void> _loadVersion() async {

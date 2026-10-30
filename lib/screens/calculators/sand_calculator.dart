@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../models/calculation.dart';
+import '../../services/ad_service.dart';
+import '../../services/review_service.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/ad_banner.dart';
+import '../../widgets/calculator_header.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/result_card.dart';
 
@@ -47,6 +52,8 @@ class _SandCalculatorState extends State<SandCalculator> {
       });
 
       _saveToHistory();
+      AdService.showInterstitialAfterCalculation();
+      ReviewService.checkAndPromptReview();
     } else {
       ScaffoldMessenger.of(
         context,
@@ -102,8 +109,6 @@ class _SandCalculatorState extends State<SandCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -123,27 +128,12 @@ class _SandCalculatorState extends State<SandCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.terrain_rounded,
-                      size: 54,
-                      color: Color(0xFFFFA726),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Calculate sand quantity\nrequired for construction',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const CalculatorHeader(
+              icon: Icons.terrain_rounded,
+              iconColor: Color(0xFFFFA726),
+              title: 'Sand Volume & Weight',
+              description: 'Calculate sand quantity in m³, cubic feet and metric tonnes',
+              formulaHint: 'Density: 1.6 t/m³ • 20% compaction allowance',
             ),
             const SizedBox(height: 20),
 
@@ -196,6 +186,15 @@ class _SandCalculatorState extends State<SandCalculator> {
                 title: 'Results',
                 icon: Icons.terrain_rounded,
                 onSave: _bookmark,
+                onShare: () {
+                  Share.share(
+                    'Sand Calculation by BuildCalc:\n'
+                    'Volume: ${_sandCubicMeters.toStringAsFixed(2)} m³ (${_sandCubicFeet.toStringAsFixed(2)} ft³)\n'
+                    'Weight: ${_sandTonnes.toStringAsFixed(2)} tonnes\n\n'
+                    'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
+                    subject: 'BuildCalc - Sand Calculation',
+                  );
+                },
                 note: 'Includes 20% allowance for compaction & transit loss',
                 rows: [
                   ResultRowItem(
@@ -216,6 +215,10 @@ class _SandCalculatorState extends State<SandCalculator> {
             ],
           ],
         ),
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

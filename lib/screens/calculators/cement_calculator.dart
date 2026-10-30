@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../models/calculation.dart';
+import '../../services/ad_service.dart';
+import '../../services/review_service.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/ad_banner.dart';
+import '../../widgets/calculator_header.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/result_card.dart';
 
@@ -53,6 +58,8 @@ class _CementCalculatorState extends State<CementCalculator> {
 
       // Save to history
       _saveToHistory();
+      AdService.showInterstitialAfterCalculation();
+      ReviewService.checkAndPromptReview();
     } else {
       ScaffoldMessenger.of(
         context,
@@ -108,8 +115,6 @@ class _CementCalculatorState extends State<CementCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -129,27 +134,12 @@ class _CementCalculatorState extends State<CementCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.architecture_rounded,
-                      size: 54,
-                      color: Color(0xFF795548),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Calculate cement and sand\nrequired for construction',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const CalculatorHeader(
+              icon: Icons.architecture_rounded,
+              iconColor: Color(0xFF795548),
+              title: 'Cement & Sand Mix',
+              description: 'Calculate cement bags and sand volume for concrete & mortar',
+              formulaHint: 'Standard 1:6 ratio • Dry factor 1.54',
             ),
             const SizedBox(height: 20),
 
@@ -202,6 +192,16 @@ class _CementCalculatorState extends State<CementCalculator> {
                 title: 'Results',
                 icon: Icons.architecture_rounded,
                 onSave: _bookmark,
+                onShare: () {
+                  Share.share(
+                    'Cement Calculation by BuildCalc:\n'
+                    'Cement Bags: ${_cementBags.toStringAsFixed(2)} bags\n'
+                    'Sand: ${_sandCubicMeters.toStringAsFixed(2)} m³\n'
+                    'Volume: ${_volume.toStringAsFixed(2)} m³\n\n'
+                    'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
+                    subject: 'BuildCalc - Cement Calculation',
+                  );
+                },
                 note:
                     'Based on standard 1:6 mix ratio with dry volume factor 1.54',
                 rows: [
@@ -223,6 +223,10 @@ class _CementCalculatorState extends State<CementCalculator> {
             ],
           ],
         ),
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

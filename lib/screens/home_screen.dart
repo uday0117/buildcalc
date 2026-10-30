@@ -10,6 +10,8 @@ import '../services/storage_service.dart';
 import '../widgets/ad_banner.dart';
 import '../widgets/calculator_card.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/onboarding_sheet.dart';
+import '../services/update_service.dart';
 import 'calculators/cost_estimator.dart';
 import 'history_screen.dart';
 import 'plan/plan_editor_screen.dart';
@@ -41,6 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _settings = widget.settings;
     AdService.preloadInterstitial();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      OnboardingSheet.showIfNeeded(context);
+      UpdateService.checkForUpdate(context);
+    });
   }
 
   @override

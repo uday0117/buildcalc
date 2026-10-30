@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../models/calculation.dart';
+import '../../services/ad_service.dart';
+import '../../services/review_service.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/ad_banner.dart';
+import '../../widgets/calculator_header.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/result_card.dart';
 
@@ -38,6 +43,8 @@ class _SteelCalculatorState extends State<SteelCalculator> {
       });
 
       _saveToHistory();
+      AdService.showInterstitialAfterCalculation();
+      ReviewService.checkAndPromptReview();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter length and diameter')),
@@ -88,8 +95,6 @@ class _SteelCalculatorState extends State<SteelCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -109,27 +114,12 @@ class _SteelCalculatorState extends State<SteelCalculator> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.fence_rounded,
-                      size: 54,
-                      color: Color(0xFF607D8B),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Calculate steel bar weight\nfor construction',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: isDark ? Colors.grey[400] : Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            const CalculatorHeader(
+              icon: Icons.fence_rounded,
+              iconColor: Color(0xFF607D8B),
+              title: 'TMT Steel & Rebar Weight',
+              description: 'Calculate unit weight per bar and total steel in kg & tonnes',
+              formulaHint: 'Standard: D² × L / 162 (D in mm, L in m)',
             ),
             const SizedBox(height: 20),
 
@@ -184,6 +174,15 @@ class _SteelCalculatorState extends State<SteelCalculator> {
                 title: 'Results',
                 icon: Icons.fence_rounded,
                 onSave: _bookmark,
+                onShare: () {
+                  Share.share(
+                    'Steel Rebar Calculation by BuildCalc:\n'
+                    'Total Weight: ${_totalWeight.toStringAsFixed(2)} kg (${(_totalWeight / 1000).toStringAsFixed(3)} tonnes)\n'
+                    'Weight per Bar: ${_weightPerBar.toStringAsFixed(2)} kg\n\n'
+                    'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
+                    subject: 'BuildCalc - Steel Rebar Calculation',
+                  );
+                },
                 note:
                     'Standard formula: Weight = D² × L / 162 (D in mm, L in meters)',
                 rows: [
@@ -205,6 +204,10 @@ class _SteelCalculatorState extends State<SteelCalculator> {
             ],
           ],
         ),
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }

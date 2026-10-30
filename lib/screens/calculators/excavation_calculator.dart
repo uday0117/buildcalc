@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../models/calculation.dart';
 import '../../models/calculators/excavation_calculation.dart';
+import '../../services/ad_service.dart';
 import '../../services/calculators/excavation_calculator_service.dart';
+import '../../services/review_service.dart';
 import '../../services/storage_service.dart';
+import '../../widgets/ad_banner.dart';
+import '../../widgets/calculators/excavation_sketch_painter.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/result_card.dart';
 import '../../widgets/unit_selector.dart';
-import '../../widgets/calculators/excavation_sketch_painter.dart';
 
 class ExcavationCalculator extends StatefulWidget {
   const ExcavationCalculator({super.key});
@@ -30,6 +34,7 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
   ExcavationType _selectedType = ExcavationType.isolatedFooting;
   ExcavationResult? _result;
   ExcavationInput? _lastInput;
+  bool _isFirstInit = true;
 
   @override
   void initState() {
@@ -70,6 +75,11 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
 
     if (res.isValid) {
       _saveToHistory(res);
+      if (!_isFirstInit) {
+        AdService.showInterstitialAfterCalculation();
+        ReviewService.checkAndPromptReview();
+      }
+      _isFirstInit = false;
     } else if (res.errorMessage != null) {
       ScaffoldMessenger.of(
         context,
@@ -422,6 +432,18 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
                 title: 'Excavation Quantities',
                 icon: Icons.layers_rounded,
                 onSave: _bookmark,
+                onShare: () {
+                  Share.share(
+                    'Excavation Estimation by BuildCalc:\n'
+                    'Type: ${_selectedType.name}\n'
+                    'In-Situ Volume: ${res.inSituExcavationM3.toStringAsFixed(2)} m³\n'
+                    'Loose/Bulked Soil: ${res.looseSoilM3.toStringAsFixed(2)} m³\n'
+                    'Backfill Needed: ${res.requiredCompactedBackfillM3.toStringAsFixed(2)} m³\n'
+                    'Truck Trips (${_truckCapacityController.text} m³): ${res.truckTrips} loads\n\n'
+                    'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
+                    subject: 'BuildCalc - Excavation Calculation',
+                  );
+                },
                 note:
                     'Effective pit: ${res.effectiveLengthMeters.toStringAsFixed(2)}m × ${res.effectiveWidthMeters.toStringAsFixed(2)}m (with +${_workingSpaceController.text}m working space)',
                 rows: [
@@ -514,6 +536,10 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
             const SizedBox(height: 24),
           ],
         ),
+      ),
+      bottomNavigationBar: const SafeArea(
+        top: false,
+        child: AppBannerAd(),
       ),
     );
   }
