@@ -110,41 +110,13 @@ class _SplashScreenState extends State<SplashScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Branded App Icon Badge
-                Container(
-                  width: 96,
-                  height: 96,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF1E3A5F), Color(0xFF2C5F8D)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(26),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF1E3A5F).withValues(alpha: 0.35),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.construction_rounded,
-                      size: 52,
-                      color: Color(0xFFFF8C00),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       'BuildCalc',
                       style: TextStyle(
-                        fontSize: 38,
+                        fontSize: 42,
                         fontWeight: FontWeight.w800,
                         color: textColor,
                         letterSpacing: -0.5,
@@ -153,8 +125,8 @@ class _SplashScreenState extends State<SplashScreen>
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
+                        horizontal: 10,
+                        vertical: 4,
                       ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFF8C00),
@@ -164,7 +136,7 @@ class _SplashScreenState extends State<SplashScreen>
                         'PRO',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 11,
+                          fontSize: 12,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1,
                         ),

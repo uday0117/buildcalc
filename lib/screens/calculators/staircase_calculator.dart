@@ -32,15 +32,9 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
   int _flightCount = 1;
   StaircaseResult? _result;
   StaircaseInput? _lastInput;
-  bool _isFirstInit = true;
+  bool _hasCalculated = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _calculate();
-  }
-
-  void _calculate() {
+  void _calculate({bool isUserTriggered = false}) {
     final height = double.tryParse(_heightController.text) ?? 0;
     final riser = double.tryParse(_riserController.text) ?? 0;
     final tread = double.tryParse(_treadController.text) ?? 0;
@@ -64,16 +58,18 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
     setState(() {
       _lastInput = input;
       _result = res;
+      if (isUserTriggered && res.isValid) {
+        _hasCalculated = true;
+      }
     });
 
     if (res.isValid) {
-      _saveToHistory(res);
-      if (!_isFirstInit) {
+      if (isUserTriggered) {
+        _saveToHistory(res);
         AdService.showInterstitialAfterCalculation();
         ReviewService.checkAndPromptReview();
       }
-      _isFirstInit = false;
-    } else if (res.errorMessage != null) {
+    } else if (isUserTriggered && res.errorMessage != null) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(res.errorMessage!)));
@@ -137,8 +133,10 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
       _landingController.text = '1.0';
       _flightCount = 1;
       _selectedGrade = ConcreteGrade.m20;
+      _result = null;
+      _lastInput = null;
+      _hasCalculated = false;
     });
-    _calculate();
   }
 
   @override
@@ -222,7 +220,9 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
                       val == 1 ? 'Single Flight' : 'Dog-legged (2 Flights)',
                   onSelected: (val) {
                     setState(() => _flightCount = val);
-                    _calculate();
+                    if (_hasCalculated) {
+                      _calculate(isUserTriggered: false);
+                    }
                   },
                 ),
               ],
@@ -243,7 +243,9 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
                   labelBuilder: (val) => val.name,
                   onSelected: (val) {
                     setState(() => _selectedGrade = val);
-                    _calculate();
+                    if (_hasCalculated) {
+                      _calculate(isUserTriggered: false);
+                    }
                   },
                 ),
               ],
@@ -322,7 +324,7 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
             const SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed: _calculate,
+              onPressed: () => _calculate(isUserTriggered: true),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFFF8C00),
                 foregroundColor: Colors.white,
@@ -337,7 +339,7 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
               ),
             ),
 
-            if (res != null && res.isValid && _lastInput != null) ...[
+            if (_hasCalculated && res != null && res.isValid && _lastInput != null) ...[
               const SizedBox(height: 24),
 
               // Visual Dimensioned Sketch
@@ -524,10 +526,12 @@ class _StaircaseCalculatorState extends State<StaircaseCalculator> {
           ],
         ),
       ),
-      bottomNavigationBar: const SafeArea(
-        top: false,
-        child: AppBannerAd(),
-      ),
+      bottomNavigationBar: _hasCalculated
+          ? const SafeArea(
+              top: false,
+              child: AppBannerAd(),
+            )
+          : null,
     );
   }
 

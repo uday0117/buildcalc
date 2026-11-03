@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/calculation.dart';
 import '../models/project.dart';
+import '../models/quotation.dart';
 
 class StorageService {
   static const String _historyKey = 'calculation_history';
@@ -11,6 +12,8 @@ class StorageService {
   static const String _projectsKey = 'project_management';
   static const String _favoritesKey = 'favorite_calculators';
   static const String _onboardingKey = 'has_seen_onboarding';
+  static const String _quotationsKey = 'contractor_quotations';
+  static const String _contractorProfileKey = 'contractor_saved_profile';
 
   // Onboarding status
   static Future<bool> hasSeenOnboarding() async {
@@ -160,5 +163,72 @@ class StorageService {
   static Future<bool> isFavoriteCalculator(String calculatorId) async {
     final favorites = await getFavoriteCalculatorIds();
     return favorites.contains(calculatorId);
+  }
+
+  // --- Quotations Management ---
+  static Future<void> saveQuotation(Quotation quotation) async {
+    final prefs = await SharedPreferences.getInstance();
+    final list = await getQuotations();
+    final index = list.indexWhere((q) => q.id == quotation.id);
+    if (index >= 0) {
+      list[index] = quotation;
+    } else {
+      list.insert(0, quotation);
+    }
+    final jsonList = list.map((q) => q.toJson()).toList();
+    await prefs.setString(_quotationsKey, json.encode(jsonList));
+  }
+
+  static Future<List<Quotation>> getQuotations() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_quotationsKey);
+    if (raw == null || raw.isEmpty) return [];
+    try {
+      final List<dynamic> list = json.decode(raw);
+      return list
+          .map((item) => Quotation.fromJson(Map<String, dynamic>.from(item)))
+          .toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  static Future<void> deleteQuotation(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final list = await getQuotations();
+    list.removeWhere((q) => q.id == id);
+    final jsonList = list.map((q) => q.toJson()).toList();
+    await prefs.setString(_quotationsKey, json.encode(jsonList));
+  }
+
+  // --- Contractor Business Profile (remembered across quotations) ---
+  static Future<Map<String, String>> getContractorProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_contractorProfileKey);
+    if (raw == null || raw.isEmpty) return {};
+    try {
+      final Map<String, dynamic> decoded = json.decode(raw);
+      return decoded.map((k, v) => MapEntry(k, v?.toString() ?? ''));
+    } catch (_) {
+      return {};
+    }
+  }
+
+  static Future<void> saveContractorProfile({
+    required String name,
+    required String phone,
+    String? email,
+    String? address,
+    String? currencySymbol,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final map = {
+      'name': name,
+      'phone': phone,
+      'email': email ?? '',
+      'address': address ?? '',
+      'currencySymbol': currencySymbol ?? '\$',
+    };
+    await prefs.setString(_contractorProfileKey, json.encode(map));
   }
 }

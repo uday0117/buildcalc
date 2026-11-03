@@ -5,10 +5,12 @@ import '../services/ad_service.dart';
 
 class AppBannerAd extends StatefulWidget {
   final bool reserveSpace;
+  final bool collapsible;
 
   const AppBannerAd({
     super.key,
     this.reserveSpace = false,
+    this.collapsible = false,
   });
 
   @override
@@ -28,6 +30,7 @@ class _AppBannerAdState extends State<AppBannerAd> {
 
   void _loadAd() {
     _bannerAd = AdService.createBannerAd(
+      collapsible: widget.collapsible,
       onLoaded: () {
         if (mounted) {
           setState(() {
@@ -55,6 +58,11 @@ class _AppBannerAdState extends State<AppBannerAd> {
 
   @override
   Widget build(BuildContext context) {
+    // Hide banner ad when soft keyboard is open to avoid obstructing inputs
+    if (MediaQuery.of(context).viewInsets.bottom > 0) {
+      return const SizedBox.shrink();
+    }
+
     if (_hasFailed || (_bannerAd == null && !widget.reserveSpace)) {
       return const SizedBox.shrink();
     }

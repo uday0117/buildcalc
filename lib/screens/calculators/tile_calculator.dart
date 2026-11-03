@@ -261,10 +261,12 @@ class _TileCalculatorState extends State<TileCalculator> {
           ],
         ),
       ),
-      bottomNavigationBar: const SafeArea(
-        top: false,
-        child: AppBannerAd(),
-      ),
+      bottomNavigationBar: _hasCalculated
+          ? const SafeArea(
+              top: false,
+              child: AppBannerAd(),
+            )
+          : null,
     );
   }
 

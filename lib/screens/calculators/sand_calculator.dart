@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../models/calculation.dart';
+import '../../models/quotation.dart';
 import '../../services/ad_service.dart';
 import '../../services/review_service.dart';
 import '../../services/storage_service.dart';
@@ -9,6 +10,7 @@ import '../../widgets/ad_banner.dart';
 import '../../widgets/calculator_header.dart';
 import '../../widgets/input_field.dart';
 import '../../widgets/result_card.dart';
+import '../quotations/quotation_editor_screen.dart';
 
 class SandCalculator extends StatefulWidget {
   const SandCalculator({super.key});
@@ -25,6 +27,7 @@ class _SandCalculatorState extends State<SandCalculator> {
   double _sandCubicMeters = 0;
   double _sandTonnes = 0;
   double _sandCubicFeet = 0;
+  double _sandBrass = 0;
   bool _hasCalculated = false;
 
   void _calculate() {
@@ -46,6 +49,7 @@ class _SandCalculatorState extends State<SandCalculator> {
       _sandCubicMeters = _sandCubicMeters * 1.2;
       _sandTonnes = _sandTonnes * 1.2;
       _sandCubicFeet = _sandCubicFeet * 1.2;
+      _sandBrass = _sandCubicFeet / 100.0;
 
       setState(() {
         _hasCalculated = true;
@@ -103,6 +107,7 @@ class _SandCalculatorState extends State<SandCalculator> {
       _sandCubicMeters = 0;
       _sandTonnes = 0;
       _sandCubicFeet = 0;
+      _sandBrass = 0;
       _hasCalculated = false;
     });
   }
@@ -189,37 +194,85 @@ class _SandCalculatorState extends State<SandCalculator> {
                 onShare: () {
                   Share.share(
                     'Sand Calculation by BuildCalc:\n'
-                    'Volume: ${_sandCubicMeters.toStringAsFixed(2)} m³ (${_sandCubicFeet.toStringAsFixed(2)} ft³)\n'
+                    'Volume: ${_sandBrass.toStringAsFixed(2)} Brass (${_sandCubicFeet.toStringAsFixed(1)} ft³ / ${_sandCubicMeters.toStringAsFixed(2)} m³)\n'
                     'Weight: ${_sandTonnes.toStringAsFixed(2)} tonnes\n\n'
                     'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
                     subject: 'BuildCalc - Sand Calculation',
                   );
                 },
-                note: 'Includes 20% allowance for compaction & transit loss',
+                note: '1 Brass = 100 cubic feet. Includes 20% allowance for compaction & transit loss.',
                 rows: [
                   ResultRowItem(
-                    label: 'Sand Required (m³)',
-                    value: '${_sandCubicMeters.toStringAsFixed(2)} m³',
+                    label: 'Sand in Brass (Standard Unit)',
+                    value: '${_sandBrass.toStringAsFixed(2)} Brass',
                     isPrimary: true,
+                    subtitle: '1 Brass = 100 cu ft • billing unit for sand trucks',
                   ),
                   ResultRowItem(
-                    label: 'In Tonnes',
+                    label: 'Volume in Cubic Feet',
+                    value: '${_sandCubicFeet.toStringAsFixed(2)} ft³',
+                  ),
+                  ResultRowItem(
+                    label: 'Weight in Tonnes',
                     value: '${_sandTonnes.toStringAsFixed(2)} tonnes',
                   ),
                   ResultRowItem(
-                    label: 'In Cubic Feet',
-                    value: '${_sandCubicFeet.toStringAsFixed(2)} ft³',
+                    label: 'Volume in Cubic Meters',
+                    value: '${_sandCubicMeters.toStringAsFixed(2)} m³',
+                  ),
+                  ResultRowItem(
+                    label: 'Estimated Tipper Truck Loads',
+                    value: '≈ ${(_sandBrass / 2.5).toStringAsFixed(1)} Loads',
+                    subtitle: 'Based on standard 6-wheeler 2.5 Brass tipper',
                   ),
                 ],
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.receipt_long_rounded, color: Color(0xFFFF8C00)),
+                label: const Text(
+                  'Add Sand to Client Quotation',
+                  style: TextStyle(
+                    color: Color(0xFFFF8C00),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  side: const BorderSide(color: Color(0xFFFF8C00), width: 1.5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => QuotationEditorScreen(
+                        initialItems: [
+                          QuotationItem(
+                            id: 'item_sand_${DateTime.now().millisecondsSinceEpoch}',
+                            description: 'River Sand / M-Sand',
+                            quantity: double.parse(_sandBrass.toStringAsFixed(2)),
+                            unit: 'brass',
+                            unitPrice: 0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ],
         ),
       ),
-      bottomNavigationBar: const SafeArea(
-        top: false,
-        child: AppBannerAd(),
-      ),
+      bottomNavigationBar: _hasCalculated
+          ? const SafeArea(
+              top: false,
+              child: AppBannerAd(),
+            )
+          : null,
     );
   }
 

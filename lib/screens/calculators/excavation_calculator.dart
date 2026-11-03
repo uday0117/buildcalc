@@ -34,15 +34,9 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
   ExcavationType _selectedType = ExcavationType.isolatedFooting;
   ExcavationResult? _result;
   ExcavationInput? _lastInput;
-  bool _isFirstInit = true;
+  bool _hasCalculated = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _calculate();
-  }
-
-  void _calculate() {
+  void _calculate({bool isUserTriggered = false}) {
     final length = double.tryParse(_lengthController.text) ?? 0;
     final width = double.tryParse(_widthController.text) ?? 0;
     final depth = double.tryParse(_depthController.text) ?? 0;
@@ -71,16 +65,18 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
     setState(() {
       _lastInput = input;
       _result = res;
+      if (isUserTriggered && res.isValid) {
+        _hasCalculated = true;
+      }
     });
 
     if (res.isValid) {
-      _saveToHistory(res);
-      if (!_isFirstInit) {
+      if (isUserTriggered) {
+        _saveToHistory(res);
         AdService.showInterstitialAfterCalculation();
         ReviewService.checkAndPromptReview();
       }
-      _isFirstInit = false;
-    } else if (res.errorMessage != null) {
+    } else if (isUserTriggered && res.errorMessage != null) {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(res.errorMessage!)));
@@ -143,8 +139,10 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
       _compactionController.text = '15';
       _truckCapacityController.text = '5.0';
       _selectedType = ExcavationType.isolatedFooting;
+      _result = null;
+      _lastInput = null;
+      _hasCalculated = false;
     });
-    _calculate();
   }
 
   @override
@@ -236,7 +234,9 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
                   },
                   onSelected: (val) {
                     setState(() => _selectedType = val);
-                    _calculate();
+                    if (_hasCalculated) {
+                      _calculate(isUserTriggered: false);
+                    }
                   },
                 ),
               ],
@@ -348,7 +348,7 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
             const SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed: _calculate,
+              onPressed: () => _calculate(isUserTriggered: true),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFFF8C00),
                 foregroundColor: Colors.white,
@@ -363,7 +363,7 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
               ),
             ),
 
-            if (res != null && res.isValid && _lastInput != null) ...[
+            if (_hasCalculated && res != null && res.isValid && _lastInput != null) ...[
               const SizedBox(height: 24),
 
               // Visual Dimensioned Trench Sketch
@@ -537,10 +537,12 @@ class _ExcavationCalculatorState extends State<ExcavationCalculator> {
           ],
         ),
       ),
-      bottomNavigationBar: const SafeArea(
-        top: false,
-        child: AppBannerAd(),
-      ),
+      bottomNavigationBar: _hasCalculated
+          ? const SafeArea(
+              top: false,
+              child: AppBannerAd(),
+            )
+          : null,
     );
   }
 

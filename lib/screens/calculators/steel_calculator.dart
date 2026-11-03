@@ -205,10 +205,12 @@ class _SteelCalculatorState extends State<SteelCalculator> {
           ],
         ),
       ),
-      bottomNavigationBar: const SafeArea(
-        top: false,
-        child: AppBannerAd(),
-      ),
+      bottomNavigationBar: _hasCalculated
+          ? const SafeArea(
+              top: false,
+              child: AppBannerAd(),
+            )
+          : null,
     );
   }
 

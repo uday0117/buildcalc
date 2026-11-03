@@ -17,8 +17,10 @@ import 'history_screen.dart';
 import 'plan/plan_editor_screen.dart';
 import 'plan/plan_templates_screen.dart';
 import 'project_management_screen.dart';
+import 'quotations/quotations_list_screen.dart';
 import 'saved_screen.dart';
 import 'settings_screen.dart';
+import 'vastu/vastu_checker_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -731,7 +733,10 @@ class _HomeContentState extends State<HomeContent> {
                                 onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: item.builder),
-                                ).then((_) => _loadData()),
+                                ).then((_) {
+                                  AdService.maybeShowInterstitialOnExit();
+                                  _loadData();
+                                }),
                                 borderRadius: BorderRadius.circular(16),
                                 child: Container(
                                   width: 170,
@@ -1039,6 +1044,33 @@ class _HomeContentState extends State<HomeContent> {
                                           ),
                                         ),
                                       ),
+                                      ActionChip(
+                                        avatar: const Icon(
+                                          Icons.explore_rounded,
+                                          size: 13,
+                                          color: Color(0xFFD97706),
+                                        ),
+                                        label: const Text(
+                                          'Vastu Compass & Checker',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        backgroundColor: const Color(
+                                          0xFFD97706,
+                                        ).withValues(alpha: 0.1),
+                                        side: BorderSide.none,
+                                        visualDensity: VisualDensity.compact,
+                                        padding: EdgeInsets.zero,
+                                        onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                const VastuCheckerScreen(),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -1058,7 +1090,7 @@ class _HomeContentState extends State<HomeContent> {
               ),
             ],
 
-            // Featured Planning & Cost Estimator Banner
+            // Featured Planning, Projects & Quotations Row
             if (_selectedCategory == CalculatorCategory.all &&
                 _searchQuery.isEmpty) ...[
               SliverToBoxAdapter(
@@ -1072,7 +1104,7 @@ class _HomeContentState extends State<HomeContent> {
                           color: isDark
                               ? const Color(0xFF1E293B)
                               : Colors.white,
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(16),
                           child: InkWell(
                             onTap: () => Navigator.push(
                               context,
@@ -1080,11 +1112,11 @@ class _HomeContentState extends State<HomeContent> {
                                 builder: (context) => const CostEstimator(),
                               ),
                             ).then((_) => _loadData()),
-                            borderRadius: BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(16),
                             child: Container(
-                              padding: const EdgeInsets.all(14),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(18),
+                                borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: const Color(
                                     0xFFFF9800,
@@ -1095,32 +1127,34 @@ class _HomeContentState extends State<HomeContent> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(7),
                                     decoration: BoxDecoration(
                                       color: const Color(
                                         0xFFFF9800,
                                       ).withValues(alpha: 0.14),
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: const Icon(
                                       Icons.calculate_rounded,
                                       color: Color(0xFFFF9800),
-                                      size: 22,
+                                      size: 20,
                                     ),
                                   ),
-                                  const SizedBox(height: 10),
+                                  const SizedBox(height: 8),
                                   const Text(
-                                    'Cost Estimator',
+                                    'Estimator',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(height: 2),
+                                  const SizedBox(height: 1),
                                   Text(
-                                    'Budget by area tier',
+                                    'Area budget',
                                     style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 9,
                                       color: isDark
                                           ? Colors.white60
                                           : Colors.grey[600],
@@ -1132,14 +1166,14 @@ class _HomeContentState extends State<HomeContent> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 8),
                       // Project Management card
                       Expanded(
                         child: Material(
                           color: isDark
                               ? const Color(0xFF1E293B)
                               : Colors.white,
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(16),
                           child: InkWell(
                             onTap: () => Navigator.push(
                               context,
@@ -1148,11 +1182,11 @@ class _HomeContentState extends State<HomeContent> {
                                     const ProjectManagementScreen(),
                               ),
                             ),
-                            borderRadius: BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(16),
                             child: Container(
-                              padding: const EdgeInsets.all(14),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(18),
+                                borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: const Color(
                                     0xFF1E3A5F,
@@ -1163,32 +1197,104 @@ class _HomeContentState extends State<HomeContent> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    padding: const EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(7),
                                     decoration: BoxDecoration(
                                       color: const Color(
                                         0xFF1E3A5F,
                                       ).withValues(alpha: 0.15),
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: const Icon(
                                       Icons.business_center_rounded,
                                       color: Color(0xFF1E3A5F),
-                                      size: 22,
+                                      size: 20,
                                     ),
                                   ),
-                                  const SizedBox(height: 10),
+                                  const SizedBox(height: 8),
                                   const Text(
                                     'Projects',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(height: 2),
+                                  const SizedBox(height: 1),
                                   Text(
-                                    'Track material costs',
+                                    'Track sites',
                                     style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 9,
+                                      color: isDark
+                                          ? Colors.white60
+                                          : Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Client Quotations (PDF & WhatsApp) card
+                      Expanded(
+                        child: Material(
+                          color: isDark
+                              ? const Color(0xFF1E293B)
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          child: InkWell(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const QuotationsListScreen(),
+                              ),
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: const Color(
+                                    0xFF25D366,
+                                  ).withValues(alpha: isDark ? 0.4 : 0.25),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(7),
+                                    decoration: BoxDecoration(
+                                      color: const Color(
+                                        0xFF25D366,
+                                      ).withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Icon(
+                                      Icons.receipt_long_rounded,
+                                      color: Color(0xFF16A34A),
+                                      size: 20,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const Text(
+                                    'Quotations',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 1),
+                                  Text(
+                                    'PDF & WhatsApp',
+                                    style: TextStyle(
+                                      fontSize: 9,
                                       color: isDark
                                           ? Colors.white60
                                           : Colors.grey[600],
@@ -1235,13 +1341,13 @@ class _HomeContentState extends State<HomeContent> {
                       ? Icons.star_border_rounded
                       : Icons.search_off_rounded,
                   title: _selectedCategory == CalculatorCategory.favorites
-                      ? AppLocalizations.translate(context, 'favorites')
-                      : AppLocalizations.translate(context, 'noCalculationsYet'),
+                      ? AppLocalizations.translate(context, 'noFavoritesYet')
+                      : AppLocalizations.translate(context, 'noCalculatorsFound'),
                   message: _selectedCategory == CalculatorCategory.favorites
-                      ? 'Tap the star icon on any calculator to pin it to your favorites!'
-                      : 'Try a different search keyword or switch category filters.',
+                      ? AppLocalizations.translate(context, 'favoriteHint')
+                      : AppLocalizations.translate(context, 'searchHint'),
                   actionLabel: _selectedCategory != CalculatorCategory.all
-                      ? 'Show all calculators'
+                      ? AppLocalizations.translate(context, 'showAllCalculators')
                       : null,
                   onAction: () {
                     _searchController.clear();
@@ -1288,7 +1394,10 @@ class _HomeContentState extends State<HomeContent> {
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(builder: item.builder),
-                          ).then((_) => _loadData()),
+                          ).then((_) {
+                            AdService.maybeShowInterstitialOnExit();
+                            _loadData();
+                          }),
                         );
                       }, childCount: filtered.length),
                     );

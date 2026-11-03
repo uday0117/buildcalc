@@ -60,6 +60,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   IconData _getIconForType(String type) {
+    final item = CalculatorItem.findById(type);
+    if (item != null) return item.icon;
     switch (type) {
       case 'cement':
         return Icons.architecture;
@@ -81,6 +83,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Color _getColorForType(String type) {
+    final item = CalculatorItem.findById(type);
+    if (item != null) return item.iconColor;
     switch (type) {
       case 'cement':
         return const Color(0xFF795548);

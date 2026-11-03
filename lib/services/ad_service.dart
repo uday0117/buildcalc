@@ -18,9 +18,21 @@ class AdService {
       'ca-app-pub-3940256099942544/1033173712';
   static const String testIOSInterstitialId =
       'ca-app-pub-3940256099942544/4411468910';
+  static const String testAndroidRewardedId =
+      'ca-app-pub-3940256099942544/5224354917';
+  static const String testIOSRewardedId =
+      'ca-app-pub-3940256099942544/1712485313';
+
+  // Set to true only for local debug/development testing with Google test ads.
+  // In release builds (Play Store), this is strictly ignored and real ads are always served.
+  static bool useTestAds = false;
+
+  /// Returns true only in debug/profile mode when test ads are explicitly enabled.
+  /// Never returns true in release mode (Play Store builds).
+  static bool get isTestMode => !kReleaseMode && useTestAds;
 
   static String get bannerAdUnitId {
-    if (kDebugMode) {
+    if (isTestMode) {
       if (!kIsWeb && Platform.isIOS) {
         return testIOSBannerId;
       }
@@ -30,7 +42,7 @@ class AdService {
   }
 
   static String get interstitialAdUnitId {
-    if (kDebugMode) {
+    if (isTestMode) {
       if (!kIsWeb && Platform.isIOS) {
         return testIOSInterstitialId;
       }
@@ -39,23 +51,40 @@ class AdService {
     return prodInterstitialAdUnitId;
   }
 
+  static String? get rewardedAdUnitId {
+    if (isTestMode) {
+      if (!kIsWeb && Platform.isIOS) {
+        return testIOSRewardedId;
+      }
+      return testAndroidRewardedId;
+    }
+    return null; // No production rewarded ad unit ID configured
+  }
+
   static InterstitialAd? _interstitialAd;
+  static RewardedAd? _rewardedAd;
   static DateTime? _lastInterstitialShownAt;
   static int _calculationCountSinceAd = 0;
 
   static Future<void> initialize() async {
     await MobileAds.instance.initialize();
     preloadInterstitial();
+    if (rewardedAdUnitId != null) {
+      preloadRewardedAd();
+    }
   }
 
   static BannerAd createBannerAd({
+    bool collapsible = false,
     VoidCallback? onLoaded,
     void Function(LoadAdError error)? onFailed,
   }) {
     return BannerAd(
       adUnitId: bannerAdUnitId,
       size: AdSize.banner,
-      request: const AdRequest(),
+      request: collapsible
+          ? const AdRequest(extras: {'collapsible': 'bottom'})
+          : const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
           onLoaded?.call();
@@ -67,6 +96,58 @@ class AdService {
         },
       ),
     );
+  }
+
+  static void preloadRewardedAd() {
+    final adUnitId = rewardedAdUnitId;
+    if (adUnitId == null || _rewardedAd != null) return;
+
+    RewardedAd.load(
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          _rewardedAd = ad;
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+              _rewardedAd = null;
+              preloadRewardedAd();
+            },
+            onAdFailedToShowFullScreenContent: (ad, error) {
+              debugPrint('Rewarded ad failed to show: $error');
+              ad.dispose();
+              _rewardedAd = null;
+              preloadRewardedAd();
+            },
+          );
+        },
+        onAdFailedToLoad: (error) {
+          debugPrint('Rewarded ad failed to load: $error');
+          _rewardedAd = null;
+        },
+      ),
+    );
+  }
+
+  /// Shows a rewarded video ad if available and triggers onUserEarnedReward
+  static Future<bool> showRewardedAd({
+    required void Function(RewardItem reward) onUserEarnedReward,
+    VoidCallback? onDismissed,
+  }) async {
+    final ad = _rewardedAd;
+    if (ad == null) {
+      preloadRewardedAd();
+      return false;
+    }
+
+    await ad.show(
+      onUserEarnedReward: (_, reward) {
+        onUserEarnedReward(reward);
+      },
+    );
+    onDismissed?.call();
+    return true;
   }
 
   static void preloadInterstitial() {
@@ -100,28 +181,41 @@ class AdService {
     );
   }
 
-  /// Displays an interstitial ad if conditions are met:
-  /// - At least 2 calculations completed since last ad
-  /// - Minimum 3 minutes cooldown between full-screen ads
-  /// - Ad is preloaded and ready
-  static Future<void> showInterstitialAfterCalculation() async {
+  /// Records a completed calculation event without displaying a full-screen ad.
+  /// Full-screen ads are NEVER shown immediately upon calculation to prevent
+  /// obstructing calculation results, complying with Google Play Better Ads Policy.
+  static void recordCalculation() {
     _calculationCountSinceAd++;
-    if (_calculationCountSinceAd < 2) {
-      return;
-    }
+  }
 
-    final shown = await maybeShowInterstitial();
+  /// Backward-compatible method: registers that a calculation was performed
+  /// without immediately opening a full-screen ad screen over the results.
+  static Future<void> showInterstitialAfterCalculation() async {
+    recordCalculation();
+  }
+
+  /// Displays an interstitial ad during natural navigation transitions (e.g. when exiting
+  /// a calculator screen back to home) provided adequate activity has occurred:
+  /// - At least 4 calculations completed
+  /// - Minimum 4 minutes cooldown between full-screen ads
+  /// - Ad is preloaded and ready
+  static Future<bool> maybeShowInterstitialOnExit({int minCalculations = 4}) async {
+    if (_calculationCountSinceAd < minCalculations) {
+      return false;
+    }
+    final shown = await maybeShowInterstitial(cooldownMinutes: 4);
     if (shown) {
       _calculationCountSinceAd = 0;
     }
+    return shown;
   }
 
-  /// Shows the interstitial ad respecting the 3-minute cooldown period.
+  /// Shows the interstitial ad respecting the cooldown period.
   /// Returns true if an ad was displayed.
-  static Future<bool> maybeShowInterstitial() async {
+  static Future<bool> maybeShowInterstitial({int cooldownMinutes = 4}) async {
     final now = DateTime.now();
     if (_lastInterstitialShownAt != null &&
-        now.difference(_lastInterstitialShownAt!).inMinutes < 3) {
+        now.difference(_lastInterstitialShownAt!).inMinutes < cooldownMinutes) {
       return false;
     }
 

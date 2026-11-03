@@ -4,6 +4,7 @@ import '../app_localizations.dart';
 import '../screens/calculators/area_calculator.dart';
 import '../screens/calculators/brick_calculator.dart';
 import '../screens/calculators/cement_calculator.dart';
+import '../screens/calculators/concrete_mix_calculator.dart';
 import '../screens/calculators/cost_estimator.dart';
 import '../screens/calculators/excavation_calculator.dart';
 import '../screens/calculators/paint_calculator.dart';
@@ -11,6 +12,9 @@ import '../screens/calculators/sand_calculator.dart';
 import '../screens/calculators/staircase_calculator.dart';
 import '../screens/calculators/steel_calculator.dart';
 import '../screens/calculators/tile_calculator.dart';
+import '../screens/calculators/water_tank_calculator.dart';
+import '../screens/quotations/quotations_list_screen.dart';
+import '../screens/vastu/vastu_checker_screen.dart';
 
 class CalculatorCategory {
   static const String all = 'All';
@@ -269,6 +273,90 @@ class CalculatorItem {
         'dumper',
       ],
       builder: (context) => const ExcavationCalculator(),
+    ),
+    CalculatorItem(
+      id: 'concrete_mix',
+      title: 'Concrete Mix Design',
+      category: CalculatorCategory.masonry,
+      description: 'M10-M30 mix ratios, cement bags, sand, aggregate & water',
+      icon: Icons.foundation_rounded,
+      iconColor: const Color(0xFF455A64),
+      keywords: [
+        'concrete',
+        'mix',
+        'm20',
+        'm25',
+        'm15',
+        'slab',
+        'beam',
+        'column',
+        'grade',
+        'rcc',
+      ],
+      builder: (context) => const ConcreteMixCalculator(),
+    ),
+    CalculatorItem(
+      id: 'water_tank',
+      title: 'Water Tank & Sump',
+      category: CalculatorCategory.structural,
+      description: 'Tank capacity in Liters & Gallons, brickwork & plaster area',
+      icon: Icons.water_drop_rounded,
+      iconColor: const Color(0xFF0288D1),
+      keywords: [
+        'water',
+        'tank',
+        'sump',
+        'capacity',
+        'liters',
+        'gallons',
+        'storage',
+        'plumbing',
+      ],
+      builder: (context) => const WaterTankCalculator(),
+    ),
+    CalculatorItem(
+      id: 'quotation_maker',
+      title: 'Contractor Quotation & Invoicing',
+      category: CalculatorCategory.estimation,
+      description: 'Professional client PDF quotes with WhatsApp share & branding',
+      icon: Icons.receipt_long_rounded,
+      iconColor: const Color(0xFFFF8C00),
+      keywords: [
+        'quote',
+        'quotation',
+        'invoice',
+        'estimate',
+        'client',
+        'pdf',
+        'whatsapp',
+        'bill',
+        'contractor',
+      ],
+      builder: (context) => const QuotationsListScreen(),
+    ),
+    CalculatorItem(
+      id: 'vastu_checker',
+      title: 'Vastu Shastra & Room Checker',
+      category: CalculatorCategory.structural,
+      description: 'Interactive Vedic compass, house plan auditor & compliance score',
+      icon: Icons.explore_rounded,
+      iconColor: const Color(0xFFD97706),
+      keywords: [
+        'vastu',
+        'compass',
+        'shastra',
+        'vedic',
+        'direction',
+        'orientation',
+        'room',
+        'kitchen',
+        'pooja',
+        'puja',
+        'ishanya',
+        'mandala',
+        'house plan',
+      ],
+      builder: (context) => const VastuCheckerScreen(),
     ),
   ];
 

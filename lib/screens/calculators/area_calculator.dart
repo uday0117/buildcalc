@@ -322,37 +322,67 @@ class _AreaCalculatorState extends State<AreaCalculator> {
                 icon: Icons.square_foot_rounded,
                 onSave: _bookmark,
                 onShare: () {
+                  final sqft = _area * 10.7639;
+                  final gaj = sqft / 9.0;
                   Share.share(
                     'Area Calculation by BuildCalc:\n'
                     'Shape: $_selectedShape\n'
-                    'Total Area: ${_area.toStringAsFixed(2)} m²\n'
+                    'Total Area: ${_area.toStringAsFixed(2)} m² (${sqft.toStringAsFixed(1)} sq ft / ${gaj.toStringAsFixed(1)} Gaj)\n'
                     '${_perimeter > 0 ? "Perimeter: ${_perimeter.toStringAsFixed(2)} m\n" : ""}\n'
                     'Calculated with BuildCalc: https://play.google.com/store/apps/details?id=com.uksolutions.buildcalc',
                     subject: 'BuildCalc - Area Calculation',
                   );
                 },
-                note: 'Shape: $_selectedShape',
+                note: 'Shape: $_selectedShape • Includes Regional Land Unit Conversions below',
                 rows: [
                   ResultRowItem(
-                    label: 'Total Area',
+                    label: 'Total Area (m²)',
                     value: '${_area.toStringAsFixed(2)} m²',
                     isPrimary: true,
+                    subtitle: '≈ ${(_area * 10.7639).toStringAsFixed(1)} Square Feet (sq ft)',
                   ),
                   if (_perimeter > 0)
                     ResultRowItem(
                       label: 'Perimeter',
-                      value: '${_perimeter.toStringAsFixed(2)} m',
+                      value: '${_perimeter.toStringAsFixed(2)} m (${(_perimeter * 3.28084).toStringAsFixed(1)} ft)',
                     ),
+                  ResultRowItem(
+                    label: 'Gaj / Square Yards',
+                    value: '${((_area * 10.7639) / 9.0).toStringAsFixed(2)} Gaj (sq yd)',
+                    subtitle: '1 Gaj = 9 sq ft (Common plot measurement unit)',
+                  ),
+                  ResultRowItem(
+                    label: 'Guntha',
+                    value: '${((_area * 10.7639) / 1089.0).toStringAsFixed(3)} Guntha',
+                    subtitle: '1 Guntha = 1,089 sq ft (33 × 33 ft)',
+                  ),
+                  ResultRowItem(
+                    label: 'Marla',
+                    value: '${((_area * 10.7639) / 272.25).toStringAsFixed(3)} Marla',
+                    subtitle: '1 Marla = 272.25 sq ft',
+                  ),
+                  ResultRowItem(
+                    label: 'Cent',
+                    value: '${((_area * 10.7639) / 435.6).toStringAsFixed(3)} Cent',
+                    subtitle: '1 Cent = 435.6 sq ft (1/100th of an Acre)',
+                  ),
+                  ResultRowItem(
+                    label: 'Acres & Hectares',
+                    value: '${((_area * 10.7639) / 43560.0).toStringAsFixed(4)} Acres',
+                    subtitle: '≈ ${(_area / 10000.0).toStringAsFixed(4)} Hectares',
+                  ),
                 ],
               ),
             ],
           ],
         ),
       ),
-      bottomNavigationBar: const SafeArea(
-        top: false,
-        child: AppBannerAd(),
-      ),
+      bottomNavigationBar: _hasCalculated
+          ? const SafeArea(
+              top: false,
+              child: AppBannerAd(),
+            )
+          : null,
     );
   }
 

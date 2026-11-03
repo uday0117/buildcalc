@@ -37,6 +37,8 @@ class _SavedScreenState extends State<SavedScreen> {
   }
 
   IconData _getIconForType(String type) {
+    final item = CalculatorItem.findById(type);
+    if (item != null) return item.icon;
     switch (type) {
       case 'cement':
         return Icons.architecture;
@@ -58,6 +60,8 @@ class _SavedScreenState extends State<SavedScreen> {
   }
 
   Color _getColorForType(String type) {
+    final item = CalculatorItem.findById(type);
+    if (item != null) return item.iconColor;
     switch (type) {
       case 'cement':
         return const Color(0xFF795548);
